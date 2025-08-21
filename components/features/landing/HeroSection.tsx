@@ -35,28 +35,25 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-        {/* Ghost Logo */}
+        {/* Neon Logo + Glitch Title */}
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ duration: 0.8, type: "spring" }}
-          className="mb-8"
+          className="mb-8 text-center"
         >
-          <div className="w-32 h-32 mx-auto bg-green-400 rounded-full flex items-center justify-center text-black text-6xl animate-pulse">
-            👻
-          </div>
+          <img 
+            src="/brand/svg/g3-neon-ghost-icon-dark.svg" 
+            alt="DATAVISM Ghost" 
+            className="h-16 md:h-20 mx-auto mb-4"
+          />
+          <h1 
+            className="text-6xl md:text-8xl font-bold glitch-text crt-text"
+            data-text="DATAVISM"
+          >
+            DATAVISM
+          </h1>
         </motion.div>
-
-        {/* Main Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-6xl md:text-8xl font-bold mb-6 glitch-text"
-          data-text="DATAVISM"
-        >
-          DATAVISM
-        </motion.h1>
 
         {/* Tagline */}
         <motion.p
@@ -65,7 +62,7 @@ export function HeroSection() {
           transition={{ delay: 0.5 }}
           className="text-xl md:text-2xl mb-4 text-yellow-400"
         >
-          Learn Data Science by Exposing Real Corruption
+          Learn Data Science by Exposing Digital Manipulation
         </motion.p>
 
         {/* Typed Text */}
@@ -92,9 +89,9 @@ export function HeroSection() {
             <span className="text-red-500 font-bold">SYSTEM WARNING</span>
           </div>
           <p className="text-sm text-red-300">
-            This is not a game. You will analyze real leaked data. 
-            You will expose actual corruption. You will make enemies. 
-            They will try to stop you. Are you ready?
+            This is not a game. You will analyze real corporate data. 
+            You will expose algorithmic manipulation. You will see through the lies. 
+            They control through data. Are you ready to fight back?
           </p>
         </motion.div>
 
@@ -205,7 +202,7 @@ function LiveCounter() {
       </div>
       <div>
         <div className="text-2xl font-bold text-red-400">€{stats.exposed.toFixed(1)}M</div>
-        <div className="text-xs uppercase">Corruption Exposed</div>
+        <div className="text-xs uppercase">Corporate BS Exposed</div>
       </div>
       <div>
         <div className="text-2xl font-bold text-cyan-400">{stats.investigations}</div>

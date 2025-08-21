@@ -15,7 +15,7 @@ export default function AboutPage() {
             THE MANIFESTO
           </h1>
           <p className="text-xl text-green-300 max-w-2xl mx-auto">
-            Why we exist. What we fight for. How we're changing the world, one dataset at a time.
+            Why algorithms control you. How data activism frees you. What we're building together.
           </p>
         </div>
 
@@ -29,23 +29,23 @@ export default function AboutPage() {
             </div>
             <div className="space-y-4 text-green-300 leading-relaxed text-lg">
               <p>
-                In 2025, <strong className="text-red-400">data literacy became the new digital divide</strong>. 
-                While corporations use advanced analytics to manipulate markets and governments use 
-                algorithms to control populations, citizens are left with Excel and good intentions.
+                In 2025, <strong className="text-red-400">algorithms control more of your life than you realize</strong>. 
+                What you see on social media, what prices you pay, what jobs you get offered, what news you read—
+                all determined by code designed to manipulate your behavior for profit.
               </p>
               <p>
-                <strong className="text-red-400">Corruption is more sophisticated than ever</strong>. 
-                Shell companies hide behind complex ownership structures. Money laundering flows through 
-                cryptocurrency and offshore accounts. Election manipulation happens through micro-targeted 
-                disinformation campaigns.
+                <strong className="text-red-400">Your data is weaponized against you</strong>. 
+                Companies know you better than you know yourself. They use sophisticated machine learning 
+                to predict and influence your decisions. They create filter bubbles that polarize society. 
+                They manipulate prices based on your location, device, and browsing history.
               </p>
               <p>
-                <strong className="text-red-400">Traditional journalism is failing</strong>. Newsrooms are 
-                understaffed. Investigative reporting takes months. By the time a story breaks, the damage 
-                is done and the criminals have moved on.
+                <strong className="text-red-400">Meanwhile, citizens are kept in the dark</strong>. 
+                These algorithms are black boxes. The data is locked away. The manipulation techniques 
+                are trade secrets. We're told to "trust the algorithm" while being systematically exploited.
               </p>
               <p className="text-red-300 font-bold">
-                Meanwhile, they're getting away with everything.
+                You are not the customer—you are the product being optimized.
               </p>
             </div>
           </section>
@@ -58,24 +58,24 @@ export default function AboutPage() {
             </div>
             <div className="space-y-4 text-green-300 leading-relaxed text-lg">
               <p>
-                <strong className="text-yellow-400">Datavism is the first educational platform where every lesson serves justice</strong>. 
+                <strong className="text-yellow-400">Datavism is the first educational platform that teaches data science through activism</strong>. 
                 You don't learn Python by analyzing flower datasets. You don't master SQL with employee records. 
                 You don't build machine learning models with wine quality data.
               </p>
               <p>
-                <strong className="text-yellow-400">You learn by exposing real corruption</strong>. 
-                Every challenge you complete exposes actual financial crimes. Every algorithm you build 
-                helps detect real money laundering. Every visualization you create reveals authentic 
-                political manipulation.
+                <strong className="text-yellow-400">You learn by exposing real algorithmic manipulation</strong>. 
+                Every challenge you complete reveals actual corporate deception. Every algorithm you build 
+                helps detect real bias in AI systems. Every visualization you create exposes authentic 
+                digital manipulation.
               </p>
               <p>
                 <strong className="text-yellow-400">This is education with impact</strong>. 
-                When you complete Week 12 of our academy, you won't just have a certificate. 
-                You'll have helped recover stolen money, exposed corrupt officials, and contributed 
-                to ongoing investigations worldwide.
+                When you complete Level 12 of our bootcamp, you won't just have a certificate. 
+                You'll have helped expose algorithmic bias, revealed corporate greenwashing, and contributed 
+                to digital transparency worldwide.
               </p>
               <p className="text-yellow-300 font-bold">
-                Your homework assignments make the world a better place.
+                Your homework assignments make the digital world more transparent.
               </p>
             </div>
           </section>
@@ -88,22 +88,22 @@ export default function AboutPage() {
             </div>
             <div className="space-y-4 text-green-300 leading-relaxed text-lg">
               <p>
-                <strong className="text-green-400">Transform 100,000 citizens into data investigators</strong>. 
-                Create a global network of people who can read between the lines of any dataset. 
-                Make transparency unstoppable.
+                <strong className="text-green-400">Transform 100,000 citizens into data activists</strong>. 
+                Create a global network of people who can see through algorithmic manipulation. 
+                Make digital transparency unstoppable.
               </p>
               <p>
-                <strong className="text-green-400">Build the infrastructure for perpetual accountability</strong>. 
-                When every major financial transaction is automatically analyzed by thousands of trained 
-                investigators, corruption becomes impossible to hide.
+                <strong className="text-green-400">Build the infrastructure for algorithmic accountability</strong>. 
+                When thousands of trained data activists can analyze every major algorithm, 
+                corporate manipulation becomes impossible to hide.
               </p>
               <p>
-                <strong className="text-green-400">Democratize the tools of power</strong>. 
+                <strong className="text-green-400">Democratize the tools of digital literacy</strong>. 
                 The same data science techniques used by corporations to manipulate you should be 
                 in your hands to hold them accountable.
               </p>
               <p className="text-green-300 font-bold">
-                When every citizen can analyze data, evil has nowhere to hide.
+                When every citizen can analyze algorithms, manipulation has nowhere to hide.
               </p>
             </div>
           </section>
@@ -114,12 +114,12 @@ export default function AboutPage() {
               READY TO JOIN THE REVOLUTION?
             </h3>
             <p className="text-xl text-green-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Every corrupt official you expose. Every hidden network you uncover. 
-              Every dollar you recover. You're not just learning—you're fighting back.
+              Every algorithm you decode. Every bias you expose. 
+              Every manipulation you uncover. You're not just learning—you're fighting back.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/academy"
+                href="/bootcamp"
                 className="px-8 py-4 bg-transparent border-2 border-yellow-400 text-yellow-400 font-bold text-lg hover:bg-yellow-400 hover:text-black transition-all duration-300"
               >
                 START YOUR TRAINING
@@ -136,7 +136,7 @@ export default function AboutPage() {
           {/* Quote */}
           <section className="text-center mt-16">
             <blockquote className="text-2xl text-green-400 font-mono max-w-3xl mx-auto mb-4">
-              "The best way to hide a lie is in a spreadsheet. 
+              "The best way to hide manipulation is in an algorithm. 
               The best way to expose it is with Python."
             </blockquote>
             <cite className="text-green-400/60 text-lg">

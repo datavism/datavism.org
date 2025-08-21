@@ -10,7 +10,7 @@ export function Navigation() {
 
   const navItems = [
     { href: '/', label: 'HOME' },
-    { href: '/academy', label: 'ACADEMY' },
+    { href: '/bootcamp', label: 'BOOTCAMP' },
     { href: '/about', label: 'ABOUT' },
     { href: '/contact', label: 'CONTACT' }
   ]
@@ -21,7 +21,11 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
-            <div className="text-2xl">👻</div>
+            <img 
+              src="/brand/svg/g3-neon-ghost-icon-dark.svg" 
+              alt="DATAVISM Ghost Logo" 
+              className="w-8 h-8"
+            />
             <span className="text-xl font-bold text-green-400">DATAVISM</span>
           </Link>
 

@@ -8,12 +8,14 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
 const liveFeeds = [
-  { type: 'leak', message: 'New leak: panama_papers_2024.csv - 2.3TB of financial records' },
-  { type: 'investigation', message: 'Investigation #247: Shell company network exposed in Malta' },
-  { type: 'alert', message: 'ALERT: Bot network detected manipulating climate data' },
-  { type: 'success', message: 'SUCCESS: €1.2M recovered from corrupt officials' },
-  { type: 'analysis', message: 'Analyzing: election_irregularities_2024.json' },
-  { type: 'operative', message: 'Ghost operative "DeepThroat2" joined from Berlin' }
+  { type: 'algorithm', message: 'New discovery: Instagram algorithm bias detected - targeting minority users' },
+  { type: 'investigation', message: 'Investigation #247: Dynamic pricing manipulation exposed at major retailer' },
+  { type: 'alert', message: 'ALERT: AI recommendation system pushing conspiracy theories' },
+  { type: 'success', message: 'SUCCESS: Greenwashing exposed - company emissions 400% higher than reported' },
+  { type: 'analysis', message: 'Analyzing: social_media_manipulation_2024.json' },
+  { type: 'operative', message: 'Data activist "AlgorithmHunter" joined from Amsterdam' },
+  { type: 'bias', message: 'BIAS DETECTED: Hiring algorithm discriminates against women in tech' },
+  { type: 'exposed', message: 'EXPOSED: Ride-sharing surge pricing targets low-income neighborhoods' }
 ]
 
 export function LiveTerminal() {
@@ -31,11 +33,13 @@ export function LiveTerminal() {
 
   const getLogColor = (type: string) => {
     switch(type) {
-      case 'leak': return 'text-yellow-400'
+      case 'algorithm': return 'text-yellow-400'
       case 'alert': return 'text-red-400'
       case 'success': return 'text-green-400'
       case 'investigation': return 'text-cyan-400'
       case 'operative': return 'text-purple-400'
+      case 'bias': return 'text-orange-400'
+      case 'exposed': return 'text-pink-400'
       default: return 'text-gray-400'
     }
   }
@@ -49,8 +53,8 @@ export function LiveTerminal() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl font-bold mb-4 text-yellow-400">LIVE OPERATIONS</h2>
-          <p className="text-lg text-green-300">Real-time feed from the Data Underground network</p>
+          <h2 className="text-4xl font-bold mb-4 text-yellow-400 crt-text">LIVE OPERATIONS</h2>
+          <p className="text-lg text-green-300">Real-time feed from the Data Activism network</p>
         </motion.div>
 
         <motion.div

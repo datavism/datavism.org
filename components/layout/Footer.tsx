@@ -19,12 +19,16 @@ export function Footer() {
           {/* Logo & Mission */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="text-2xl">👻</div>
+              <img 
+                src="/brand/svg/g3-neon-ghost-icon-dark.svg" 
+                alt="DATAVISM Ghost Logo" 
+                className="w-8 h-8"
+              />
               <span className="text-xl font-bold text-green-400">DATAVISM</span>
             </div>
             <p className="text-green-300 text-sm leading-relaxed mb-4">
-              Learn Data Science by Exposing Real Corruption. 
-              The revolution will be computed.
+              Learn Data Science by Exposing Algorithmic Manipulation. 
+              Turn data into activism.
             </p>
             <p className="text-green-400/60 text-xs">
               A Non-Profit Digital Art Project
@@ -37,8 +41,8 @@ export function Footer() {
               Quick Access
             </h3>
             <div className="space-y-2">
-              <Link href="/academy" className="block text-green-300 hover:text-yellow-400 transition-colors text-sm">
-                Academy
+              <Link href="/bootcamp" className="block text-green-300 hover:text-yellow-400 transition-colors text-sm">
+                Bootcamp
               </Link>
               <Link href="/about" className="block text-green-300 hover:text-yellow-400 transition-colors text-sm">
                 Manifesto
@@ -47,7 +51,7 @@ export function Footer() {
                 Secure Contact
               </Link>
               <Link href="/whistleblower" className="block text-red-400 hover:text-red-300 transition-colors text-sm">
-                Whistleblower Channels
+                Report Manipulation
               </Link>
             </div>
           </div>
@@ -76,9 +80,9 @@ export function Footer() {
             <div className="bg-black/50 border border-green-400/30 p-3 font-mono text-xs">
               <div className="text-green-400">
                 <span className="text-green-400/60">&gt; </span>
-                "Information wants to be free.<br/>
+                "Algorithms control you.<br/>
                 <span className="text-green-400/60">&gt; </span>
-                Evil fears transparency."
+                Data activism frees you."
               </div>
             </div>
           </div>

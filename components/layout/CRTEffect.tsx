@@ -15,7 +15,7 @@ export function CRTEffect() {
 
   return (
     <div 
-      className="crt-overlay"
+      className="crt-overlay-selective"
       suppressHydrationWarning={true}
     />
   )

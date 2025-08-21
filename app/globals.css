@@ -33,7 +33,46 @@
 }
 
 @layer components {
-  /* CRT Effect */
+  /* CRT Effect - Only for large elements */
+  .crt-overlay-selective {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+      linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+    background-size: 100% 4px, 6px 100%;
+    pointer-events: none;
+    z-index: 1000;
+    animation: crt-flicker 0.15s infinite;
+    /* Only apply to elements with text-2xl and larger */
+    mix-blend-mode: multiply;
+  }
+
+  /* CRT Effect for specific large elements */
+  .crt-text {
+    position: relative;
+  }
+  
+  .crt-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%),
+      linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    z-index: 1;
+    animation: crt-flicker 0.15s infinite;
+  }
+
+  /* Remove global overlay, add selective class */
   .crt-overlay {
     position: fixed;
     top: 0;
@@ -87,6 +126,13 @@
   }
 }
 
+  /* Boss Battle Mode */
+  .boss-battle-mode {
+    animation: boss-warning 0.5s infinite;
+    border-color: var(--red) !important;
+    box-shadow: 0 0 30px var(--red);
+  }
+
 @layer utilities {
   @keyframes crt-flicker {
     0%, 100% { opacity: 0.97; }
@@ -122,5 +168,10 @@
   @keyframes blink {
     0%, 49% { opacity: 1; }
     50%, 100% { opacity: 0; }
+  }
+
+  @keyframes boss-warning {
+    0%, 100% { background: rgba(255, 0, 64, 0.1); }
+    50% { background: rgba(255, 0, 64, 0.2); }
   }
 }

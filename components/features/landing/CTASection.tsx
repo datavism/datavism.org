@@ -24,13 +24,13 @@ export function CTASection() {
           
           <div className="space-y-4 text-red-300 leading-relaxed">
             <p className="text-lg">
-              <strong>This is not a game.</strong> You will analyze real leaked data.
+              <strong>This is not a game.</strong> You will analyze real corporate data.
             </p>
             <p className="text-lg">
-              <strong>You will expose actual corruption.</strong> You will make enemies.
+              <strong>You will expose algorithmic manipulation.</strong> You will see through digital lies.
             </p>
             <p className="text-lg">
-              <strong>They will try to stop you.</strong> Are you ready?
+              <strong>They will try to hide the truth.</strong> Are you ready to fight back?
             </p>
           </div>
         </motion.div>
@@ -42,12 +42,12 @@ export function CTASection() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="text-5xl font-bold mb-6 text-yellow-400">
+          <h2 className="text-5xl font-bold mb-6 text-yellow-400 crt-text">
             THE CHOICE IS YOURS
           </h2>
           
           <p className="text-xl text-green-300 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Stay comfortable with Excel and watch corruption thrive. 
+            Stay comfortable with Excel and watch algorithms manipulate you. 
             Or learn Python and start exposing the truth. What will it be?
           </p>
 
@@ -58,7 +58,7 @@ export function CTASection() {
               whileTap={{ scale: 0.95 }}
             >
               <Link
-                href="/academy/week/1"
+                href="/bootcamp"
                 className="inline-flex items-center gap-3 px-10 py-5 bg-transparent border-2 border-yellow-400 text-yellow-400 font-bold text-lg hover:bg-yellow-400 hover:text-black transition-all duration-300 group"
               >
                 <Target size={24} />

@@ -9,47 +9,47 @@ export function FeaturesSection() {
     {
       icon: Code,
       title: 'Real Python Training',
-      description: 'Learn Python, SQL, and ML by analyzing actual leaked data. No toy projects, no fake datasets.',
+      description: 'Learn Python, SQL, and ML by analyzing real corporate data. No toy projects, no fake datasets.',
       color: 'border-yellow-400 hover:shadow-yellow-400/20',
       textColor: 'text-yellow-400',
-      link: '/academy/week/1'
+      link: '/bootcamp/level/1'
     },
     {
       icon: Database,
-      title: 'Live Investigations',
-      description: 'Access real corruption cases. Contribute to ongoing investigations with global impact.',
+      title: 'Algorithm Investigations',
+      description: 'Expose how algorithms manipulate your behavior. Decode recommendation systems and pricing tricks.',
       color: 'border-red-400 hover:shadow-red-400/20',
       textColor: 'text-red-400',
       link: '/investigations'
     },
     {
       icon: Users,
-      title: 'Global Network',
-      description: 'Join 2,847+ investigators worldwide. Form squads, share intel, coordinate operations.',
+      title: 'Data Activist Network',
+      description: 'Join 2,847+ data activists worldwide. Form squads, share insights, coordinate investigations.',
       color: 'border-cyan-400 hover:shadow-cyan-400/20',
       textColor: 'text-cyan-400',
       link: '/community'
     },
     {
       icon: Shield,
-      title: 'Secure Operations',
-      description: 'Military-grade encryption, anonymous communication, whistleblower protection protocols.',
+      title: 'Ethical Data Science',
+      description: 'Learn responsible data analysis. Understand bias, privacy, and how to use data for positive impact.',
       color: 'border-green-400 hover:shadow-green-400/20',
       textColor: 'text-green-400',
-      link: '/security'
+      link: '/ethics'
     },
     {
       icon: Target,
       title: 'Mission System',
-      description: 'Complete special operations. Target specific corruption networks. Make real impact.',
+      description: 'Complete data activism missions. Target greenwashing, price manipulation, algorithmic bias.',
       color: 'border-purple-400 hover:shadow-purple-400/20',
       textColor: 'text-purple-400',
       link: '/missions'
     },
     {
       icon: Zap,
-      title: 'AI Assistant',
-      description: 'Ghost AI helps you analyze data patterns, identify anomalies, and connect the dots.',
+      title: 'AI Bias Detective',
+      description: 'Use AI to detect AI bias. Build tools that expose algorithmic discrimination and manipulation.',
       color: 'border-orange-400 hover:shadow-orange-400/20',
       textColor: 'text-orange-400',
       link: '/tools/ai'
@@ -65,12 +65,12 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold mb-6 text-yellow-400">
+          <h2 className="text-4xl font-bold mb-6 text-yellow-400 crt-text">
             WEAPONS OF MASS INSTRUCTION
           </h2>
           <p className="text-xl text-green-300 max-w-3xl mx-auto leading-relaxed">
-            Transform from Excel victim to data vigilante. Our platform gives you everything 
-            needed to expose corruption and create real-world impact.
+            Transform from data victim to data activist. Our platform gives you everything 
+            needed to expose algorithmic manipulation and create real-world impact.
           </p>
         </motion.div>
 
@@ -132,11 +132,11 @@ export function FeaturesSection() {
               Ready to Join the Revolution?
             </h3>
             <p className="text-green-300 mb-6 leading-relaxed">
-              Every corrupt official you expose. Every hidden network you uncover. 
-              Every dollar you recover. You're not just learning—you're fighting back.
+              Every algorithm you decode. Every bias you expose. 
+              Every manipulation you uncover. You're not just learning—you're fighting back.
             </p>
             <Link
-              href="/academy/week/1"
+              href="/bootcamp/level/1"
               className="inline-block px-8 py-4 bg-transparent border-2 border-yellow-400 text-yellow-400 font-bold hover:bg-yellow-400 hover:text-black transition-all duration-300"
             >
               START YOUR TRAINING

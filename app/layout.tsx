@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Navigation } from '../components/layout/Navigation'
 import { Footer } from '../components/layout/Footer'
 import { CRTEffect } from '../components/layout/CRTEffect'
+import { Providers } from './providers'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -33,12 +34,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="font-mono">
       <body className="bg-black text-green-400 overflow-x-hidden cursor-crosshair min-h-screen" suppressHydrationWarning={true}>
-        <CRTEffect />
-        <Navigation />
-        <main className="relative z-10">
-          {children}
-        </main>
-        <Footer />
+        <Providers>
+          <CRTEffect />
+          <Navigation />
+          <main className="relative z-10">
+            {children}
+          </main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   )

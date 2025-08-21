@@ -9,7 +9,7 @@ export function StatsSection() {
     investigators: 2847,
     exposedValue: 12.3,
     investigations: 247,
-    arrests: 89
+    algorithms: 89
   })
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export function StatsSection() {
         investigators: prev.investigators + Math.floor(Math.random() * 3),
         exposedValue: prev.exposedValue + (Math.random() * 0.1),
         investigations: prev.investigations + (Math.random() > 0.8 ? 1 : 0),
-        arrests: prev.arrests + (Math.random() > 0.95 ? 1 : 0)
+        algorithms: prev.algorithms + (Math.random() > 0.95 ? 1 : 0)
       }))
     }, 5000)
 
@@ -29,30 +29,30 @@ export function StatsSection() {
     {
       icon: Users,
       value: stats.investigators.toLocaleString(),
-      label: 'Active Investigators',
+      label: 'Data Activists',
       color: 'text-yellow-400',
-      description: 'Data scientists fighting corruption worldwide'
+      description: 'Data scientists fighting algorithmic manipulation worldwide'
     },
     {
       icon: DollarSign,
       value: `€${stats.exposedValue.toFixed(1)}M`,
-      label: 'Issues Exposed',
+      label: 'Corporate BS Exposed',
       color: 'text-red-400',
-      description: 'Total value of corruption uncovered'
+      description: 'Value of hidden corporate manipulation uncovered'
     },
     {
       icon: Search,
       value: stats.investigations.toString(),
-      label: 'Investigations',
+      label: 'Active Investigations',
       color: 'text-cyan-400',
-      description: 'Active cases being investigated'
+      description: 'Data-driven investigations exposing digital manipulation'
     },
     {
       icon: ShieldCheck,
-      value: stats.arrests.toString(),
-      label: 'Arrests Made',
+      value: stats.algorithms.toString(),
+      label: 'Algorithms Decoded',
       color: 'text-green-400',
-      description: 'Legal actions resulting from our work'
+      description: 'Manipulative algorithms exposed and decoded'
     }
   ]
 
@@ -65,10 +65,10 @@ export function StatsSection() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold mb-4 text-yellow-400">GLOBAL IMPACT</h2>
+          <h2 className="text-3xl font-bold mb-4 text-yellow-400 crt-text">GLOBAL IMPACT</h2>
           <p className="text-green-300 max-w-2xl mx-auto">
             Real numbers from real investigations. Updated in real-time as our community 
-            exposes corruption and creates tangible change worldwide.
+            exposes algorithmic manipulation and creates digital transparency worldwide.
           </p>
         </motion.div>
 

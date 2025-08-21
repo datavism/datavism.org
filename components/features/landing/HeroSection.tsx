@@ -1,5 +1,3 @@
-// src/components/features/landing/HeroSection.tsx
-
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -33,7 +31,7 @@ export function HeroSection() {
       
       {/* Matrix Rain Background */}
       <div className="absolute inset-0 opacity-20">
-        <MatrixRain />
+        {mounted && <MatrixRain />}
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
@@ -108,7 +106,7 @@ export function HeroSection() {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <Link
-            href="/academy/week/1"
+            href="/academy"
             className="px-8 py-4 bg-transparent border-2 border-yellow-400 text-yellow-400 font-bold text-lg hover:bg-yellow-400 hover:text-black transition-all duration-300 group"
           >
             <span className="flex items-center gap-2">
@@ -119,7 +117,7 @@ export function HeroSection() {
           </Link>
           
           <Link
-            href="/manifesto"
+            href="/about"
             className="px-8 py-4 bg-transparent border-2 border-green-400 text-green-400 font-bold text-lg hover:bg-green-400 hover:text-black transition-all duration-300"
           >
             <span className="flex items-center gap-2">
@@ -136,7 +134,7 @@ export function HeroSection() {
           transition={{ delay: 1.3 }}
           className="mt-12 text-sm text-green-300"
         >
-          <LiveCounter />
+          {mounted && <LiveCounter />}
         </motion.div>
       </div>
     </section>
@@ -148,14 +146,16 @@ function MatrixRain() {
   const [drops, setDrops] = useState<number[]>([])
 
   useEffect(() => {
-    const columns = Math.floor(window.innerWidth / 20)
-    setDrops(Array(columns).fill(1))
+    if (typeof window !== 'undefined') {
+      const columns = Math.floor(window.innerWidth / 20)
+      setDrops(Array(columns).fill(1))
 
-    const interval = setInterval(() => {
-      setDrops(prev => prev.map(y => (y > window.innerHeight || Math.random() > 0.95 ? 0 : y + 20)))
-    }, 100)
+      const interval = setInterval(() => {
+        setDrops(prev => prev.map(y => (y > window.innerHeight || Math.random() > 0.95 ? 0 : y + 20)))
+      }, 100)
 
-    return () => clearInterval(interval)
+      return () => clearInterval(interval)
+    }
   }, [])
 
   return (

@@ -12,20 +12,41 @@
     --magenta: #ff00ff;
   }
 
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    height: 100%;
+  }
+
   body {
-    @apply bg-black text-green-400;
+    background: #000000;
+    color: #00ff41;
+    font-family: 'Courier New', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: crosshair;
   }
 }
 
 @layer components {
   /* CRT Effect */
   .crt-overlay {
-    @apply fixed inset-0 pointer-events-none z-50;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: 
       linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
       linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
     background-size: 100% 2px, 3px 100%;
-    animation: flicker 0.15s infinite;
+    pointer-events: none;
+    z-index: 1000;
+    animation: crt-flicker 0.15s infinite;
   }
 
   /* Glitch Text */
@@ -56,21 +77,18 @@
     z-index: -2;
   }
 
-  /* Boss Battle Mode */
-  .boss-battle-mode {
-    animation: boss-warning 0.5s infinite;
-    border-color: var(--red) !important;
-    box-shadow: 0 0 30px var(--red);
-  }
-
-  /* Blink Animation */
+  /* Animations */
   .animate-blink {
     animation: blink 1s infinite;
+  }
+
+  .shadow-glow {
+    text-shadow: 0 0 10px currentColor;
   }
 }
 
 @layer utilities {
-  @keyframes flicker {
+  @keyframes crt-flicker {
     0%, 100% { opacity: 0.97; }
     50% { opacity: 1; }
   }
@@ -99,11 +117,6 @@
     25% { clip-path: inset(40% 0 10% 0); transform: translate(2px, -2px); }
     50% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 2px); }
     75% { clip-path: inset(5% 0 80% 0); transform: translate(1px, -1px); }
-  }
-
-  @keyframes boss-warning {
-    0%, 100% { background: rgba(255, 0, 64, 0.1); }
-    50% { background: rgba(255, 0, 64, 0.2); }
   }
 
   @keyframes blink {

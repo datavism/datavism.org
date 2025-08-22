@@ -35,18 +35,50 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-        {/* Neon Logo + Glitch Title */}
+        {/* Animated Neon Logo + Glitch Title */}
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ duration: 0.8, type: "spring" }}
           className="mb-8 text-center"
         >
-          <img 
-            src="/brand/svg/g3-neon-ghost-icon-dark.svg" 
-            alt="DATAVISM Ghost" 
-            className="h-16 md:h-20 mx-auto mb-4"
-          />
+          {/* Animated Ghost SVG */}
+          <div className="mb-4">
+            <svg 
+              className="h-16 md:h-20 mx-auto animated-ghost" 
+              viewBox="0 0 240 240" 
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {/* Icon (transparent background) */}
+              <g transform="translate(60,40)">
+                {/* Magenta shadow with glitch animation */}
+                <path 
+                  id="ghost-shadow"
+                  d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" 
+                  fill="none" 
+                  stroke="#FF2A6D" 
+                  strokeWidth="12" 
+                  opacity="0.9" 
+                  transform="translate(2,2)"
+                />
+                
+                {/* Neon core stroke */}
+                <path 
+                  id="ghost-core"
+                  d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" 
+                  fill="none" 
+                  stroke="#39FF14" 
+                  strokeWidth="10" 
+                  strokeLinejoin="round"
+                />
+                
+                {/* Eyes with blink animation */}
+                <circle id="eye1" cx="78" cy="64" r="7" fill="#39FF14" className="ghost-eye" />
+                <circle id="eye2" cx="110" cy="64" r="7" fill="#39FF14" className="ghost-eye" />
+              </g>
+            </svg>
+          </div>
+          
           <h1 
             className="text-6xl md:text-8xl font-bold glitch-text crt-text"
             data-text="DATAVISM"

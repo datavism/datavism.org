@@ -33,6 +33,24 @@
 }
 
 @layer components {
+  /* Ghost Logo Animation */
+  .animated-ghost {
+    filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.5));
+    animation: ghost-glitch 3s infinite, ghost-glow 6s ease-in-out infinite alternate;
+    transition: all 0.3s ease;
+  }
+
+  .animated-ghost:hover {
+    animation-duration: 1s, 3s;
+    filter: drop-shadow(0 0 20px rgba(57, 255, 20, 0.8)) 
+            drop-shadow(0 0 30px rgba(255, 42, 109, 0.5));
+  }
+
+  /* Ghost Eyes Blink Animation */
+  .ghost-eye {
+    animation: ghost-blink 4s infinite;
+  }
+
   /* CRT Effect - Only for large elements */
   .crt-overlay-selective {
     position: fixed;
@@ -134,6 +152,48 @@
   }
 
 @layer utilities {
+  /* Ghost Animation Keyframes */
+  @keyframes ghost-glitch {
+    0%, 100% { 
+      transform: translate(2px, 2px);
+      filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.5)) 
+              drop-shadow(2px 2px 0px #FF2A6D);
+    }
+    25% { 
+      transform: translate(-2px, 2px);
+      filter: drop-shadow(0 0 15px rgba(57, 255, 20, 0.7)) 
+              drop-shadow(-2px 2px 0px #FF2A6D);
+    }
+    50% { 
+      transform: translate(2px, -2px);
+      filter: drop-shadow(0 0 8px rgba(57, 255, 20, 0.3)) 
+              drop-shadow(2px -2px 0px #FF2A6D);
+    }
+    75% { 
+      transform: translate(-2px, -2px);
+      filter: drop-shadow(0 0 12px rgba(57, 255, 20, 0.6)) 
+              drop-shadow(-2px -2px 0px #FF2A6D);
+    }
+  }
+
+  @keyframes ghost-glow {
+    0% { 
+      filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.5)) 
+              drop-shadow(2px 2px 0px #FF2A6D);
+    }
+    100% { 
+      filter: drop-shadow(0 0 20px rgba(57, 255, 20, 0.8)) 
+              drop-shadow(2px 2px 0px #FF2A6D) 
+              drop-shadow(0 0 30px rgba(57, 255, 20, 0.3));
+    }
+  }
+
+  @keyframes ghost-blink {
+    0%, 85%, 100% { opacity: 1; }
+    90%, 95% { opacity: 0; }
+  }
+
+  /* Original Animations */
   @keyframes crt-flicker {
     0%, 100% { opacity: 0.97; }
     50% { opacity: 1; }

@@ -1,195 +1,166 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { createClient } from '@/lib/services/supabase/client'
 
 interface UserProgress {
   xp: number
   level: number
-  reputation: string
   completedChallenges: string[]
-  currentWeek: number
+  currentStreak: number
+  lastActiveDate: string
   achievements: string[]
+  totalTimeSpent: number // in minutes
+}
+
+interface Challenge {
+  id: string
+  levelId: number
+  code: string
+  xpEarned: number
+  completedAt: string
 }
 
 interface AcademyState {
   userProgress: UserProgress
-  loading: boolean
+  challenges: Challenge[]
+  
+  // Actions
   addXP: (amount: number) => Promise<void>
-  completeChallenge: (challengeId: string, weekId: number, code?: string, xpEarned?: number) => Promise<void>
-  unlockAchievement: (achievementId: string) => void
+  completeChallenge: (challengeId: string, levelId: number, code: string, xpEarned: number) => Promise<void>
+  updateStreak: () => void
+  addAchievement: (achievementId: string) => void
   resetProgress: () => void
-  syncWithDatabase: (userId: string) => Promise<void>
 }
 
-const calculateLevel = (xp: number) => {
-  if (xp >= 5000) return 12
-  if (xp >= 3000) return 10
-  if (xp >= 1500) return 7
-  if (xp >= 500) return 4
-  return Math.floor(xp / 100) + 1
-}
-
-const calculateReputation = (xp: number) => {
-  if (xp >= 5000) return 'Ghost'
-  if (xp >= 3000) return 'Revolutionary'
-  if (xp >= 1500) return 'Investigator'
-  if (xp >= 500) return 'Data Analyst'
-  if (xp >= 50) return 'Script Kiddie'
-  return 'Curious Citizen'
+const initialUserProgress: UserProgress = {
+  xp: 0,
+  level: 1,
+  completedChallenges: [],
+  currentStreak: 0,
+  lastActiveDate: new Date().toISOString().split('T')[0],
+  achievements: [],
+  totalTimeSpent: 0
 }
 
 export const useAcademyStore = create<AcademyState>()(
   persist(
     (set, get) => ({
-      userProgress: {
-        xp: 0,
-        level: 1,
-        reputation: 'Curious Citizen',
-        completedChallenges: [],
-        currentWeek: 1,
-        achievements: []
-      },
-      loading: false,
+      userProgress: initialUserProgress,
+      challenges: [],
       
-      addXP: async (amount) => {
-        const state = get()
-        const newXP = state.userProgress.xp + amount
-        const newLevel = calculateLevel(newXP)
-        const newReputation = calculateReputation(newXP)
-        
-        set({
-          userProgress: {
-            ...state.userProgress,
-            xp: newXP,
-            level: newLevel,
-            reputation: newReputation
+      addXP: async (amount: number) => {
+        set((state) => {
+          const newXP = state.userProgress.xp + amount
+          const newLevel = Math.floor(newXP / 1000) + 1
+          
+          return {
+            userProgress: {
+              ...state.userProgress,
+              xp: newXP,
+              level: newLevel,
+              lastActiveDate: new Date().toISOString().split('T')[0]
+            }
           }
         })
-        
-        // Update database
-        try {
-          const supabase = createClient()
-          const { data: { user } } = await supabase.auth.getUser()
-          
-          if (user) {
-            await supabase
-              .from('profiles')
-              .update({
-                xp: newXP,
-                level: newLevel,
-                reputation: newReputation
-              })
-              .eq('id', user.id)
-          }
-        } catch (error) {
-          console.error('Failed to update XP in database:', error)
-        }
       },
       
-      completeChallenge: async (challengeId, weekId, code, xpEarned = 0) => {
-        const state = get()
-        const fullChallengeId = `week${weekId}-${challengeId}`
-        
-        if (state.userProgress.completedChallenges.includes(fullChallengeId)) {
-          return // Already completed
-        }
-        
-        set({
-          userProgress: {
-            ...state.userProgress,
-            completedChallenges: [...state.userProgress.completedChallenges, fullChallengeId]
+      completeChallenge: async (challengeId: string, levelId: number, code: string, xpEarned: number) => {
+        set((state) => {
+          const isAlreadyCompleted = state.userProgress.completedChallenges.includes(challengeId)
+          
+          if (isAlreadyCompleted) {
+            return state // Don't update if already completed
+          }
+          
+          const newChallenge: Challenge = {
+            id: challengeId,
+            levelId,
+            code,
+            xpEarned,
+            completedAt: new Date().toISOString()
+          }
+          
+          const newXP = state.userProgress.xp + xpEarned
+          const newLevel = Math.floor(newXP / 1000) + 1
+          
+          // Check for achievements
+          const newAchievements = [...state.userProgress.achievements]
+          const completedCount = state.userProgress.completedChallenges.length + 1
+          
+          if (completedCount === 1 && !newAchievements.includes('first_challenge')) {
+            newAchievements.push('first_challenge')
+          }
+          if (completedCount === 5 && !newAchievements.includes('mission_veteran')) {
+            newAchievements.push('mission_veteran')
+          }
+          if (newXP >= 100 && !newAchievements.includes('xp_hunter')) {
+            newAchievements.push('xp_hunter')
+          }
+          
+          return {
+            userProgress: {
+              ...state.userProgress,
+              xp: newXP,
+              level: newLevel,
+              completedChallenges: [...state.userProgress.completedChallenges, challengeId],
+              achievements: newAchievements,
+              lastActiveDate: new Date().toISOString().split('T')[0]
+            },
+            challenges: [...state.challenges, newChallenge]
           }
         })
-        
-        // Save to database
-        try {
-          const supabase = createClient()
-          const { data: { user } } = await supabase.auth.getUser()
-          
-          if (user) {
-            await supabase
-              .from('progress')
-              .upsert({
-                user_id: user.id,
-                week_id: weekId,
-                challenge_id: challengeId,
-                completed: true,
-                code: code || null,
-                xp_earned: xpEarned,
-                completed_at: new Date().toISOString()
-              })
-          }
-        } catch (error) {
-          console.error('Failed to save challenge progress:', error)
-        }
-        
-        // Add XP if specified
-        if (xpEarned > 0) {
-          await get().addXP(xpEarned)
-        }
       },
       
-      unlockAchievement: (achievementId) => set((state) => ({
-        userProgress: {
-          ...state.userProgress,
-          achievements: [...state.userProgress.achievements, achievementId]
-        }
-      })),
-      
-      syncWithDatabase: async (userId) => {
-        set({ loading: true })
-        
-        try {
-          const supabase = createClient()
+      updateStreak: () => {
+        set((state) => {
+          const today = new Date().toISOString().split('T')[0]
+          const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0]
           
-          // Fetch user profile
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', userId)
-            .single()
+          let newStreak = state.userProgress.currentStreak
           
-          // Fetch user progress
-          const { data: progress } = await supabase
-            .from('progress')
-            .select('*')
-            .eq('user_id', userId)
-            .eq('completed', true)
-          
-          if (profile) {
-            const completedChallenges = progress?.map(p => `week${p.week_id}-${p.challenge_id}`) || []
-            
-            set({
-              userProgress: {
-                xp: profile.xp,
-                level: profile.level,
-                reputation: profile.reputation,
-                completedChallenges,
-                currentWeek: Math.floor(completedChallenges.length / 5) + 1,
-                achievements: profile.achievements || []
-              }
-            })
+          if (state.userProgress.lastActiveDate === yesterday) {
+            newStreak += 1
+          } else if (state.userProgress.lastActiveDate !== today) {
+            newStreak = 1
           }
-        } catch (error) {
-          console.error('Failed to sync with database:', error)
-        } finally {
-          set({ loading: false })
-        }
+          
+          return {
+            userProgress: {
+              ...state.userProgress,
+              currentStreak: newStreak,
+              lastActiveDate: today
+            }
+          }
+        })
       },
       
-      resetProgress: () => set({
-        userProgress: {
-          xp: 0,
-          level: 1,
-          reputation: 'Curious Citizen',
-          completedChallenges: [],
-          currentWeek: 1,
-          achievements: []
-        }
-      })
+      addAchievement: (achievementId: string) => {
+        set((state) => {
+          if (state.userProgress.achievements.includes(achievementId)) {
+            return state
+          }
+          
+          return {
+            userProgress: {
+              ...state.userProgress,
+              achievements: [...state.userProgress.achievements, achievementId]
+            }
+          }
+        })
+      },
+      
+      resetProgress: () => {
+        set({
+          userProgress: initialUserProgress,
+          challenges: []
+        })
+      }
     }),
     {
-      name: 'datavism-academy-progress'
+      name: 'datavism-academy-storage',
+      partialize: (state) => ({
+        userProgress: state.userProgress,
+        challenges: state.challenges
+      })
     }
   )
 )

@@ -1,20 +1,29 @@
 'use client'
 
+import { motion } from 'framer-motion'
+
 interface HandlerMessageProps {
   message: string
   handler: string
+  avatar: string
 }
 
-export function HandlerMessage({ message, handler }: HandlerMessageProps) {
+export function HandlerMessage({ message, handler, avatar }: HandlerMessageProps) {
   return (
-    <div className="border border-cyan-400 p-4 bg-cyan-950/10 my-4">
-      <div className="flex items-center gap-3 mb-2">
-        <div className="w-10 h-10 bg-cyan-400 rounded-full flex items-center justify-center text-black font-bold">
-          MC
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="border border-purple-400/30 p-4 mb-4 bg-purple-950/10"
+    >
+      <div className="flex items-start gap-3">
+        <div className="text-2xl">{avatar}</div>
+        <div className="flex-1">
+          <div className="text-purple-400 font-bold mb-2">{handler}</div>
+          <div className="text-purple-300 text-sm italic">
+            "{message}"
+          </div>
         </div>
-        <span className="text-cyan-400 font-bold">{handler}</span>
       </div>
-      <p className="text-cyan-300 italic text-sm">{message}</p>
-    </div>
+    </motion.div>
   )
 }

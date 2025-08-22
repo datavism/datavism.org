@@ -51,6 +51,38 @@
     animation: ghost-blink 4s infinite;
   }
 
+  /* Enhanced CRT Effects for Level 1 */
+  .crt-lines {
+    background: linear-gradient(
+      rgba(18, 16, 16, 0) 50%,
+      rgba(0, 255, 0, 0.03) 50%
+    );
+    background-size: 100% 2px;
+    animation: flicker 0.15s infinite;
+  }
+
+  .scanlines {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 255, 0, 0.02),
+      transparent
+    );
+    animation: scanlines 2s linear infinite;
+  }
+
+  /* Boss Battle Effects */
+  .boss-battle-glow {
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+    animation: battlePulse 1s ease-in-out infinite;
+  }
+
+  .boss-battle-mode {
+    animation: boss-warning 0.5s infinite;
+    border-color: var(--red) !important;
+    box-shadow: 0 0 30px var(--red);
+  }
+
   /* CRT Effect - Only for large elements */
   .crt-overlay-selective {
     position: fixed;
@@ -65,7 +97,6 @@
     pointer-events: none;
     z-index: 1000;
     animation: crt-flicker 0.15s infinite;
-    /* Only apply to elements with text-2xl and larger */
     mix-blend-mode: multiply;
   }
 
@@ -142,16 +173,87 @@
   .shadow-glow {
     text-shadow: 0 0 10px currentColor;
   }
-}
 
-  /* Boss Battle Mode */
-  .boss-battle-mode {
-    animation: boss-warning 0.5s infinite;
-    border-color: var(--red) !important;
-    box-shadow: 0 0 30px var(--red);
+  /* Notification System */
+  .notification-enter {
+    animation: notificationSlideIn 0.3s ease-out;
   }
 
+  .notification-exit {
+    animation: notificationSlideOut 0.3s ease-in;
+  }
+
+  /* Phase-based theming */
+  .phase-intro {
+    --primary-color: #00ff00;
+    --secondary-color: #ffff00;
+    --accent-color: #00ffff;
+  }
+
+  .phase-awakening {
+    --primary-color: #00ff00;
+    --secondary-color: #00ffff;
+    --accent-color: #ffff00;
+  }
+
+  .phase-missions {
+    --primary-color: #00ffff;
+    --secondary-color: #00ff00;
+    --accent-color: #ffff00;
+  }
+
+  .phase-boss {
+    --primary-color: #ff0000;
+    --secondary-color: #ffff00;
+    --accent-color: #ff00ff;
+  }
+
+  .phase-victory {
+    --primary-color: #ffff00;
+    --secondary-color: #00ff00;
+    --accent-color: #00ffff;
+  }
+}
+
 @layer utilities {
+  /* Level 1 Specific Animations */
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+
+  @keyframes scanlines {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100vw); }
+  }
+
+  @keyframes battlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.01); }
+  }
+
+  @keyframes notificationSlideIn {
+    from { 
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to { 
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes notificationSlideOut {
+    from { 
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to { 
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
   /* Ghost Animation Keyframes */
   @keyframes ghost-glitch {
     0%, 100% { 
@@ -233,5 +335,54 @@
   @keyframes boss-warning {
     0%, 100% { background: rgba(255, 0, 64, 0.1); }
     50% { background: rgba(255, 0, 64, 0.2); }
+  }
+
+  /* Utility classes for Level 1 */
+  .resistance-glow {
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  }
+
+  .data-activist-badge {
+    background: linear-gradient(45deg, #00ff00, #ffff00);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbow-shift 3s infinite;
+  }
+
+  @keyframes rainbow-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Maya Chen speaking animation */
+  .maya-speaking {
+    animation: speaking-pulse 0.8s ease-in-out infinite;
+  }
+
+  @keyframes speaking-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Algorithm defeated animation */
+  .algorithm-defeated {
+    animation: destruction 2s ease-out;
+  }
+
+  @keyframes destruction {
+    0% { 
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    50% { 
+      transform: scale(1.2) rotate(180deg);
+      opacity: 0.5;
+      filter: hue-rotate(180deg);
+    }
+    100% { 
+      transform: scale(0) rotate(360deg);
+      opacity: 0;
+    }
   }
 }

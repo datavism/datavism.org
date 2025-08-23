@@ -170,7 +170,7 @@ def scrape_flight_price(route):
     # Simulated HTML response
     fake_html = f'''
     <div class="price-container">
-        <span class="current-price">${{np.random.randint(200, 800)}}</span>
+        <span class="current-price">\${np.random.randint(200, 800)}</span>
         <span class="route">{route}</span>
         <span class="seats">23 available</span>
     </div>
@@ -197,7 +197,7 @@ def scrape_flight_price(route):
     # Simulated HTML response
     fake_html = f'''
     <div class="price-container">
-        <span class="current-price">${np.random.randint(200, 800)}</span>
+        <span class="current-price">\${np.random.randint(200, 800)}</span>
         <span class="route">{route}</span>
         <span class="seats">23 available</span>
     </div>
@@ -214,7 +214,7 @@ def scrape_flight_price(route):
     if price_element:
         price = price_element.text.replace('$', '')
         print(f"📊 Route: {route}")
-        print(f"💰 Current Price: ${price}")
+        print(f"💰 Current Price: \${price}")
         print(f"✈️ Availability: {seats_element.text if seats_element else 'Unknown'}")
         return int(price)
     
@@ -317,7 +317,7 @@ class PriceTrackerBot:
         
         self.price_history.append(price_data)
         
-        print(f"📊 {platform}: {route} = ${current_price}")
+        print(f"📊 {platform}: {route} = \${current_price}")
         if manipulation_factor > 2.0:
             print(f"🚨 ALERT: {manipulation_factor:.1f}x price spike detected!")
         
@@ -566,9 +566,9 @@ max_flight = df.loc[df['flight_price'].idxmax()]
 min_flight = df.loc[df['flight_price'].idxmin()]
 
 print(f"\\n🚨 PRICE DISCRIMINATION DETECTED:")
-print(f"   Highest: {max_flight['city']} - ${max_flight['flight_price']}")
-print(f"   Lowest: {min_flight['city']} - ${min_flight['flight_price']}")
-print(f"   Difference: ${max_flight['flight_price'] - min_flight['flight_price']} ({((max_flight['flight_price'] / min_flight['flight_price']) - 1) * 100:.1f}% markup)")
+print(f"   Highest: {max_flight['city']} - \${max_flight['flight_price']}")
+print(f"   Lowest: {min_flight['city']} - \${min_flight['flight_price']}")
+print(f"   Difference: \${max_flight['flight_price'] - min_flight['flight_price']} ({((max_flight['flight_price'] / min_flight['flight_price']) - 1) * 100:.1f}% markup)")
 
 if income_flight_corr > 0.6:
     print("\\n⚠️ STRONG CORRELATION: Geographic discrimination confirmed!")
@@ -707,7 +707,7 @@ for i, scenario in enumerate(test_scenarios, 1):
     print(f"   Time: {scenario['hour']}:00, Battery: {scenario['battery']}%")
     print(f"   Usage: {scenario['frequency']}x today, Speed: {scenario['walking_speed']} mph")
     print(f"   Weather: {scenario['weather']}")
-    print(f"   💰 Price: ${base_price} → ${final_price:.2f} ({multiplier}x surge)")
+    print(f"   💰 Price: \${base_price} → \${final_price:.2f} ({multiplier}x surge)")
     
     if multiplier > 2.0:
         print(f"   🚨 EXTREME EXPLOITATION DETECTED!")
@@ -964,9 +964,9 @@ affected_consumers = 50000000  # Estimated user base
 total_harm = average_overcharge * affected_consumers * 10  # 10 transactions per year
 
 print(f"\\n💰 CONSUMER HARM CALCULATION:")
-print(f"   Average overcharge per transaction: ${average_overcharge:.2f}")
+print(f"   Average overcharge per transaction: \${average_overcharge:.2f}")
 print(f"   Estimated affected consumers: {affected_consumers:,}")
-print(f"   Total annual consumer harm: ${total_harm:,.0f}")
+print(f"   Total annual consumer harm: \${total_harm:,.0f}")
 
 # 5. Generate evidence package hash
 evidence_summary = {
@@ -992,7 +992,7 @@ print(f"📋 EVIDENCE PACKAGE COMPILED:")
 print(f"   ✅ {total_manipulation} manipulation events documented")
 print(f"   ✅ {high_severity_patterns} dark pattern violations")
 print(f"   ✅ {geo_corr:.1%} geographic discrimination correlation")
-print(f"   ✅ ${total_harm:,.0f} in consumer harm calculated")
+print(f"   ✅ \${total_harm:,.0f} in consumer harm calculated")
 print(f"\\n🏛️ READY FOR LEGAL ACTION:")
 print(f"   📄 Evidence package hash: {evidence_hash}")
 print(f"   ⚖️ Antitrust violation documentation complete")
@@ -1037,64 +1037,94 @@ ALEX: But this is just the beginning. Level 3 awaits: Environmental Data Warfare
 
 ALEX: Welcome to the next level of corporate accountability. Welcome to the Data Justice League.`
     },
+
     starterCode: `# ⚖️ PRICE JUSTICE ACHIEVED
-print("🎉 CONGRATULATIONS! 🎉")
-print("You have completed Level 2: Corporate Price Manipulation")
-print("\\nAlex 'Zero Cool' Rodriguez: 'Justice served, data activist!'")
-
-def create_price_justice_certificate():
-    # Your final achievement documentation
-    pass
-
-create_price_justice_certificate()
-
-`,
-    solution: `print("🎉 CONGRATULATIONS! 🎉")
-print("You have completed Level 2: Corporate Price Manipulation")
-print("\\nAlex 'Zero Cool' Rodriguez: 'Justice served, data activist!'")
-
-def create_price_justice_certificate():
-    print("\\n" + "="*70)
-    print("⚖️ PRICE JUSTICE ACHIEVEMENT CERTIFICATE ⚖️")
-    print("="*70)
-    print("🎯 Skills Mastered:")
-    print("  ✅ Web scraping and automation")
-    print("  ✅ API integration and monitoring")
-    print("  ✅ Dark pattern detection")
-    print("  ✅ Geographic discrimination analysis")
-    print("  ✅ Network analysis and cartel detection")
-    print("  ✅ Evidence compilation and documentation")
-    print("\\n🏆 Achievements Unlocked:")
-    print("  👑 Price Manipulation Cartel Defeated")
-    print("  💰 Consumer Harm Documented")
-    print("  🕸️ Corporate Network Exposed")
-    print("  📊 Legal-Grade Evidence Generated")
-    print("  ⚖️ Corporate Accountability Enforced")
-    print("\\n📈 Impact Generated:")
-    print("  💵 Millions in consumer refunds secured")
-    print("  🏛️ New regulations implemented")
-    print("  📰 International media coverage")
-    print("  🔍 Ongoing antitrust investigations")
-    print("\\n🎯 Next Mission:")
-    print("  Level 3: Environmental Data Warfare")
-    print("  Handler: Dr. Greta Silva (Climate Data Scientist)")
-    print("  Focus: Greenwashing, pollution cover-ups, climate lies")
-    print("\\n🔥 Ready to save the planet with data!")
-    print("="*70)
-
-create_price_justice_certificate()
-
-print("\\n🌟 THE DATA JUSTICE LEAGUE GROWS!")
-print("Share your victory. Protect consumers. Change the market.")
-print("\\n💎 Your evidence hash is your badge of honor.")
-print("You've proven that data activism can deliver real justice!")`,
-    test: (code) => code.includes('price_justice_certificate') && code.includes('achievements'),
-    xp: 1000,
-    hint: 'Create a comprehensive certificate showcasing all your price justice achievements',
-    difficulty: 'easy'
-  }
-]
-
+    print("🎉 CONGRATULATIONS! 🎉")
+    print("You have completed Level 2: Corporate Price Manipulation")
+    print("\\nAlex 'Zero Cool' Rodriguez: 'Justice served, data activist!'")
+    
+    def create_price_justice_certificate():
+        print("\\n" + "="*70)
+        print("⚖️ PRICE JUSTICE ACHIEVEMENT CERTIFICATE ⚖️")
+        print("="*70)
+        print("🎯 Skills Mastered:")
+        print("  ✅ Web scraping and automation")
+        print("  ✅ API integration and monitoring")
+        print("  ✅ Dark pattern detection")
+        print("  ✅ Geographic discrimination analysis")
+        print("  ✅ Network analysis and cartel detection")
+        print("  ✅ Evidence compilation and documentation")
+        print("\\n🏆 Achievements Unlocked:")
+        print("  Price Manipulation Cartel Defeated")
+        print("  💰 Consumer Harm Documented")
+        print(" ️ Corporate Network Exposed")
+        print("  📊 Legal-Grade Evidence Generated")
+        print("  ⚖️ Corporate Accountability Enforced")
+        print("\\n📈 Impact Generated:")
+        print("  💵 Millions in consumer refunds secured")
+        print("  🏛️ New regulations implemented")
+        print("  📰 International media coverage")
+        print("  🔍 Ongoing antitrust investigations")
+        print("\\n🎯 Next Mission:")
+        print("  Level 3: Environmental Data Warfare")
+        print("  Handler: Dr. Greta Silva (Climate Data Scientist)")
+        print("  Focus: Greenwashing, pollution cover-ups, climate lies")
+        print("\\n🔥 Ready to save the planet with data!")
+        print("="*70)
+    
+    create_price_justice_certificate()
+    
+    print("\\n🌟 THE DATA JUSTICE LEAGUE GROWS!")
+    print("Share your victory. Protect consumers. Change the market.")
+    print("\\n Your evidence hash is your badge of honor.")
+    print("You've proven that data activism can deliver real justice!")`,
+    
+        solution: `print("🎉 CONGRATULATIONS! 🎉")
+    print("You have completed Level 2: Corporate Price Manipulation")
+    print("\\nAlex 'Zero Cool' Rodriguez: 'Justice served, data activist!'")
+    
+    def create_price_justice_certificate():
+        print("\\n" + "="*70)
+        print("⚖️ PRICE JUSTICE ACHIEVEMENT CERTIFICATE ⚖️")
+        print("="*70)
+        print("🎯 Skills Mastered:")
+        print("  ✅ Web scraping and automation")
+        print("  ✅ API integration and monitoring")
+        print("  ✅ Dark pattern detection")
+        print("  ✅ Geographic discrimination analysis")
+        print("  ✅ Network analysis and cartel detection")
+        print("  ✅ Evidence compilation and documentation")
+        print("\\n🏆 Achievements Unlocked:")
+        print("  Price Manipulation Cartel Defeated")
+        print("  💰 Consumer Harm Documented")
+        print(" ️ Corporate Network Exposed")
+        print("  📊 Legal-Grade Evidence Generated")
+        print("  ⚖️ Corporate Accountability Enforced")
+        print("\\n📈 Impact Generated:")
+        print("  💵 Millions in consumer refunds secured")
+        print("  🏛️ New regulations implemented")
+        print("  📰 International media coverage")
+        print("  🔍 Ongoing antitrust investigations")
+        print("\\n🎯 Next Mission:")
+        print("  Level 3: Environmental Data Warfare")
+        print("  Handler: Dr. Greta Silva (Climate Data Scientist)")
+        print("  Focus: Greenwashing, pollution cover-ups, climate lies")
+        print("\\n🔥 Ready to save the planet with data!")
+        print("="*70)
+    
+    create_price_justice_certificate()
+    
+    print("\\n🌟 THE DATA JUSTICE LEAGUE GROWS!")
+    print("Share your victory. Protect consumers. Change the market.")
+    print("\\n Your evidence hash is your badge of honor.")
+    print("You've proven that data activism can deliver real justice!")`,
+    
+        test: (code) => code.includes('price_justice_certificate') && code.includes('achievements'),
+        xp: 1000,
+        hint: 'Create a comprehensive certificate showcasing all your price justice achievements',
+        difficulty: 'easy'
+      }
+    ]
 export function Level2PriceManipulationExperience() {
   const [currentChallenge, setCurrentChallenge] = useState(0)
   const [code, setCode] = useState(priceManipulationChallenges[0].starterCode)
@@ -1125,53 +1155,97 @@ export function Level2PriceManipulationExperience() {
     }, 5000)
   }
 
-  const handleRunCode = async () => {
-    if (!ready) {
-      setOutput('⚡ Initializing surveillance environment...')
-      return
-    }
-
-    setIsRunning(true)
-    const challenge = currentChallengeData
-    
-    try {
-      const result = await runCode(code)
-      
-      if (challenge.test(code)) {
-        const successMessage = challenge.isBoss 
-          ? `🎉 CARTEL DEFEATED! PRICE MANIPULATION EXPOSED!\\n${result}\\n\\n🏆 +${challenge.xp} XP EARNED\\n⚖️ Corporate Justice Delivered!`
-          : `✅ INVESTIGATION SUCCESS!\\n${result}\\n\\n🎯 +${challenge.xp} XP EARNED\\n💰 Price manipulation exposed!`
-        
-        setOutput(successMessage)
-        
-        await addXP(challenge.xp)
-        await completeChallenge(challenge.id, 2, code, challenge.xp)
-        
-        if (challenge.isBoss) {
-          addNotification('👑 BOSS DEFEATED - Price Cartel destroyed!')
-        } else if (challenge.isCheckpoint) {
-          addNotification(`📍 Checkpoint: ${challenge.title} mastered!`)
-        } else {
-          addNotification(`✅ ${challenge.title} complete!`)
-        }
-        
-        setTimeout(() => {
-          if (currentChallenge < priceManipulationChallenges.length - 1) {
-            setCurrentChallenge(prev => prev + 1)
-          } else {
-            handleLevelComplete()
-          }
-        }, challenge.isBoss ? 5000 : 3000)
-        
-      } else {
-        setOutput(`❌ Investigation incomplete\\n${result}\\n\\n💡 Alex's hint: ${challenge.hint}`)
-      }
-    } catch (error) {
-      setOutput(`❌ System error: ${error}\\n\\n🔧 Debug your surveillance code`)
-    } finally {
-      setIsRunning(false)
-    }
+// ... existing code ...
+const handleRunCode = async () => {
+  console.log('🔍 ANALYZE button clicked!')
+  console.log('ready:', ready)
+  console.log('code:', code)
+  console.log('currentChallengeData:', currentChallengeData)
+  
+  // Simple test first
+  setOutput('�� ANALYZE button was clicked! Testing...')
+  
+  // Debug: Temporarily bypass ready check
+  if (!ready) {
+    console.log('⚠️ Pyodide not ready, but continuing for debug...')
+    setOutput('⚡ Initializing surveillance environment... (Debug mode)')
+    // return // Comment this out temporarily
   }
+
+  setIsRunning(true)
+  const challenge = currentChallengeData
+  
+  try {
+    console.log('🚀 Attempting to run code...')
+    
+    // Debug: If runCode is not available, simulate it
+    let result
+    if (typeof runCode === 'function') {
+      result = await runCode(code)
+    } else {
+      result = 'Debug: Code execution simulated\n' + code
+      console.log('⚠️ runCode function not available, simulating result')
+    }
+    
+    console.log('✅ Result:', result)
+    
+    if (challenge.test(code)) {
+      const successMessage = challenge.isBoss 
+        ? `🎉 CARTEL DEFEATED! PRICE MANIPULATION EXPOSED!\\n${result}\\n\\n🏆 +${challenge.xp} XP EARNED\\n⚖️ Corporate Justice Delivered!`
+        : `✅ INVESTIGATION SUCCESS!\\n${result}\\n\\n🎯 +${challenge.xp} XP EARNED\\n�� Price manipulation exposed!`
+      
+      setOutput(successMessage)
+      console.log('✅ Challenge completed successfully!')
+      
+      // Debug: Check if these functions exist
+      if (typeof addXP === 'function') {
+        await addXP(challenge.xp)
+      } else {
+        console.log('⚠️ addXP function not available')
+      }
+      
+      if (typeof completeChallenge === 'function') {
+        await completeChallenge(challenge.id, 2, code, challenge.xp)
+      } else {
+        console.log('⚠️ completeChallenge function not available')
+      }
+      
+      if (challenge.isBoss) {
+        addNotification('👑 BOSS DEFEATED - Price Cartel destroyed!')
+      } else if (challenge.isCheckpoint) {
+        addNotification(`📍 Checkpoint: ${challenge.title} mastered!`)
+      } else {
+        addNotification(`✅ ${challenge.title} complete!`)
+      }
+      
+      setTimeout(() => {
+        if (currentChallenge < priceManipulationChallenges.length - 1) {
+          setCurrentChallenge(prev => prev + 1)
+        } else {
+          handleLevelComplete()
+        }
+      }, challenge.isBoss ? 5000 : 3000)
+      
+    } else {
+      setOutput(`❌ Investigation incomplete\\n${result}\\n\\n💡 Alex's hint: ${challenge.hint}`)
+      console.log('❌ Challenge test failed')
+    }
+  } catch (error) {
+    console.error('❌ Error in handleRunCode:', error)
+    setOutput(`❌ System error: ${error}\\n\\n🔧 Debug your surveillance code`)
+  } finally {
+    setIsRunning(false)
+  }
+}
+
+// Add a simple test function
+const testButton = () => {
+  console.log('🧪 Test button clicked!')
+  setOutput('�� Test button works!')
+}
+// ... existing code ...
+
+
 
   const handleLevelComplete = () => {
     setOutput(`
@@ -1286,6 +1360,7 @@ Handler: Dr. Greta Silva (Climate Data Scientist)
             theme={phase === 'showdown' ? 'boss-battle' : 'surveillance'}
           />
 
+
           <ControlPanel
             onRun={handleRunCode}
             onHint={() => alert(currentChallengeData.hint)}
@@ -1294,7 +1369,9 @@ Handler: Dr. Greta Silva (Climate Data Scientist)
             isRunning={isRunning}
             isBoss={currentChallengeData.isBoss}
             phase={phase}
+            onTest={testButton} // Diese Zeile hinzufügen
           />
+
 
           <TerminalOutput 
             output={output} 
@@ -1466,7 +1543,8 @@ function ChallengeInterface({ challenge, challengeNumber, totalChallenges, onSho
   )
 }
 
-function ControlPanel({ onRun, onHint, onSolution, onShowVideo, isRunning, isBoss, phase }: {
+// ... existing code ...
+function ControlPanel({ onRun, onHint, onSolution, onShowVideo, isRunning, isBoss, phase, onTest }: {
   onRun: () => void
   onHint: () => void
   onSolution: () => void
@@ -1474,6 +1552,7 @@ function ControlPanel({ onRun, onHint, onSolution, onShowVideo, isRunning, isBos
   isRunning: boolean
   isBoss?: boolean
   phase: Phase
+  onTest?: () => void // Add this
 }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
@@ -1518,9 +1597,20 @@ function ControlPanel({ onRun, onHint, onSolution, onShowVideo, isRunning, isBos
       >
         🔓 LEAK
       </button>
+
+      {/* Add test button */}
+      {onTest && (
+        <button
+          onClick={onTest}
+          className="px-4 py-3 border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black transition-all font-bold"
+        >
+          🧪 TEST
+        </button>
+      )}
     </div>
   )
 }
+// ... existing code ...
 
 function TerminalOutput({ output, ready, loading, phase }: {
   output: string
@@ -1662,5 +1752,6 @@ function getAlexMessage(challengeIndex: number, phase: Phase): string {
   if (phase === 'showdown') return "Cartel's fighting back! Use every investigation technique!"
   if (phase === 'justice') return "Justice served! Corporate accountability achieved!"
   
-  return messages[challengeIndex] || "Keep investigating. Corporate lies have no defense against data."
+  return messages[challengeIndex % messages.length] || "Keep investigating. Corporate lies have no defense against data."
 }
+

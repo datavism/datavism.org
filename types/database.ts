@@ -18,6 +18,44 @@ export interface Database {
           created_at: string
           updated_at: string
         }
+      user_progress: {
+        Row: {
+          id: string
+          user_id: string
+          level_id: string
+          completed_challenges: string[]
+          total_xp: number
+          current_challenge: number
+          completed_at: string | null
+          time_spent: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          level_id: string
+          completed_challenges?: string[]
+          total_xp?: number
+          current_challenge?: number
+          completed_at?: string | null
+          time_spent?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          level_id?: string
+          completed_challenges?: string[]
+          total_xp?: number
+          current_challenge?: number
+          completed_at?: string | null
+          time_spent?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
         Insert: {
           id: string
           username: string

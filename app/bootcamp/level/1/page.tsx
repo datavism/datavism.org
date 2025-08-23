@@ -1,4 +1,4 @@
-import { Level1AwakeningExperience } from '@/components/features/bootcamp/Level1AwakeningExperience'
+import { Level1AwakeningExperience } from '@/components/features/bootcamp/Level1AwakeningExperience-Simple'
 
 export default function Level1Page() {
   return <Level1AwakeningExperience />

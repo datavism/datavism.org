@@ -1,0 +1,156 @@
+// Pyodide Service - Real Python in the Browser
+// This manages the Python runtime for executing actual Python code
+
+declare global {
+  interface Window {
+    loadPyodide: any;
+    pyodide: any;
+  }
+}
+
+class PyodideService {
+  private pyodide: any = null;
+  private loading: boolean = false;
+  private loadPromise: Promise<void> | null = null;
+
+  async initialize(): Promise<void> {
+    if (this.pyodide) return;
+    if (this.loading) return this.loadPromise!;
+
+    this.loading = true;
+    this.loadPromise = this._loadPyodide();
+    await this.loadPromise;
+    this.loading = false;
+  }
+
+  private async _loadPyodide(): Promise<void> {
+    try {
+      // Load Pyodide script
+      if (!window.loadPyodide) {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js';
+        script.async = true;
+        
+        await new Promise((resolve, reject) => {
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
+
+      // Initialize Pyodide
+      this.pyodide = await window.loadPyodide({
+        indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/',
+        stdout: (text: string) => {
+          console.log('Python stdout:', text);
+        },
+        stderr: (text: string) => {
+          console.error('Python stderr:', text);
+        }
+      });
+
+      // Load common packages
+      await this.pyodide.loadPackage(['numpy', 'pandas', 'matplotlib']);
+
+      // Set up initial environment
+      this.pyodide.runPython(`
+import sys
+import io
+import json
+from collections import defaultdict
+
+# Redirect stdout to capture print statements
+old_stdout = sys.stdout
+sys.stdout = io.StringIO()
+
+# Initialize data_points for continuity across challenges
+data_points = [
+    {'day': 1, 'emotional_state': 'vulnerable', 'content_type': 'ad', 'manipulation_score': 0.8},
+    {'day': 2, 'emotional_state': 'happy', 'content_type': 'friend_post', 'manipulation_score': 0.2},
+    {'day': 3, 'emotional_state': 'sad', 'content_type': 'sponsored', 'manipulation_score': 0.9},
+    {'day': 4, 'emotional_state': 'angry', 'content_type': 'ad', 'manipulation_score': 0.7},
+    {'day': 5, 'emotional_state': 'neutral', 'content_type': 'friend_post', 'manipulation_score': 0.3},
+    {'day': 6, 'emotional_state': 'vulnerable', 'content_type': 'ad', 'manipulation_score': 0.85},
+    {'day': 7, 'emotional_state': 'happy', 'content_type': 'friend_post', 'manipulation_score': 0.1},
+    {'day': 8, 'emotional_state': 'sad', 'content_type': 'sponsored', 'manipulation_score': 0.95},
+    {'day': 9, 'emotional_state': 'vulnerable', 'content_type': 'ad', 'manipulation_score': 0.75},
+    {'day': 10, 'emotional_state': 'neutral', 'content_type': 'friend_post', 'manipulation_score': 0.4}
+]
+
+print("🐍 Python environment initialized")
+print("🔓 Resistance toolkit loaded")
+      `);
+
+      console.log('✅ Pyodide initialized successfully');
+    } catch (error) {
+      console.error('❌ Failed to initialize Pyodide:', error);
+      throw error;
+    }
+  }
+
+  async runCode(code: string): Promise<{ output: string; error: string | null }> {
+    if (!this.pyodide) {
+      await this.initialize();
+    }
+
+    try {
+      // Clear previous output
+      this.pyodide.runPython('sys.stdout = io.StringIO()');
+      
+      // Run the user's code
+      this.pyodide.runPython(code);
+      
+      // Capture output
+      const output = this.pyodide.runPython('sys.stdout.getvalue()');
+      
+      return {
+        output: output || '',
+        error: null
+      };
+    } catch (error: any) {
+      return {
+        output: '',
+        error: error.message || 'Unknown Python error'
+      };
+    }
+  }
+
+  async runCodeWithContext(code: string, context: Record<string, any> = {}): Promise<{ output: string; error: string | null }> {
+    if (!this.pyodide) {
+      await this.initialize();
+    }
+
+    try {
+      // Set context variables
+      for (const [key, value] of Object.entries(context)) {
+        this.pyodide.globals.set(key, value);
+      }
+
+      return await this.runCode(code);
+    } catch (error: any) {
+      return {
+        output: '',
+        error: error.message || 'Unknown Python error'
+      };
+    }
+  }
+
+  isReady(): boolean {
+    return this.pyodide !== null;
+  }
+
+  reset(): void {
+    if (this.pyodide) {
+      // Reset Python environment
+      this.pyodide.runPython(`
+# Clear all user-defined variables except data_points
+for name in list(globals().keys()):
+    if not name.startswith('_') and name not in ['data_points', 'sys', 'io', 'json', 'defaultdict']:
+        del globals()[name]
+      `);
+    }
+  }
+}
+
+// Singleton instance
+export const pyodideService = new PyodideService();

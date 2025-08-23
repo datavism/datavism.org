@@ -24,7 +24,7 @@ CREATE TABLE profiles (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Create progress table
+-- Create progress table (old week-based progress)
 CREATE TABLE progress (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
@@ -36,6 +36,23 @@ CREATE TABLE progress (
   completed_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(user_id, week_id, challenge_id)
+);
+
+-- Create user_progress table (new level-based progress)
+CREATE TABLE user_progress (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  level_id VARCHAR(50) NOT NULL,
+  completed_challenges JSONB DEFAULT '[]',
+  total_xp INTEGER DEFAULT 0,
+  current_challenge INTEGER DEFAULT 0,
+  completed_at TIMESTAMP WITH TIME ZONE,
+  time_spent INTEGER DEFAULT 0, -- in seconds
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  
+  -- Ensure one progress record per user per level
+  UNIQUE(user_id, level_id)
 );
 
 -- Create investigations table
@@ -84,6 +101,7 @@ CREATE TABLE squad_members (
 -- Enable RLS
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE investigations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE squads ENABLE ROW LEVEL SECURITY;
 ALTER TABLE squad_members ENABLE ROW LEVEL SECURITY;
@@ -108,6 +126,23 @@ CREATE POLICY "Users can view own progress"
 
 CREATE POLICY "Users can update own progress"
   ON progress FOR ALL
+  USING (auth.uid() = user_id);
+
+-- User Progress policies (new level-based)
+CREATE POLICY "Users can view own user_progress"
+  ON user_progress FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own user_progress"
+  ON user_progress FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own user_progress"
+  ON user_progress FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete own user_progress"
+  ON user_progress FOR DELETE
   USING (auth.uid() = user_id);
 
 -- Investigations policies
@@ -173,6 +208,11 @@ CREATE TRIGGER investigations_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at();
 
+CREATE TRIGGER user_progress_updated_at
+  BEFORE UPDATE ON user_progress
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at();
+
 -- Function to handle new user signup
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
@@ -235,6 +275,8 @@ CREATE INDEX idx_profiles_xp ON profiles(xp DESC);
 CREATE INDEX idx_profiles_username ON profiles(username);
 CREATE INDEX idx_progress_user_week ON progress(user_id, week_id);
 CREATE INDEX idx_progress_completed ON progress(completed, created_at DESC);
+CREATE INDEX idx_user_progress_user_id ON user_progress(user_id);
+CREATE INDEX idx_user_progress_level_id ON user_progress(level_id);
 CREATE INDEX idx_investigations_status ON investigations(status, created_at DESC);
 CREATE INDEX idx_investigations_author ON investigations(author_id);
 CREATE INDEX idx_squad_members_squad ON squad_members(squad_id);

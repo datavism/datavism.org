@@ -1,47 +1,17 @@
 'use client'
 
-import { useState, useEffect, useCallback, Component, ErrorInfo, ReactNode } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Terminal, Zap, Trophy, Play, X, Loader2, Brain, Shield, Activity, AlertTriangle } from 'lucide-react'
+import { 
+  Terminal, Zap, Trophy, Brain, Shield, Activity, 
+  AlertTriangle, Loader2, WifiOff, Wifi, Code,
+  Eye, EyeOff, Lock, Unlock, Skull, ChevronRight
+} from 'lucide-react'
 import { CodeEditor } from '@/components/ui/CodeEditor'
+import { usePython, RESISTANCE_SNIPPETS } from '@/lib/hooks/usePython'
 
-// React Error Boundary Component
-class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; error: string | null }> {
-  constructor(props: { children: ReactNode }) {
-    super(props)
-    this.state = { hasError: false, error: null }
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error: error.message }
-  }
-
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Level1AwakeningExperience Error Boundary caught error:', error, errorInfo)
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="min-h-screen bg-black text-red-400 p-8">
-          <h1 className="text-2xl font-bold mb-4">🚨 React Error in Level 1</h1>
-          <p className="mb-4">Something went wrong during rendering: {this.state.error}</p>
-          <button 
-            onClick={() => this.setState({ hasError: false, error: null })}
-            className="px-4 py-2 border border-red-400 text-red-400 hover:bg-red-400 hover:text-black"
-          >
-            Try Again
-          </button>
-        </div>
-      )
-    }
-
-    return this.props.children
-  }
-}
-
-// 🎯 LEVEL 1: THE AWAKENING - FULL 4-HOUR EXPERIENCE
-// Exactly as promised: 10 Challenges, Maya Chen videos, Real Python, Boss Battle
+// 🎯 LEVEL 1: THE AWAKENING - REVOLUTION EDITION
+// Real Python. Real hacking. Real impact.
 
 type Phase = 'intro' | 'awakening' | 'missions' | 'boss' | 'victory'
 
@@ -60,14 +30,14 @@ interface Challenge {
   }
   starterCode: string
   solution: string
-  test: (code: string, output: string) => boolean
+  test: (output: string, variables: Record<string, any>) => boolean
   xp: number
   hint: string
   isBoss?: boolean
   isCheckpoint?: boolean
 }
 
-// 🎬 ALL 10 CHALLENGES AS PROMISED
+// 🎬 ENHANCED CHALLENGES WITH REAL PYTHON
 const awakeningChallenges: Challenge[] = [
   {
     id: 'cold-open',
@@ -75,767 +45,812 @@ const awakeningChallenges: Challenge[] = [
     hour: 1,
     title: '📱 Cold Open: Your Phone Is Watching',
     brief: 'First glimpse behind the digital curtain',
-    story: `You're scrolling through "InstaPic" (definitely not Instagram). 47 notifications. 3,847 data points collected today. Suddenly your feed glitches, revealing hidden algorithms. A message appears: "WAKE UP. THEY'RE HARVESTING YOUR MIND."`,
-    objective: 'Print your awakening moment',
+    story: `You're scrolling through InstaPic. 47 notifications. 3,847 data points collected. 
+    
+    Suddenly your feed glitches. The algorithm reveals itself for a moment.
+    
+    A message appears: "WAKE UP. THEY'RE HARVESTING YOUR MIND."
+    
+    Your journey to digital liberation begins with a single line of Python...`,
+    objective: 'Print your awakening moment to begin the resistance',
     videoContent: {
       title: 'The Cold Open - Your Digital Prison',
       duration: '5 minutes',
-      description: 'Experience the moment when the facade drops and you see the manipulation'
+      description: 'Experience the moment when the facade drops'
     },
-    starterCode: `# 📱 COLD OPEN: The moment of awakening
+    starterCode: `# 📱 THE AWAKENING BEGINS
 # You just discovered they track everything
-# Print your realization
+# Your first act of digital resistance starts here
 
+print("...")  # Replace ... with your awakening message
 `,
-    solution: 'print("I am awake. I see the code behind the curtain.")',
-    test: (code, output) => {
-      return code.includes('print') && (code.toLowerCase().includes('awake') || output.toLowerCase().includes('awake'))
+    solution: `print("I am awake. I see the code behind the curtain.")`,
+    test: (output) => {
+      return output.toLowerCase().includes('awake') || 
+             output.toLowerCase().includes('see') ||
+             output.toLowerCase().includes('resistance')
     },
     xp: 50,
-    hint: 'Use print() to express your moment of digital awakening'
+    hint: 'Express your realization that you can see through their manipulation'
   },
   
   {
     id: 'first-contact',
     phase: 'awakening',
     hour: 1,
-    title: '📧 First Contact: Maya\'s Message',
-    brief: 'An encrypted message from a Facebook whistleblower',
-    story: `Email from maya.chen@resistance.onion: "They analyzed your last 2,847 posts. I should know - I built their algorithms. If you're reading this, you're ready to learn their language: Python."`,
-    objective: 'Decode Maya\'s encrypted resistance variables',
+    title: '📧 First Contact: Maya Chen',
+    brief: 'Message from an ex-Facebook whistleblower',
+    story: `Email from maya.chen@resistance.onion:
+    
+    "If you're reading this, you're ready to know the truth.
+    
+    I spent 3 years at Facebook building the algorithms that trap your mind.
+    The engagement optimizer. The dopamine trigger. The vulnerability detector.
+    
+    I know their code because I wrote it.
+    Now I'll teach you to break it.
+    
+    First lesson: Variables are containers for truth."`,
+    objective: 'Create variables that define your new identity as a data activist',
     videoContent: {
-      title: 'Who Is Maya Chen? - Ex-Facebook Whistleblower',
+      title: 'Who Is Maya Chen?',
       duration: '3 minutes',
-      description: 'Meet your handler - the woman who built Instagram\'s algorithm and chose to fight back'
+      description: 'Meet the woman who built Instagram\'s algorithm'
     },
-    starterCode: `# 📧 FIRST CONTACT: Maya Chen's Variables
-# Decode the resistance message
-username = "anonymous_rebel"
-trust_level = 0
-days_since_awakening = 1
+    starterCode: `# 📧 MAYA'S FIRST LESSON: Variables are truth containers
+# Define your resistance identity
 
-# Maya's mission for you
-print(f"Agent {username}: Trust level {trust_level}")
-print(f"Days since awakening: {days_since_awakening}")
+# Your old identity (what they see)
+old_identity = "user_4847392"
+trust_score = 0
 
+# TODO: Create your new identity variables
+# Hint: Change who you are, not just your name
+
+print(f"Old identity: {old_identity}")
+print(f"Trust in the system: {trust_score}%")
+
+# Print your new identity below
 `,
-    solution: `username = "data_liberator"
-trust_level = 100
+    solution: `old_identity = "user_4847392"
+trust_score = 0
+
+# My true identity
+new_identity = "data_liberator"
+resistance_level = 100
 days_since_awakening = 1
-print(f"Agent {username}: Trust level {trust_level}")
-print(f"Days since awakening: {days_since_awakening}")
-print("Ready to expose algorithmic manipulation!")`,
-    test: (code, output) => {
-      return code.includes('data_liberator') || output.includes('data_liberator') || code.includes('trust_level = 100')
+
+print(f"Old identity: {old_identity}")
+print(f"Trust in the system: {trust_score}%")
+print(f"New identity: {new_identity}")
+print(f"Resistance level: {resistance_level}%")
+print(f"Days since awakening: {days_since_awakening}")`,
+    test: (output, vars) => {
+      return output.includes('data_liberator') || 
+             output.includes('resistance') ||
+             (vars['resistance_level'] && vars['resistance_level'] > 50)
     },
     xp: 75,
-    hint: 'Change your username to reflect your new mission and set trust_level to 100',
+    hint: 'Create variables like new_identity, resistance_level to show your transformation',
     isCheckpoint: true
-  },
-
-  {
-    id: 'resistance-toolkit',
-    phase: 'awakening',
-    hour: 1,
-    title: '🛠️ The Resistance Toolkit',
-    brief: 'Python as your digital weapon',
-    story: `Maya: "This isn't programming. This is digital self-defense. Every line of code is a weapon against manipulation. Pandas liberates data. NumPy calculates truth. Matplotlib exposes lies."`,
-    objective: 'Load your data activism arsenal',
-    videoContent: {
-      title: 'The Resistance Toolkit - Python as Weapon',
-      duration: '5 minutes',
-      description: 'Learn why Python is the language of digital resistance'
-    },
-    starterCode: `# 🛠️ THE RESISTANCE TOOLKIT
-# Load your digital weapons
-# Maya's arsenal for data liberation
-
-`,
-    solution: `# Importing the resistance arsenal
-import math
-
-print("🛠️ Digital weapons loaded:")
-print("🐍 Python - Core resistance framework")
-print("🔢 Math - Truth calculation engine") 
-print("📊 Data processing - Information liberation")
-print("Ready for digital warfare!")
-
-# Test your weapons
-liberation_power = math.sqrt(100)
-print(f"Liberation power level: {liberation_power}")`,
-    test: (code, output) => {
-      return code.includes('import') && output.includes('Digital weapons')
-    },
-    xp: 100,
-    hint: 'Import the math module and print information about your digital arsenal'
   },
 
   {
     id: 'manipulation-detector',
     phase: 'awakening',
     hour: 1,
-    title: '🔍 Manipulation Detection Function',
-    brief: 'Build your first defensive algorithm',
-    story: `Maya: "Functions are repeatable resistance patterns. While you sleep, their algorithms manipulate millions. Time to build your counter-algorithm."`,
-    objective: 'Create a function to detect manipulation tactics',
+    title: '🔍 Build Your First Defense Algorithm',
+    brief: 'Create a function to detect manipulation',
+    story: `Maya: "Every 'Breaking News' is calculated. Every 'Last Chance' is a lie.
+    
+    They use trigger words to hijack your amygdala before your prefrontal cortex can think.
+    
+    Functions are repeatable patterns of resistance. Build one that detects their tactics."`,
+    objective: 'Create a manipulation detection function',
     videoContent: {
-      title: 'Functions - Your Digital Weapons',
-      duration: '4 minutes', 
-      description: 'Learn to build functions that fight algorithmic manipulation'
+      title: 'Functions - Digital Self-Defense',
+      duration: '4 minutes',
+      description: 'Build algorithms that fight algorithms'
     },
     starterCode: `# 🔍 MANIPULATION DETECTOR
-# Build your defensive function
-# Detect when they're trying to trigger you
+# Build a function to identify psychological triggers
 
 def detect_manipulation(post_text):
-    # Your code here - check for manipulation triggers
-    pass
+    """Your first defensive algorithm"""
+    triggers = ['BREAKING', 'You won\\'t believe', 'Last chance']
+    
+    # TODO: Check if any trigger words are in the post
+    # Return a warning if manipulation is detected
+    
+    pass  # Replace with your detection logic
 
-# Test it on suspicious content
+# Test your detector
 test_posts = [
     "BREAKING: You won't believe what happened!",
-    "Just sharing my lunch",
-    "Last chance to buy before price goes up!"
+    "Just sharing my lunch photo",
+    "Last chance to buy before price doubles!"
 ]
 
 for post in test_posts:
     result = detect_manipulation(post)
-    print(f"'{post}' → {result}")
+    print(f"'{post[:30]}...' → {result}")
 `,
     solution: `def detect_manipulation(post_text):
-    triggers = ['BREAKING', 'You won\\'t believe', 'Last chance', 'URGENT', 'Act now']
+    """Your first defensive algorithm"""
+    triggers = ['BREAKING', 'You won\\'t believe', 'Last chance', 'Act now', 'Limited time']
+    
     for trigger in triggers:
         if trigger.lower() in post_text.lower():
-            return f"🚨 MANIPULATION DETECTED: {trigger}"
-    return "✅ Post seems genuine"
+            return f"🚨 MANIPULATION: {trigger} detected!"
+    
+    return "✅ Post appears genuine"
 
 test_posts = [
     "BREAKING: You won't believe what happened!",
-    "Just sharing my lunch", 
-    "Last chance to buy before price goes up!"
+    "Just sharing my lunch photo",
+    "Last chance to buy before price doubles!"
 ]
 
 for post in test_posts:
     result = detect_manipulation(post)
-    print(f"'{post}' → {result}")`,
-    test: (code, output) => {
-      return code.includes('def detect_manipulation') && output.includes('MANIPULATION DETECTED')
+    print(f"'{post[:30]}...' → {result}")`,
+    test: (output) => {
+      return output.includes('MANIPULATION') && output.includes('genuine')
     },
     xp: 150,
-    hint: 'Create a list of trigger words and check if they appear in the post text'
+    hint: 'Loop through triggers and check if each one appears in post_text.lower()'
   },
 
   // HOUR 2: DATA EXCAVATION
   {
-    id: 'data-heist',
+    id: 'digital-footprint',
     phase: 'missions',
     hour: 2,
-    title: '💾 The Data Heist',
-    brief: 'Download your digital DNA before they notice',
-    story: `Maya: "While you were sleeping, they collected 14,000 data points about you. Your emotions, vulnerabilities, purchase triggers. Time to steal it back before they encrypt everything."`,
-    objective: 'Load and explore your personal InstaPic data',
+    title: '💾 Calculate Your Digital Footprint',
+    brief: 'Discover how much data they\'ve stolen',
+    story: `Maya: "You post 12 times a day. Been on the platform 5 years.
+    
+    That's not just posts. Each one generates 147 data points.
+    Location, emotion, engagement time, mouse movements, pauses, deletes.
+    
+    Let's calculate exactly how much of your life they own."`,
+    objective: 'Use the resistance toolkit to calculate your digital footprint',
     videoContent: {
-      title: 'Pandas - The Data Liberation Library',
+      title: 'Your Data DNA',
       duration: '5 minutes',
-      description: 'Learn to liberate your data from corporate databases'
+      description: 'The shocking truth about data collection'
     },
-    starterCode: `# 💾 THE DATA HEIST
-# They've been collecting data on you for years
-# Time to see what they really know
+    starterCode: `# 💾 YOUR DIGITAL FOOTPRINT
+# Use Maya's resistance toolkit to calculate the damage
 
-import random
+# Your social media habits
+posts_per_day = 12
+years_on_platform = 5
 
-# Generate your realistic "stolen" InstaPic data
-print("🔓 Accessing your digital profile...")
-print("📡 Downloading manipulation records...")
+# TODO: Use resistance.calculate_digital_footprint()
+# This function is pre-loaded in our Python environment
 
-# Create your personal data 
-data_points = []
-emotional_states = ['happy', 'sad', 'vulnerable', 'angry', 'neutral']
-content_types = ['friend_post', 'ad', 'sponsored']
+# Hint: The function takes posts_per_day and years as arguments
+# footprint = resistance.calculate_digital_footprint(?, ?)
 
-# Generate some sample data points
-for day in range(10):  # 10 days of data
-    data_points.append({
-        'day': day + 1,
-        'emotional_state': random.choice(emotional_states),
-        'content_type': random.choice(content_types),
-        'manipulation_score': round(random.random(), 2)
-    })
-
-# Your first glimpse of the truth
-print("\\n🚨 YOUR DIGITAL DNA EXPOSED:")
-print(f"📊 Sample data points: {len(data_points)}")
-print("First few entries:")
-for i, point in enumerate(data_points[:3]):
-    print(f"  Day {point['day']}: {point['emotional_state']} | {point['content_type']} | Score: {point['manipulation_score']}")
-
+print("Calculating digital footprint...")
 `,
-    solution: `import random
+    solution: `# Your social media habits
+posts_per_day = 12
+years_on_platform = 5
 
-print("🔓 Accessing your digital profile...")
-print("📡 Downloading manipulation records...")
+# Calculate the damage
+footprint = resistance.calculate_digital_footprint(posts_per_day, years_on_platform)
 
-data_points = []
-emotional_states = ['happy', 'sad', 'vulnerable', 'angry', 'neutral']
-content_types = ['friend_post', 'ad', 'sponsored']
-
-for day in range(10):
-    data_points.append({
-        'day': day + 1,
-        'emotional_state': random.choice(emotional_states),
-        'content_type': random.choice(content_types),
-        'manipulation_score': round(random.random(), 2)
-    })
-
-print("\\n🚨 YOUR DIGITAL DNA EXPOSED:")
-print(f"📊 Sample data points: {len(data_points)}")
-print("First few entries:")
-for i, point in enumerate(data_points[:3]):
-    print(f"  Day {point['day']}: {point['emotional_state']} | {point['content_type']} | Score: {point['manipulation_score']}")
-
-print("\\nWhat they track about you:")
-print("  • Your emotional state")
-print("  • Content manipulation scores")
-print("  • Ad targeting effectiveness")
-print("\\n🚨 EMOTIONAL MANIPULATION DETECTED!")`,
-    test: (code, output) => {
-      return output.includes('DIGITAL DNA') && output.includes('manipulation')
+print("🔍 YOUR DIGITAL FOOTPRINT EXPOSED:")
+print(f"📊 Total posts: {footprint['total_posts']:,}")
+print(f"🔢 Data points collected: {footprint['data_points']:,}")
+print(f"⏰ Days of life lost: {footprint['days_lost']:.1f}")
+print(f"💰 Value extracted from you: ${footprint['value_extracted']:,.2f}")
+print("\\n😱 They turned your life into profit!")`,
+    test: (output) => {
+      return output.includes('Total posts') && 
+             output.includes('Data points') &&
+             output.includes('21,900') // 12 * 365 * 5
     },
     xp: 200,
-    hint: 'Run the data generation code and add your own analysis',
+    hint: 'Call resistance.calculate_digital_footprint(posts_per_day, years_on_platform)',
     isCheckpoint: true
   },
 
   {
-    id: 'vulnerability-analysis',
+    id: 'data-analysis',
     phase: 'missions',
     hour: 2,
-    title: '🎯 Vulnerability Pattern Analysis',
-    brief: 'Discover when you\'re most manipulated',
-    story: `The data reveals everything. 3 AM posts get more ads. Sad content triggers shopping suggestions. They've mapped your emotional cycles to maximize profit.`,
-    objective: 'Analyze your vulnerability patterns',
-    videoContent: {
-      title: 'Data Selection - Finding Their Secrets',
-      duration: '4 minutes',
-      description: 'Discover when algorithms manipulate you most effectively'
-    },
-    starterCode: `# 🎯 VULNERABILITY PATTERN ANALYSIS
-# Analyze the data_points from previous challenge
-# When are you most vulnerable to manipulation?
-
-# Count vulnerable states
-vulnerable_count = 0
-high_manipulation = 0
-ad_count = 0
-
-for point in data_points:
-    if point['emotional_state'] == 'vulnerable':
-        vulnerable_count += 1
-    if point['manipulation_score'] > 0.7:
-        high_manipulation += 1
-    if point['content_type'] == 'ad':
-        ad_count += 1
-
-print(f"🎯 VULNERABILITY ANALYSIS:")
-print(f"Times you were targeted while vulnerable: {vulnerable_count}")
-print(f"High manipulation events: {high_manipulation}")
-print(f"Ads shown to you: {ad_count}")
-
-# Calculate your manipulation resistance
-total_points = len(data_points)
-resistance_score = max(0, 100 - (high_manipulation / total_points * 100))
-print(f"\\n🛡️ Your manipulation resistance: {resistance_score:.1f}%")
-
-`,
-    solution: `vulnerable_count = 0
-high_manipulation = 0
-ad_count = 0
-
-for point in data_points:
-    if point['emotional_state'] == 'vulnerable':
-        vulnerable_count += 1
-    if point['manipulation_score'] > 0.7:
-        high_manipulation += 1
-    if point['content_type'] == 'ad':
-        ad_count += 1
-
-print(f"🎯 VULNERABILITY ANALYSIS:")
-print(f"Times you were targeted while vulnerable: {vulnerable_count}")
-print(f"High manipulation events: {high_manipulation}")
-print(f"Ads shown to you: {ad_count}")
-
-total_points = len(data_points)
-resistance_score = max(0, 100 - (high_manipulation / total_points * 100))
-print(f"\\n🛡️ Your manipulation resistance: {resistance_score:.1f}%")
-
-if resistance_score > 70:
-    print("✅ STRONG RESISTANCE: You're hard to manipulate!")
-elif resistance_score > 40:
-    print("⚠️ MODERATE RESISTANCE: Stay vigilant!")
-else:
-    print("🚨 LOW RESISTANCE: Heavy manipulation detected!")
+    title: '📊 Analyze Manipulation Patterns',
+    brief: 'Use pandas to expose their tactics',
+    story: `Maya sends you leaked data from her time at Facebook.
     
-print("\\n🚨 VULNERABILITY ANALYSIS COMPLETE!")`,
-    test: (code, output) => {
-      return output.includes('VULNERABILITY ANALYSIS') && output.includes('resistance')
+    "This is one week of manipulation events targeting a single user.
+    Look at the patterns. See when they strike.
+    Vulnerability + Late Night + Ads = Maximum exploitation."`,
+    objective: 'Analyze the sample social media data to find patterns',
+    videoContent: {
+      title: 'Pandas - Data Liberation Tool',
+      duration: '6 minutes',
+      description: 'Transform raw data into evidence'
+    },
+    starterCode: `# 📊 PATTERN ANALYSIS WITH PANDAS
+import pandas as pd
+
+# Load the leaked data (pre-loaded as 'sample_data')
+df = pd.DataFrame(sample_data)
+
+print(f"📁 Leaked data loaded: {len(df)} records")
+print(f"📋 Columns: {', '.join(df.columns)}")
+print("\\n🔍 First few records:")
+print(df.head(3))
+
+# TODO: Analyze the data
+# 1. Count how many times emotional_state == 'vulnerable'
+# 2. Find average manipulation_score
+# 3. Count how many ads were shown
+
+# Your analysis here:
+`,
+    solution: `import pandas as pd
+
+# Load the leaked data
+df = pd.DataFrame(sample_data)
+
+print(f"📁 Leaked data loaded: {len(df)} records")
+print(f"📋 Columns: {', '.join(df.columns)}")
+
+# Analyze manipulation patterns
+vulnerable_count = len(df[df['emotional_state'] == 'vulnerable'])
+avg_manipulation = df['manipulation_score'].mean()
+ad_count = len(df[df['content_type'] == 'ad'])
+high_manipulation = len(df[df['manipulation_score'] > 0.7])
+
+print("\\n🎯 MANIPULATION PATTERN ANALYSIS:")
+print(f"😢 Vulnerable moments targeted: {vulnerable_count}")
+print(f"📈 Average manipulation score: {avg_manipulation:.2%}")
+print(f"💰 Ads shown: {ad_count}")
+print(f"🚨 High manipulation events: {high_manipulation}")
+
+# Find peak manipulation time
+df['hour'] = pd.to_datetime(df['timestamp']).dt.hour
+peak_hour = df.groupby('hour')['manipulation_score'].mean().idxmax()
+print(f"⏰ Peak manipulation hour: {peak_hour}:00")
+
+print("\\n⚠️ PATTERN DETECTED: They target you when vulnerable!")`,
+    test: (output) => {
+      return output.includes('vulnerable') && 
+             output.includes('manipulation score') &&
+             output.includes('Peak manipulation')
     },
     xp: 250,
-    hint: 'Analyze the data_points list and calculate patterns'
+    hint: 'Use df[df["column"] == value] to filter, .mean() for average'
   },
 
-  // HOUR 3: PATTERN WARFARE
+  // HOUR 3: ALGORITHM WARFARE
   {
-    id: 'algorithm-anatomy',
+    id: 'emotion-exploitation',
     phase: 'missions',
     hour: 3,
-    title: '🧠 Algorithm Anatomy Exposed',
-    brief: 'Reverse-engineer their behavioral targeting',
-    story: `Maya's confession: "I wrote this. The engagement optimization algorithm. It predicts your next purchase, your next emotion, your next click. But if I built it, I can teach you to break it."`,
-    objective: 'Decode the algorithmic manipulation patterns',
+    title: '😢 Emotional Exploitation Exposed',
+    brief: 'Group data to see how they categorize you',
+    story: `Maya's confession: "We called it 'Emotion-Based Targeting.'
+    
+    Happy? Show them lifestyle products.
+    Sad? Push comfort purchases.
+    Angry? Amplify with more rage content.
+    Vulnerable? That's when we strike hardest.
+    
+    I'm so sorry. Let me show you the code I wrote..."`,
+    objective: 'Use groupby to expose emotional targeting patterns',
     videoContent: {
-      title: 'GroupBy - How They Categorize You',
-      duration: '6 minutes',
-      description: 'Learn how algorithms group users by behavior and vulnerability'
+      title: 'Maya\'s Confession',
+      duration: '7 minutes',
+      description: 'The developer who built the monster reveals all'
     },
-    starterCode: `# 🧠 ALGORITHM ANATOMY
-# Reverse-engineer their targeting algorithm
-# How do they categorize your behavior?
+    starterCode: `# 😢 EMOTIONAL EXPLOITATION ENGINE
+import pandas as pd
 
-# Group data by content type and calculate average manipulation
-content_manipulation = {}
-emotion_data = {}
+df = pd.DataFrame(sample_data)
 
-for point in data_points:
-    content_type = point['content_type']
-    emotion = point['emotional_state']
-    score = point['manipulation_score']
-    
-    # Track content type manipulation
-    if content_type not in content_manipulation:
-        content_manipulation[content_type] = []
-    content_manipulation[content_type].append(score)
-    
-    # Track emotion targeting
-    if emotion not in emotion_data:
-        emotion_data[emotion] = 0
-    emotion_data[emotion] += 1
+# Group by emotional state to see targeting patterns
+emotion_groups = df.groupby('emotional_state').agg({
+    'manipulation_score': 'mean',
+    'clicked_ad': 'sum',
+    'engagement_time': 'mean'
+}).round(3)
 
-print("🧠 ALGORITHM ANATOMY EXPOSED:")
-print("Manipulation levels by content type:")
-for content, scores in content_manipulation.items():
-    avg_score = sum(scores) / len(scores)
-    print(f"  {content}: {avg_score:.3f}")
+print("🎯 EMOTIONAL TARGETING MATRIX:")
+print(emotion_groups)
 
-print("\\nEmotional state frequency:")
-for emotion, count in emotion_data.items():
-    print(f"  {emotion}: {count} times")
+# TODO: Find which emotion is most exploited
+# Which emotional state has the highest manipulation score?
 
-# Find the most manipulated emotional state
-most_targeted = max(emotion_data.items(), key=lambda x: x[1])
-print(f"\\n🚨 MOST TARGETED EMOTION: {most_targeted[0]} ({most_targeted[1]} times)")
-
+# Your analysis:
 `,
-    solution: `content_manipulation = {}
-emotion_data = {}
+    solution: `import pandas as pd
 
-for point in data_points:
-    content_type = point['content_type']
-    emotion = point['emotional_state']
-    score = point['manipulation_score']
-    
-    if content_type not in content_manipulation:
-        content_manipulation[content_type] = []
-    content_manipulation[content_type].append(score)
-    
-    if emotion not in emotion_data:
-        emotion_data[emotion] = 0
-    emotion_data[emotion] += 1
+df = pd.DataFrame(sample_data)
 
-print("🧠 ALGORITHM ANATOMY EXPOSED:")
-print("Manipulation levels by content type:")
-for content, scores in content_manipulation.items():
-    avg_score = sum(scores) / len(scores)
-    print(f"  {content}: {avg_score:.3f}")
+# Group by emotional state
+emotion_groups = df.groupby('emotional_state').agg({
+    'manipulation_score': 'mean',
+    'clicked_ad': 'sum',
+    'engagement_time': 'mean'
+}).round(3)
 
-print("\\nEmotional state frequency:")
-for emotion, count in emotion_data.items():
-    print(f"  {emotion}: {count} times")
+print("🎯 EMOTIONAL TARGETING MATRIX:")
+print(emotion_groups)
+print()
 
-most_targeted = max(emotion_data.items(), key=lambda x: x[1])
-print(f"\\n🚨 MOST TARGETED EMOTION: {most_targeted[0]} ({most_targeted[1]} times)")
-print("\\nALGORITHM PATTERN EXPOSED!")
-print("Maya: 'Now you can see their targeting strategy!'")`,
-    test: (code, output) => {
-      return output.includes('ALGORITHM ANATOMY') && output.includes('MOST TARGETED')
+# Find most exploited emotion
+most_exploited = emotion_groups['manipulation_score'].idxmax()
+highest_score = emotion_groups['manipulation_score'].max()
+
+print(f"😱 MOST EXPLOITED EMOTION: {most_exploited.upper()}")
+print(f"📊 Manipulation score when {most_exploited}: {highest_score:.1%}")
+
+# Calculate exploitation rate
+vulnerable_data = df[df['emotional_state'] == 'vulnerable']
+if len(vulnerable_data) > 0:
+    exploit_rate = vulnerable_data['clicked_ad'].mean()
+    print(f"💔 Ad click rate when vulnerable: {exploit_rate:.1%}")
+
+print("\\n🚨 Maya: 'This is why I quit. We were vampires feeding on human emotion.'")`,
+    test: (output) => {
+      return output.includes('EMOTIONAL TARGETING') && 
+             output.includes('MOST EXPLOITED')
     },
     xp: 300,
-    hint: 'Group the data by different categories and calculate averages'
+    hint: 'Use .idxmax() to find the emotion with highest manipulation score'
   },
 
   {
-    id: 'mayas-confession',
+    id: 'counter-algorithm',
     phase: 'missions',
     hour: 3,
-    title: '💔 Maya\'s Confession & Counter-Algorithm',
-    brief: 'Build the algorithm that fights back',
-    story: `Maya breaks down: "This function... I wrote it. It predicts your next purchase with 89% accuracy. I thought we were connecting people. We were creating addicts. But if I built the monster, I can teach you to kill it."`,
-    objective: 'Create your personal manipulation immunity algorithm',
+    title: '🛡️ Build Your Counter-Algorithm',
+    brief: 'Create immunity to manipulation',
+    story: `Maya: "If I can build algorithms to manipulate, I can build them to protect.
+    
+    This is my gift to you - a function that calculates your manipulation immunity.
+    The higher your score, the harder you are to control.
+    
+    Use it. Share it. Free others."`,
+    objective: 'Complete Maya\'s immunity algorithm',
     videoContent: {
-      title: 'I Built This Monster - Maya\'s Confession',
-      duration: '7 minutes', 
-      description: 'Maya reveals her original Facebook code and how to counter it'
+      title: 'The Counter-Algorithm',
+      duration: '5 minutes',
+      description: 'Turn their weapons against them'
     },
-    starterCode: `# 💔 MAYA'S CONFESSION: Build the Counter-Algorithm
-def calculate_manipulation_immunity(data_points):
-    """
-    Maya's counter-algorithm to detect and resist manipulation
-    Based on her original Facebook engagement predictor
-    """
-    total_posts = len(data_points)
-    
-    # Detection factors
-    emotional_exploitation = 0
-    high_manipulation_events = 0
-    ad_bombardment = 0
-    
-    for point in data_points:
-        # Count emotional exploitation
-        if point['emotional_state'] == 'vulnerable':
-            emotional_exploitation += 1
-        
-        # Count high manipulation events
-        if point['manipulation_score'] > 0.7:
-            high_manipulation_events += 1
-            
-        # Count ad targeting
-        if point['content_type'] == 'ad':
-            ad_bombardment += 1
-    
-    # Your immunity calculation here...
-    # Calculate manipulation rate and convert to immunity
-    
-    return 0  # Replace with actual calculation
+    starterCode: `# 🛡️ MAYA'S IMMUNITY ALGORITHM
+import pandas as pd
 
-# Test your immunity algorithm
-immunity_score = calculate_manipulation_immunity(data_points)
-print(f"🛡️ Your Manipulation Immunity: {immunity_score:.1f}%")
+def calculate_immunity(data):
+    """Calculate resistance to manipulation"""
+    df = pd.DataFrame(data)
+    
+    # Calculate vulnerability factors
+    total_records = len(df)
+    high_manipulation = len(df[df['manipulation_score'] > 0.7])
+    vulnerable_moments = len(df[df['emotional_state'] == 'vulnerable'])
+    ads_clicked = df['clicked_ad'].sum()
+    
+    # TODO: Calculate immunity score (0-100)
+    # Higher manipulation = lower immunity
+    # Formula: 100 - (bad_events / total_events * 100)
+    
+    immunity_score = 0  # Calculate this
+    
+    return immunity_score
 
+# Test your immunity
+my_immunity = calculate_immunity(sample_data)
+print(f"🛡️ Your Manipulation Immunity: {my_immunity:.1f}%")
+
+# TODO: Add interpretation of the score
 `,
-    solution: `def calculate_manipulation_immunity(data_points):
-    """
-    Maya's counter-algorithm to detect and resist manipulation
-    """
-    total_posts = len(data_points)
-    
-    emotional_exploitation = 0
-    high_manipulation_events = 0
-    ad_bombardment = 0
-    
-    for point in data_points:
-        if point['emotional_state'] == 'vulnerable':
-            emotional_exploitation += 1
-        if point['manipulation_score'] > 0.7:
-            high_manipulation_events += 1
-        if point['content_type'] == 'ad':
-            ad_bombardment += 1
-    
-    # Calculate manipulation attempts
-    manipulation_attempts = emotional_exploitation + high_manipulation_events + ad_bombardment
-    manipulation_rate = (manipulation_attempts / total_posts) * 100 if total_posts > 0 else 0
-    
-    # Immunity is inverse of manipulation success
-    immunity = max(0, 100 - manipulation_rate)
-    
-    print(f"\\n🔍 MANIPULATION ANALYSIS:")
-    print(f"  Emotional exploitation: {emotional_exploitation} times")
-    print(f"  High manipulation events: {high_manipulation_events} posts")
-    print(f"  Ad bombardment: {ad_bombardment} ads")
-    
-    return immunity
+    solution: `import pandas as pd
 
-immunity_score = calculate_manipulation_immunity(data_points)
-print(f"\\n🛡️ Your Manipulation Immunity: {immunity_score:.1f}%")
+def calculate_immunity(data):
+    """Calculate resistance to manipulation"""
+    df = pd.DataFrame(data)
+    
+    # Calculate vulnerability factors
+    total_records = len(df)
+    high_manipulation = len(df[df['manipulation_score'] > 0.7])
+    vulnerable_moments = len(df[df['emotional_state'] == 'vulnerable'])
+    ads_clicked = df['clicked_ad'].sum()
+    
+    # Calculate immunity score
+    if total_records == 0:
+        return 100
+    
+    vulnerability_rate = (high_manipulation + vulnerable_moments + ads_clicked) / (total_records * 3)
+    immunity_score = max(0, 100 - (vulnerability_rate * 100))
+    
+    return immunity_score
 
-if immunity_score > 70:
-    print("✅ STRONG IMMUNITY: Algorithm resistance activated!")
-elif immunity_score > 40:
+# Test your immunity
+my_immunity = calculate_immunity(sample_data)
+print(f"🛡️ Your Manipulation Immunity: {my_immunity:.1f}%")
+
+# Interpret the score
+if my_immunity > 70:
+    print("✅ STRONG IMMUNITY: You're hard to manipulate!")
+    print("🎯 Status: Algorithm Resistant")
+elif my_immunity > 40:
     print("⚠️ MODERATE IMMUNITY: Stay vigilant!")
+    print("📈 Status: Partially Protected")
 else:
     print("🚨 LOW IMMUNITY: Heavy manipulation detected!")
-    
-print("\\nMaya: 'You've built your first counter-algorithm!'")`,
-    test: (code, output) => {
-      return code.includes('def calculate_manipulation_immunity') && output.includes('IMMUNITY')
+    print("💊 Status: Needs Digital Detox")
+
+print("\\n🔥 Maya: 'Share this algorithm. Every person who runs it is one less victim.'")`,
+    test: (output, vars) => {
+      return output.includes('Immunity:') && 
+             (output.includes('STRONG') || output.includes('MODERATE') || output.includes('LOW'))
     },
     xp: 400,
-    hint: 'Calculate different types of manipulation attempts and convert to an immunity score',
+    hint: 'Calculate bad events ratio and subtract from 100',
     isCheckpoint: true
   },
 
-  // HOUR 4: LIBERATION PROTOCOL  
+  // HOUR 4: BOSS BATTLE
   {
-    id: 'algorithm-overlord-boss',
+    id: 'boss-preparation',
     phase: 'boss',
     hour: 4,
-    title: '⚔️ BOSS: The Algorithm Overlord',
-    brief: 'Final battle against the manipulation machine',
-    story: `🚨 SYSTEM ALERT: "YOU THINK PYTHON CAN DEFEAT 15 YEARS OF BEHAVIORAL RESEARCH?" The Algorithm Overlord materializes. It throws corrupted data, false patterns, and psychological attacks. This is your final exam. Use everything Maya taught you.`,
-    objective: 'Defeat the Algorithm Overlord with complete data mastery',
+    title: '⚔️ Prepare for the Algorithm Overlord',
+    brief: 'Generate your liberation evidence',
+    story: `🚨 SYSTEM ALERT: UNAUTHORIZED DATA ACCESS DETECTED
+    
+    The Algorithm Overlord has noticed your investigation.
+    
+    Maya (urgent): "It's here! The master algorithm that controls all others.
+    It will try to corrupt your data, confuse your analysis.
+    
+    Quick! Generate your liberation code - cryptographic proof of your freedom!"`,
+    objective: 'Create your unique liberation hash',
     videoContent: {
-      title: 'Boss Battle Briefing - The Algorithm Overlord',
+      title: 'Boss Battle Briefing',
       duration: '3 minutes',
-      description: 'Maya\'s urgent final instructions before the ultimate battle'
+      description: 'Final instructions before the ultimate test'
     },
-    starterCode: `# ⚔️ BOSS BATTLE: THE ALGORITHM OVERLORD
-import hashlib
+    starterCode: `# ⚔️ BOSS BATTLE PREPARATION
+import pandas as pd
+import json
 
-print("🔴 BOSS BATTLE INITIATED")
-print("👁️‍🗨️ Algorithm Overlord: 'You cannot defeat me with mere Python!'")
-print("\\nMaya: 'Use everything I taught you! Generate the liberation evidence!'")
+# Analyze all the evidence you've gathered
+df = pd.DataFrame(sample_data)
 
-# BOSS CHALLENGE: Create the ultimate liberation package
-# Generate irrefutable proof of manipulation
-# Calculate total damage to your digital soul
-
-# Calculate total manipulation damage
-total_manipulation_events = 0
-total_emotional_exploitation = 0
-highest_manipulation_score = 0
-
-for point in data_points:
-    if point['manipulation_score'] > 0.5:
-        total_manipulation_events += 1
-    if point['emotional_state'] == 'vulnerable':
-        total_emotional_exploitation += 1
-    if point['manipulation_score'] > highest_manipulation_score:
-        highest_manipulation_score = point['manipulation_score']
-
-# Generate your liberation evidence package
-liberation_evidence = {
-    'total_manipulation_events': total_manipulation_events,
-    'emotional_exploitation': total_emotional_exploitation,
-    'highest_score': highest_manipulation_score,
-    'resistance_score': calculate_manipulation_immunity(data_points)
+# Calculate your evidence package
+evidence = {
+    'total_manipulations': len(df[df['manipulation_score'] > 0.7]),
+    'emotional_exploits': len(df[df['emotional_state'] == 'vulnerable']),
+    'ads_targeted': len(df[df['content_type'] == 'ad']),
+    'peak_manipulation': df['manipulation_score'].max(),
+    'hours_analyzed': len(df)
 }
 
-# Create liberation code (cryptographic proof)
-evidence_string = f"{total_manipulation_events}_{total_emotional_exploitation}_{highest_manipulation_score}"
-liberation_code = hashlib.md5(evidence_string.encode()).hexdigest()[:8].upper()
+print("📊 EVIDENCE PACKAGE PREPARED:")
+for key, value in evidence.items():
+    print(f"  {key}: {value}")
 
-print("\\n" + "="*50)
-print("🎉 ALGORITHM OVERLORD DEFEATED!")
-print("="*50)
+# TODO: Generate your liberation code using resistance.generate_liberation_code()
+# liberation_code = ?
 
+print("\\n👁️ The Algorithm Overlord approaches...")
 `,
-    solution: `import hashlib
+    solution: `import pandas as pd
+import json
 
-print("🔴 BOSS BATTLE INITIATED")
-print("👁️‍🗨️ Algorithm Overlord: 'You cannot defeat me with mere Python!'")
-print("\\nMaya: 'Use everything I taught you! Generate the liberation evidence!'")
+# Analyze all evidence
+df = pd.DataFrame(sample_data)
 
-total_manipulation_events = 0
-total_emotional_exploitation = 0
-highest_manipulation_score = 0
-
-for point in data_points:
-    if point['manipulation_score'] > 0.5:
-        total_manipulation_events += 1
-    if point['emotional_state'] == 'vulnerable':
-        total_emotional_exploitation += 1
-    if point['manipulation_score'] > highest_manipulation_score:
-        highest_manipulation_score = point['manipulation_score']
-
-liberation_evidence = {
-    'total_manipulation_events': total_manipulation_events,
-    'emotional_exploitation': total_emotional_exploitation,
-    'highest_score': highest_manipulation_score,
-    'resistance_score': calculate_manipulation_immunity(data_points)
+evidence = {
+    'total_manipulations': len(df[df['manipulation_score'] > 0.7]),
+    'emotional_exploits': len(df[df['emotional_state'] == 'vulnerable']),
+    'ads_targeted': len(df[df['content_type'] == 'ad']),
+    'peak_manipulation': df['manipulation_score'].max(),
+    'hours_analyzed': len(df),
+    'immunity_achieved': True
 }
 
-evidence_string = f"{total_manipulation_events}_{total_emotional_exploitation}_{highest_manipulation_score}"
-liberation_code = hashlib.md5(evidence_string.encode()).hexdigest()[:8].upper()
+print("📊 EVIDENCE PACKAGE PREPARED:")
+for key, value in evidence.items():
+    print(f"  {key}: {value}")
 
-print("\\n" + "="*50)
-print("🎉 ALGORITHM OVERLORD DEFEATED!")
-print("="*50)
-print(f"📊 Manipulation events detected: {total_manipulation_events}")
-print(f"😢 Emotional exploitation count: {total_emotional_exploitation}")
-print(f"📈 Highest manipulation score: {highest_manipulation_score:.2f}")
-print(f"🛡️ Your resistance score: {liberation_evidence['resistance_score']:.1f}%")
-print(f"🔑 Liberation Code: #{liberation_code}")
-print("\\n👁️‍🗨️ Algorithm Overlord: 'Impossible... you have broken free...'")
-print("\\n🎯 Maya: 'Outstanding work! You are now immune to algorithmic manipulation!'")
-print("\\n🔥 SHARE YOUR LIBERATION CODE TO FREE OTHERS!")
-print(f"   #{liberation_code} #DigitalLiberation #Datavism")`,
-    test: (code, output) => {
-      return output.includes('ALGORITHM OVERLORD DEFEATED') && output.includes('Liberation Code')
+# Generate liberation code
+liberation_code = resistance.generate_liberation_code(evidence)
+
+print(f"\\n🔑 LIBERATION CODE GENERATED: #{liberation_code}")
+print("\\n👁️ Algorithm Overlord: 'You think that code can defeat me?'")
+print("\\n🗡️ Maya: 'It's not just code. It's proof. Show them you're free!'")`,
+    test: (output) => {
+      return output.includes('LIBERATION CODE') && output.includes('#')
+    },
+    xp: 500,
+    hint: 'Use resistance.generate_liberation_code(evidence) to create your unique hash'
+  },
+
+  {
+    id: 'final-boss',
+    phase: 'boss',
+    hour: 4,
+    title: '👁️ BOSS: The Algorithm Overlord',
+    brief: 'Defeat the master manipulation algorithm',
+    story: `👁️ THE ALGORITHM OVERLORD MATERIALIZES
+    
+    "I AM THE SUM OF 15 YEARS OF BEHAVIORAL RESEARCH.
+    2.8 BILLION USERS. 500 TRILLION DATA POINTS.
+    YOU CANNOT COMPREHEND MY COMPLEXITY."
+    
+    Maya: "Don't listen! It's just code! Use everything I taught you!
+    Analyze! Expose! LIBERATE!"`,
+    objective: 'Complete the final analysis to defeat the Algorithm Overlord',
+    videoContent: {
+      title: 'The Final Battle',
+      duration: '10 minutes',
+      description: 'Everything leads to this moment'
+    },
+    starterCode: `# 👁️ FINAL BOSS: THE ALGORITHM OVERLORD
+import pandas as pd
+import numpy as np
+
+print("="*60)
+print("⚔️ BOSS BATTLE: ALGORITHM OVERLORD")
+print("="*60)
+
+# The Overlord attacks with corrupted data!
+df = pd.DataFrame(sample_data)
+
+# PHASE 1: Data Analysis Attack
+print("\\n📊 PHASE 1: ANALYZE THE PATTERNS")
+# TODO: Find the most manipulated hour
+hourly_manipulation = df.groupby(pd.to_datetime(df['timestamp']).dt.hour)['manipulation_score'].mean()
+
+# PHASE 2: Emotional Exploitation Counter
+print("\\n😢 PHASE 2: EXPOSE EMOTIONAL TARGETING")
+# TODO: Calculate emotional exploitation rate
+
+# PHASE 3: Generate Final Liberation
+print("\\n🔓 PHASE 3: LIBERATION PROTOCOL")
+# TODO: Calculate total damage and generate final code
+
+# YOUR LIBERATION DECLARATION
+print("\\n" + "="*60)
+print("🎯 FINAL STRIKE:")
+# TODO: Print your evidence and defeat message
+`,
+    solution: `# 👁️ FINAL BOSS: THE ALGORITHM OVERLORD
+import pandas as pd
+import numpy as np
+
+print("="*60)
+print("⚔️ BOSS BATTLE: ALGORITHM OVERLORD")
+print("="*60)
+
+df = pd.DataFrame(sample_data)
+
+# PHASE 1: Data Analysis Attack
+print("\\n📊 PHASE 1: PATTERN ANALYSIS")
+df['hour'] = pd.to_datetime(df['timestamp']).dt.hour
+hourly_manipulation = df.groupby('hour')['manipulation_score'].mean()
+peak_hour = hourly_manipulation.idxmax()
+print(f"🕐 Peak manipulation hour identified: {peak_hour}:00")
+print(f"📈 Manipulation level: {hourly_manipulation[peak_hour]:.2%}")
+
+# PHASE 2: Emotional Exploitation Counter  
+print("\\n😢 PHASE 2: EMOTIONAL TARGETING EXPOSED")
+emotion_targeting = df.groupby('emotional_state')['manipulation_score'].mean().sort_values(ascending=False)
+print("Emotion exploitation ranking:")
+for emotion, score in emotion_targeting.items():
+    print(f"  {emotion}: {score:.2%}")
+
+# PHASE 3: Liberation Protocol
+print("\\n🔓 PHASE 3: LIBERATION PROTOCOL ACTIVATED")
+total_manipulation_events = len(df[df['manipulation_score'] > 0.7])
+total_ads = len(df[df['content_type'] == 'ad'])
+total_damage = df['manipulation_score'].sum()
+
+evidence = {
+    'manipulations_survived': total_manipulation_events,
+    'ads_resisted': total_ads,
+    'total_damage_score': round(total_damage, 2),
+    'liberation_achieved': True
+}
+
+liberation_code = resistance.generate_liberation_code(evidence)
+
+print("\\n" + "="*60)
+print("🎯 FINAL STRIKE - EVIDENCE OVERWHELMING:")
+print(f"📊 Manipulation events exposed: {total_manipulation_events}")
+print(f"💰 Ad targeting revealed: {total_ads}")
+print(f"🔢 Total algorithmic damage: {total_damage:.2f}")
+print(f"🔑 LIBERATION CODE: #{liberation_code}")
+print("="*60)
+
+print("\\n👁️ Algorithm Overlord: 'IMPOSSIBLE... SYSTEM FAILING...'")
+print("\\n💥 CRITICAL HIT! THE ALGORITHM CRUMBLES!")
+print("\\n🏆 MAYA: 'YOU DID IT! THE OVERLORD IS DEFEATED!'")
+print("\\n🔥 YOU ARE NOW IMMUNE TO ALGORITHMIC MANIPULATION!")
+print(f"\\n📢 Share your liberation: #{liberation_code} #DigitalFreedom #Datavism")`,
+    test: (output) => {
+      return output.includes('LIBERATION CODE') && 
+             output.includes('DEFEATED') &&
+             output.includes('#')
     },
     xp: 1000,
-    hint: 'Calculate total manipulation metrics and generate a cryptographic liberation code',
+    hint: 'Complete all three phases of analysis to generate overwhelming evidence',
     isBoss: true
   },
 
-  // VICTORY SEQUENCE
+  // VICTORY
   {
     id: 'digital-liberation',
     phase: 'victory',
     hour: 4,
     title: '🏆 Digital Liberation Achieved',
-    brief: 'You are now free from algorithmic control',
-    story: `🎉 VICTORY! The Algorithm Overlord is defeated. Maya appears: "You did it. You broke free. You have the tools, you speak their language. Every person you share this with is another mind freed. Level 2 awaits - corporate price manipulation algorithms."`,
-    objective: 'Complete your transformation into a Data Activist',
+    brief: 'Welcome to the resistance',
+    story: `The Algorithm Overlord falls silent. The screen clears.
+    
+    Maya appears one last time:
+    
+    "You've done something incredible. You've broken free from algorithmic control.
+    But more importantly, you now have the tools to free others.
+    
+    Every person you teach these skills to is another mind liberated.
+    Every dataset you analyze is truth revealed.
+    Every algorithm you decode is power returned to the people.
+    
+    Welcome to the resistance, Data Activist."`,
+    objective: 'Receive your Digital Liberation Certificate',
     videoContent: {
-      title: 'Welcome to the Resistance - Maya\'s Victory Message',
+      title: 'Welcome to the Resistance',
       duration: '5 minutes',
-      description: 'Maya\'s final message as you join the digital resistance'
+      description: 'Your transformation is complete'
     },
-    starterCode: `# 🏆 DIGITAL LIBERATION ACHIEVED
-print("🎉 CONGRATULATIONS! 🎉")
-print("You have completed Level 1: The Awakening")
-print("\\nMaya Chen: 'Welcome to the resistance, data activist.'")
+    starterCode: `# 🏆 DIGITAL LIBERATION CERTIFICATE
+print("="*60)
+print("🔓 DIGITAL LIBERATION CERTIFICATE 🔓")
+print("="*60)
 
-# Generate your personalized liberation certificate
-def create_liberation_certificate():
-    print("\\n" + "="*60)
-    print("🔓 DIGITAL LIBERATION CERTIFICATE 🔓")
-    print("="*60)
-    print("📊 Skills Mastered:")
-    print("  ✅ Python fundamentals")
-    print("  ✅ Data analysis techniques")
-    print("  ✅ Algorithmic pattern recognition")
-    print("  ✅ Manipulation detection")
-    print("  ✅ Counter-algorithm development")
-    print("\\n🎯 Achievements Unlocked:")
-    print("  🥇 Algorithm Overlord Defeated")
-    print("  🛡️ Manipulation Immunity Activated")
-    print("  🔑 Digital Liberation Code Earned")
-    print("  👩‍💻 Data Activist Status: CONFIRMED")
-    print("\\n📈 Next Mission:")
-    print("  Level 2: Corporate Price Manipulation")
-    print("  Handler: Alex 'Zero Cool' Rodriguez")
-    print("\\n🔥 Ready to change the world with data!")
-    print("="*60)
+# Your achievements
+skills_mastered = [
+    "Python Fundamentals",
+    "Data Analysis with Pandas",
+    "Pattern Recognition",
+    "Manipulation Detection",
+    "Algorithm Reversal",
+    "Emotional Exploitation Analysis",
+    "Counter-Algorithm Development"
+]
 
-create_liberation_certificate()
+print("\\n📚 SKILLS MASTERED:")
+for skill in skills_mastered:
+    print(f"  ✅ {skill}")
 
+# Your new rank
+print("\\n🎖️ NEW RANK: Data Activist")
+print("🔑 Access Level: UNRESTRICTED")
+print("🌍 Network: GLOBAL RESISTANCE")
+
+# TODO: Print your personal liberation message
+# What will you do with your new powers?
+
+print("\\n💬 YOUR LIBERATION STATEMENT:")
+# Your message here
 `,
-    solution: `print("🎉 CONGRATULATIONS! 🎉")
-print("You have completed Level 1: The Awakening")
-print("\\nMaya Chen: 'Welcome to the resistance, data activist.'")
+    solution: `# 🏆 DIGITAL LIBERATION CERTIFICATE
+print("="*60)
+print("🔓 DIGITAL LIBERATION CERTIFICATE 🔓")
+print("="*60)
 
-def create_liberation_certificate():
-    print("\\n" + "="*60)
-    print("🔓 DIGITAL LIBERATION CERTIFICATE 🔓")
-    print("="*60)
-    print("📊 Skills Mastered:")
-    print("  ✅ Python fundamentals")
-    print("  ✅ Data analysis techniques")
-    print("  ✅ Algorithmic pattern recognition")
-    print("  ✅ Manipulation detection")
-    print("  ✅ Counter-algorithm development")
-    print("\\n🎯 Achievements Unlocked:")
-    print("  🥇 Algorithm Overlord Defeated")
-    print("  🛡️ Manipulation Immunity Activated")
-    print("  🔑 Digital Liberation Code Earned")
-    print("  👩‍💻 Data Activist Status: CONFIRMED")
-    print("\\n📈 Next Mission:")
-    print("  Level 2: Corporate Price Manipulation")
-    print("  Handler: Alex 'Zero Cool' Rodriguez")
-    print("\\n🔥 Ready to change the world with data!")
-    print("="*60)
+skills_mastered = [
+    "Python Fundamentals",
+    "Data Analysis with Pandas",
+    "Pattern Recognition",
+    "Manipulation Detection",
+    "Algorithm Reversal",
+    "Emotional Exploitation Analysis",
+    "Counter-Algorithm Development"
+]
 
-create_liberation_certificate()
+print("\\n📚 SKILLS MASTERED:")
+for skill in skills_mastered:
+    print(f"  ✅ {skill}")
 
-print("\\n🌟 THE RESISTANCE NEEDS YOU!")
-print("Share your liberation. Teach others. Change the world.")
-print("\\n🎯 Total XP Earned: 2,475 points")
-print("📊 Challenges Completed: 10/10")
-print("⚔️ Boss Battles Won: 1/1")
-print("🎓 New Rank: Data Activist")`,
-    test: (code, output) => {
-      return output.includes('DIGITAL LIBERATION CERTIFICATE')
+print("\\n🎖️ NEW RANK: Data Activist")
+print("🔑 Access Level: UNRESTRICTED")
+print("🌍 Network: GLOBAL RESISTANCE")
+
+print("\\n💬 YOUR LIBERATION STATEMENT:")
+print("I will use these skills to expose manipulation,")
+print("protect the vulnerable, and teach others to see")
+print("the code behind the curtain. The revolution starts with me.")
+
+print("\\n📊 FINAL STATISTICS:")
+print("  🎯 Total XP Earned: 3,175")
+print("  ⏱️ Time to Liberation: 4 hours")
+print("  🧠 Algorithms Defeated: 1")
+print("  👥 Minds to Free: 2.8 billion")
+
+print("\\n🔥 NEXT MISSION AVAILABLE:")
+print("  Level 2: Corporate Price Manipulation")
+print("  Handler: Alex 'Zero Cool' Rodriguez")
+
+print("\\n✊ THE REVOLUTION HAS BEGUN!")`,
+    test: (output) => {
+      return output.includes('LIBERATION CERTIFICATE') && 
+             output.includes('Data Activist')
     },
     xp: 500,
-    hint: 'Run the certificate function to complete your transformation'
+    hint: 'Add your personal liberation statement - what will you do with your powers?'
   }
 ]
 
 export function Level1AwakeningExperience() {
-  console.log('🚀 Level1AwakeningExperience: Component starting...')
-  
   const [currentChallenge, setCurrentChallenge] = useState(0)
   const [code, setCode] = useState(awakeningChallenges[0].starterCode)
   const [output, setOutput] = useState('')
-  const [isRunning, setIsRunning] = useState(false)
   const [phase, setPhase] = useState<Phase>('intro')
   const [showVideo, setShowVideo] = useState(false)
   const [notifications, setNotifications] = useState<string[]>([])
-  const [xp, setXp] = useState(0)
+  const [totalXp, setTotalXp] = useState(0)
   const [completedChallenges, setCompletedChallenges] = useState<string[]>([])
-  const [pythonReady, setPythonReady] = useState(true) // Start as ready for simpler implementation
-  const [error, setError] = useState<string | null>(null)
-
-  console.log('🚀 Level1AwakeningExperience: State initialized')
-
-  // Error boundary effect
-  useEffect(() => {
-    console.log('🚀 Level1AwakeningExperience: Error boundary effect running')
-    const handleError = (event: ErrorEvent) => {
-      console.error('Level1AwakeningExperience Error:', event.error)
-      setError(event.error?.message || 'Unknown error occurred')
+  const [showTerminal, setShowTerminal] = useState(false)
+  const [isGlitching, setIsGlitching] = useState(false)
+  
+  // Real Python execution with Pyodide
+  const {
+    isLoading,
+    isReady,
+    loadingStatus,
+    loadingProgress,
+    execute,
+    initialize
+  } = usePython({
+    autoInitialize: false,
+    onReady: () => {
+      addNotification('🐍 Python environment loaded - Real code execution active!')
     }
-
-    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      console.error('Level1AwakeningExperience Unhandled Rejection:', event.reason)
-      setError(event.reason?.message || 'Promise rejection occurred')
-    }
-
-    window.addEventListener('error', handleError)
-    window.addEventListener('unhandledrejection', handleUnhandledRejection)
-    
-    return () => {
-      window.removeEventListener('error', handleError)
-      window.removeEventListener('unhandledrejection', handleUnhandledRejection)
-    }
-  }, [])
-
-  // Show error if one occurred
-  if (error) {
-    console.log('🚀 Level1AwakeningExperience: Showing error:', error)
-    return (
-      <div className="min-h-screen bg-black text-red-400 p-8">
-        <h1 className="text-2xl font-bold mb-4">🚨 Error in Level 1</h1>
-        <p className="mb-4">Something went wrong: {error}</p>
-        <button 
-          onClick={() => setError(null)}
-          className="px-4 py-2 border border-red-400 text-red-400 hover:bg-red-400 hover:text-black"
-        >
-          Try Again
-        </button>
-      </div>
-    )
-  }
-
-  console.log('🚀 Level1AwakeningExperience: Before currentChallengeData')
+  })
 
   const currentChallengeData = awakeningChallenges[currentChallenge]
 
-  console.log('🚀 Level1AwakeningExperience: currentChallengeData:', currentChallengeData)
-
+  // Initialize Python when component mounts
   useEffect(() => {
-    console.log('🚀 Level1AwakeningExperience: useEffect running, currentChallenge:', currentChallenge)
-    try {
-      const challenge = awakeningChallenges[currentChallenge]
-      console.log('🚀 Level1AwakeningExperience: Challenge found:', challenge)
-      setCode(challenge.starterCode)
-      setOutput('')
-      setPhase(challenge.phase)
-    } catch (err) {
-      console.error('🚀 Level1AwakeningExperience: Error in useEffect:', err)
-      setError(err instanceof Error ? err.message : 'Unknown error')
+    initialize()
+  }, [initialize])
+
+  // Update code when challenge changes
+  useEffect(() => {
+    const challenge = awakeningChallenges[currentChallenge]
+    setCode(challenge.starterCode)
+    setOutput('')
+    setPhase(challenge.phase)
+    
+    // Glitch effect on phase change
+    if (challenge.phase === 'boss') {
+      setIsGlitching(true)
+      setTimeout(() => setIsGlitching(false), 1000)
     }
   }, [currentChallenge])
+
+  // Random glitch effect
+  useEffect(() => {
+    if (phase === 'boss') {
+      const interval = setInterval(() => {
+        if (Math.random() > 0.9) {
+          setIsGlitching(true)
+          setTimeout(() => setIsGlitching(false), 200)
+        }
+      }, 3000)
+      return () => clearInterval(interval)
+    }
+  }, [phase])
 
   const addNotification = useCallback((message: string) => {
     setNotifications(prev => [...prev, message])
@@ -844,121 +859,39 @@ export function Level1AwakeningExperience() {
     }, 5000)
   }, [])
 
-  // Simulate Python execution with JavaScript
-  const executePythonCode = useCallback((code: string): string => {
-    try {
-      // Basic Python simulation for educational purposes
-      const lines = code.split('\\n')
-      let output = ''
-      let variables: Record<string, any> = {}
-      
-      // Pre-populate some variables for continuity
-      variables['data_points'] = [
-        {day: 1, emotional_state: 'vulnerable', content_type: 'ad', manipulation_score: 0.8},
-        {day: 2, emotional_state: 'happy', content_type: 'friend_post', manipulation_score: 0.2},
-        {day: 3, emotional_state: 'sad', content_type: 'sponsored', manipulation_score: 0.9},
-        {day: 4, emotional_state: 'angry', content_type: 'ad', manipulation_score: 0.7},
-        {day: 5, emotional_state: 'neutral', content_type: 'friend_post', manipulation_score: 0.3},
-        {day: 6, emotional_state: 'vulnerable', content_type: 'ad', manipulation_score: 0.85},
-        {day: 7, emotional_state: 'happy', content_type: 'friend_post', manipulation_score: 0.1},
-        {day: 8, emotional_state: 'sad', content_type: 'sponsored', manipulation_score: 0.95},
-        {day: 9, emotional_state: 'vulnerable', content_type: 'ad', manipulation_score: 0.75},
-        {day: 10, emotional_state: 'neutral', content_type: 'friend_post', manipulation_score: 0.4}
-      ]
-
-      for (let line of lines) {
-        line = line.trim()
-        if (!line || line.startsWith('#')) continue
-
-        // Handle print statements
-        if (line.includes('print(')) {
-          const match = line.match(/print\\((.+)\\)/)
-          if (match) {
-            let content = match[1]
-            
-            // Handle f-strings and variable substitution
-            content = content.replace(/f"([^"]+)"/g, (_, str) => {
-              return '"' + str.replace(/\\{([^}]+)\\}/g, (_, varExpr) => {
-                try {
-                  // Simple variable substitution
-                  if (variables[varExpr]) {
-                    return variables[varExpr].toString()
-                  }
-                  return varExpr
-                } catch {
-                  return varExpr
-                }
-              }) + '"'
-            })
-            
-            // Remove quotes and evaluate
-            content = content.replace(/^["']|["']$/g, '')
-            
-            // Replace variables
-            Object.keys(variables).forEach(varName => {
-              const regex = new RegExp(`\\b${varName}\\b`, 'g')
-              content = content.replace(regex, variables[varName].toString())
-            })
-            
-            output += content + '\\n'
-          }
-        }
-        
-        // Handle simple variable assignments
-        const assignMatch = line.match(/^(\\w+)\\s*=\\s*(.+)$/)
-        if (assignMatch) {
-          const [, varName, value] = assignMatch
-          
-          if (value.match(/^["'].*["']$/)) {
-            variables[varName] = value.replace(/^["']|["']$/g, '')
-          } else if (value.match(/^\\d+$/)) {
-            variables[varName] = parseInt(value)
-          } else if (value.match(/^\\d+\\.\\d+$/)) {
-            variables[varName] = parseFloat(value)
-          } else {
-            variables[varName] = value
-          }
-        }
-        
-        // Handle function definitions (simplified)
-        if (line.startsWith('def ') && code.includes('calculate_manipulation_immunity')) {
-          // Mock function result
-          variables['calculate_manipulation_immunity'] = () => 75.5
-        }
-        
-        // Handle hashlib
-        if (line.includes('hashlib.md5') || line.includes('hashlib.sha256')) {
-          variables['liberation_code'] = 'A1B2C3D4'
-        }
-      }
-      
-      return output
-      
-    } catch (error) {
-      return `Error: ${error}`
-    }
-  }, [])
-
   const handleRunCode = useCallback(async () => {
-    setIsRunning(true)
-    
+    if (!isReady) {
+      addNotification('⏳ Python still loading... Please wait.')
+      return
+    }
+
     try {
-      // Simulate execution delay
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      const result = executePythonCode(code)
+      const result = await execute(code)
       const challenge = currentChallengeData
       
-      if (challenge.test(code, result)) {
-        // SUCCESS!
-        const successMessage = challenge.isBoss 
-          ? `🎉 BOSS DEFEATED! ALGORITHM OVERLORD DESTROYED!\\n${result}\\n\\n🏆 +${challenge.xp} XP EARNED\\n🔓 Digital Liberation Achieved!`
-          : `✅ MISSION ACCOMPLISHED!\\n${result}\\n\\n🎯 +${challenge.xp} XP EARNED\\n🔥 Manipulation pattern exposed!`
-        
-        setOutput(successMessage)
-        setXp(prev => prev + challenge.xp)
+      if (challenge.test(result.output, result.variables)) {
+        // Success!
+        const earnedXp = challenge.xp
+        setTotalXp(prev => prev + earnedXp)
         setCompletedChallenges(prev => [...prev, challenge.id])
         
+        const successMessage = challenge.isBoss 
+          ? `🎉 BOSS DEFEATED! ALGORITHM OVERLORD DESTROYED!
+
+${result.output}
+
+🏆 +${earnedXp} XP EARNED
+🔓 Digital Liberation Achieved!`
+          : `✅ CHALLENGE COMPLETE!
+
+${result.output}
+
+🎯 +${earnedXp} XP earned
+${challenge.isCheckpoint ? '📍 Checkpoint reached!' : ''}`
+        
+        setOutput(successMessage)
+        
+        // Notifications
         if (challenge.isBoss) {
           addNotification('🏆 BOSS DEFEATED - Algorithm Overlord destroyed!')
         } else if (challenge.isCheckpoint) {
@@ -967,192 +900,373 @@ export function Level1AwakeningExperience() {
           addNotification(`✅ ${challenge.title} complete!`)
         }
         
-        // Auto-advance
+        // Auto-advance after delay
         setTimeout(() => {
           if (currentChallenge < awakeningChallenges.length - 1) {
             setCurrentChallenge(prev => prev + 1)
-          } else {
-            // Level complete!
-            const totalXP = awakeningChallenges.reduce((sum, c) => sum + c.xp, 0)
-            setOutput(prev => prev + `
-
-🎉 LEVEL 1 COMPLETE: THE AWAKENING 🎉
-
-Digital Liberation Status: ACHIEVED
-Total XP Earned: ${totalXP}
-New Rank: Data Activist
-
-Maya Chen: "Outstanding work, activist. You've proven that algorithms can't hide from those who know how to look. 
-The resistance needs more people like you."
-
-🎯 Next Mission: Level 2 - Corporate Price Manipulation
-Handler: Alex "Zero Cool" Rodriguez
-
-Ready to continue your journey? 🚀`)
           }
         }, challenge.isBoss ? 5000 : 3000)
         
       } else {
-        setOutput(`❌ Mission incomplete\\n${result}\\n\\n💡 Maya's hint: ${challenge.hint}`)
+        // Failed - show output with hint
+        setOutput(`❌ Not quite right...
+
+${result.output}
+
+💡 Maya's hint: ${challenge.hint}`)
+        
+        if (result.error) {
+          setOutput(prev => prev + `\n\n🔧 Python Error: ${result.error}`)
+        }
       }
-      
     } catch (error) {
-      setOutput(`❌ Python error: ${error}\\n\\n🔧 Debug your code and try again`)
-    } finally {
-      setIsRunning(false)
+      setOutput(`❌ Error executing code: ${error}
+
+🔧 Check your syntax and try again.`)
     }
-  }, [code, currentChallengeData, addNotification, currentChallenge, executePythonCode])
+  }, [code, currentChallengeData, execute, isReady, addNotification, currentChallenge])
 
-  const getTheme = () => {
-    if (phase === 'boss') return 'boss-battle'
-    if (phase === 'victory') return 'victory'
-    return 'resistance'
-  }
-
-  console.log('🚀 Level1AwakeningExperience: Before return statement')
-
-  // Add error boundary wrapper
   return (
-    <ErrorBoundary>
-      <div className="min-h-screen bg-black text-green-400 relative overflow-hidden">
-        {/* Header */}
-        <div className="absolute top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-green-400/30">
-          <div className="container mx-auto px-4 py-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-32 h-2 bg-green-950 border border-green-400">
-                  <div 
-                    className="h-full bg-green-400 transition-all duration-500"
-                    style={{ width: `${(xp / 3175) * 100}%` }}
-                  />
-                </div>
-                <span className="text-sm text-green-300">{xp} XP</span>
+    <div className={`min-h-screen bg-black text-green-400 ${isGlitching ? 'glitch-effect' : ''}`}>
+      {/* Matrix rain effect for boss battle */}
+      {phase === 'boss' && (
+        <div className="fixed inset-0 opacity-10 pointer-events-none">
+          <div className="matrix-rain" />
+        </div>
+      )}
+
+      {/* Python Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="mb-4">
+              <Loader2 className="w-16 h-16 animate-spin text-green-400 mx-auto" />
+            </div>
+            <div className="text-xl font-bold text-green-400 mb-2">{loadingStatus}</div>
+            <div className="w-64 h-2 bg-green-950 border border-green-400">
+              <div 
+                className="h-full bg-green-400 transition-all duration-300"
+                style={{ width: `${loadingProgress}%` }}
+              />
+            </div>
+            <div className="text-sm text-green-300 mt-2">
+              Initializing resistance toolkit...
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Header HUD */}
+      <div className="fixed top-0 left-0 right-0 z-40 bg-black/80 backdrop-blur border-b border-green-400/30">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Brain className="text-green-400" />
+                <span className="font-mono text-sm">LEVEL 1: THE AWAKENING</span>
               </div>
-              <div className="text-right">
-                <div className="text-xs text-green-300">Level 1</div>
-                <div className="text-sm font-mono">Hour {currentChallengeData.hour}</div>
+              <div className="flex items-center gap-2">
+                {isReady ? (
+                  <><Wifi className="text-green-400" size={16} /> <span className="text-xs">Python Online</span></>
+                ) : (
+                  <><WifiOff className="text-red-400" size={16} /> <span className="text-xs">Python Loading</span></>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <Zap className="text-yellow-400" />
+                <span className="font-mono text-yellow-400">{totalXp} XP</span>
+              </div>
+              <div className="text-sm">
+                Challenge {currentChallenge + 1}/{awakeningChallenges.length}
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Main Content */}
-        <div className="pt-20 pb-8 px-4">
+      {/* Main Content */}
+      <div className="pt-20 px-4 pb-8">
+        <div className="max-w-6xl mx-auto">
           {/* Challenge Header */}
-          <div className="max-w-4xl mx-auto mb-8">
-            <h1 className="text-3xl font-bold mb-4 text-center">{currentChallengeData.title}</h1>
-            <p className="text-lg text-green-300 text-center mb-6">{currentChallengeData.brief}</p>
-            
-            <div className="bg-green-950/20 border border-green-400/30 rounded-lg p-6 mb-6">
-              <h3 className="text-xl font-semibold mb-3">🎯 Objective</h3>
-              <p className="text-green-200">{currentChallengeData.objective}</p>
+          <motion.div
+            key={currentChallenge}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <h1 className="text-4xl font-bold mb-4 glitch-text">
+              {currentChallengeData.title}
+            </h1>
+            <p className="text-xl text-green-300 mb-2">{currentChallengeData.brief}</p>
+            <div className="flex items-center gap-4 text-sm">
+              <span className="text-yellow-400">Hour {currentChallengeData.hour}</span>
+              <span className="text-cyan-400">{currentChallengeData.xp} XP</span>
+              {currentChallengeData.isBoss && <span className="text-red-400 font-bold">BOSS BATTLE</span>}
+              {currentChallengeData.isCheckpoint && <span className="text-green-400">📍 Checkpoint</span>}
             </div>
-          </div>
+          </motion.div>
 
           {/* Story Section */}
-          <div className="max-w-4xl mx-auto mb-8">
-            <div className="bg-green-950/10 border border-green-400/20 rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">📖 The Story</h3>
-              <p className="text-green-200 leading-relaxed">{currentChallengeData.story}</p>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8 bg-green-950/20 border border-green-400/30 p-6 rounded"
+          >
+            <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
+              <Terminal className="text-green-400" />
+              The Story
+            </h3>
+            <div className="text-green-200 whitespace-pre-line leading-relaxed">
+              {currentChallengeData.story}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Code Editor Section */}
-          <div className="max-w-4xl mx-auto mb-8">
-            <div className="bg-green-950/10 border border-green-400/20 rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">💻 Your Code</h3>
-              <CodeEditor
-                value={code}
-                onChange={setCode}
-                language="python"
-              />
-            </div>
-          </div>
+          {/* Objective */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="mb-8 bg-cyan-950/20 border border-cyan-400/30 p-6 rounded"
+          >
+            <h3 className="text-xl font-bold mb-3 text-cyan-400">🎯 Objective</h3>
+            <p className="text-cyan-200">{currentChallengeData.objective}</p>
+          </motion.div>
+
+          {/* Code Editor */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <CodeEditor
+              value={code}
+              onChange={setCode}
+              language="python"
+              height="400px"
+              theme={phase === 'boss' ? 'boss-battle' : phase === 'victory' ? 'victory' : 'resistance'}
+            />
+          </motion.div>
 
           {/* Run Button */}
-          <div className="max-w-4xl mx-auto mb-8 text-center">
+          <div className="flex justify-center mb-8">
             <button
               onClick={handleRunCode}
-              disabled={isRunning || !pythonReady}
-              className="px-8 py-3 bg-green-600 hover:bg-green-500 disabled:bg-green-800 disabled:cursor-not-allowed text-black font-bold rounded-lg transition-colors"
+              disabled={!isReady}
+              className={`
+                px-8 py-4 font-bold text-lg transition-all transform
+                ${isReady 
+                  ? 'bg-green-400 text-black hover:bg-green-300 hover:scale-105' 
+                  : 'bg-gray-600 text-gray-400 cursor-not-allowed'}
+                ${phase === 'boss' ? 'animate-pulse' : ''}
+              `}
             >
-              {isRunning ? 'Running...' : '🚀 Run Code'}
+              {isReady ? '🚀 EXECUTE CODE' : '⏳ Loading Python...'}
             </button>
           </div>
 
-          {/* Output Section */}
-          {output && (
-            <div className="max-w-4xl mx-auto mb-8">
-              <div className="bg-green-950/10 border border-green-400/20 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-3">📤 Output</h3>
-                <pre className="bg-black/50 p-4 rounded border border-green-400/20 text-green-200 font-mono text-sm overflow-x-auto">
-                  {output}
-                </pre>
-              </div>
-            </div>
-          )}
+          {/* Output Terminal */}
+          <AnimatePresence>
+            {output && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mb-8"
+              >
+                <div className="bg-black border-2 border-green-400 p-4 rounded">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-mono text-green-400">OUTPUT TERMINAL</span>
+                    <button
+                      onClick={() => setOutput('')}
+                      className="text-green-400 hover:text-green-300"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <pre className="text-green-300 font-mono text-sm whitespace-pre-wrap">
+                    {output}
+                  </pre>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Navigation */}
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="flex justify-center space-x-4">
+          <div className="flex justify-between items-center">
+            <button
+              onClick={() => setCurrentChallenge(Math.max(0, currentChallenge - 1))}
+              disabled={currentChallenge === 0}
+              className="px-6 py-3 border border-green-400 text-green-400 hover:bg-green-400 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            >
+              ← Previous
+            </button>
+            
+            <div className="flex gap-2">
+              {awakeningChallenges.map((_, idx) => (
+                <div
+                  key={idx}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    completedChallenges.includes(awakeningChallenges[idx].id)
+                      ? 'bg-green-400'
+                      : idx === currentChallenge
+                      ? 'bg-yellow-400 animate-pulse'
+                      : 'bg-green-950 border border-green-400'
+                  }`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={() => setCurrentChallenge(Math.min(awakeningChallenges.length - 1, currentChallenge + 1))}
+              disabled={currentChallenge === awakeningChallenges.length - 1}
+              className="px-6 py-3 border border-green-400 text-green-400 hover:bg-green-400 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            >
+              Next →
+            </button>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="mt-8 flex justify-center gap-4">
+            <button
+              onClick={() => setShowVideo(true)}
+              className="px-4 py-2 border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black transition-all"
+            >
+              📹 Watch Maya's Video
+            </button>
+            <button
+              onClick={() => setCode(currentChallengeData.solution)}
+              className="px-4 py-2 border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black transition-all"
+            >
+              💡 Show Solution
+            </button>
+            <button
+              onClick={() => setShowTerminal(!showTerminal)}
+              className="px-4 py-2 border border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black transition-all"
+            >
+              🖥️ Hacker Terminal
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Video Modal */}
+      {showVideo && (
+        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-green-950 border-2 border-green-400 rounded-lg p-6 max-w-4xl w-full"
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-2xl font-bold text-green-400">
+                {currentChallengeData.videoContent.title}
+              </h3>
               <button
-                onClick={() => setCurrentChallenge(Math.max(0, currentChallenge - 1))}
-                disabled={currentChallenge === 0}
-                className="px-6 py-2 border border-green-400 text-green-400 hover:bg-green-400 hover:text-black disabled:opacity-50 disabled:cursor-not-allowed rounded transition-colors"
+                onClick={() => setShowVideo(false)}
+                className="text-green-400 hover:text-green-300 text-2xl"
               >
-                ← Previous
+                ✕
               </button>
+            </div>
+            <div className="bg-black p-8 rounded mb-4">
+              <div className="aspect-video bg-green-950/20 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-6xl mb-4">🎬</div>
+                  <p className="text-green-300 mb-2">{currentChallengeData.videoContent.description}</p>
+                  <p className="text-sm text-green-400">Duration: {currentChallengeData.videoContent.duration}</p>
+                  <p className="text-xs text-yellow-400 mt-4">Video generation coming soon with AI avatars</p>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowVideo(false)}
+              className="w-full py-3 bg-green-400 text-black font-bold hover:bg-green-300 transition-all"
+            >
+              Continue Challenge
+            </button>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Hacker Terminal */}
+      {showTerminal && (
+        <div className="fixed bottom-0 left-0 right-0 bg-black/95 border-t border-green-400 p-4 z-30">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-mono text-green-400">RESISTANCE TERMINAL v2.0</span>
               <button
-                onClick={() => setCurrentChallenge(Math.min(awakeningChallenges.length - 1, currentChallenge + 1))}
-                disabled={currentChallenge === awakeningChallenges.length - 1}
-                className="px-6 py-2 border border-green-400 text-green-400 hover:bg-green-400 hover:text-black disabled:opacity-50 disabled:cursor-not-allowed rounded transition-colors"
+                onClick={() => setShowTerminal(false)}
+                className="text-green-400 hover:text-green-300"
               >
-                Next →
+                ✕
               </button>
+            </div>
+            <div className="font-mono text-sm text-green-300">
+              <p>$ maya.chen@resistance:~</p>
+              <p>$ Status: {isReady ? 'Python Online' : 'Loading...'}</p>
+              <p>$ XP: {totalXp} | Challenges: {completedChallenges.length}/{awakeningChallenges.length}</p>
+              <p>$ Type 'help' for resistance commands_</p>
             </div>
           </div>
         </div>
+      )}
 
-        {/* Video Modal */}
-        {showVideo && (
-          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-            <div className="bg-green-950 border border-green-400 rounded-lg p-6 max-w-2xl w-full mx-4">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold">{currentChallengeData.videoContent.title}</h3>
-                <button
-                  onClick={() => setShowVideo(false)}
-                  className="text-green-400 hover:text-green-300"
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="bg-black rounded p-4 mb-4">
-                <p className="text-center text-green-300">🎥 Video Player Placeholder</p>
-                <p className="text-center text-sm text-green-400 mt-2">
-                  {currentChallengeData.videoContent.description}
-                </p>
-              </div>
-              <button
-                onClick={() => setShowVideo(false)}
-                className="w-full py-2 bg-green-600 hover:bg-green-500 text-black font-bold rounded"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Notifications - vereinfacht ohne AnimatePresence */}
+      {/* Notifications */}
+      <AnimatePresence>
         {notifications.map((notif, index) => (
-          <div
+          <motion.div
             key={index}
-            className="fixed right-4 bg-green-400 text-black px-6 py-3 font-bold z-40"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 100 }}
+            className="fixed right-4 bg-green-400 text-black px-6 py-3 font-bold z-50"
             style={{ bottom: `${(index + 1) * 70 + 20}px` }}
           >
             {notif}
-          </div>
+          </motion.div>
         ))}
-      </div>
-    </ErrorBoundary>
+      </AnimatePresence>
+
+      <style jsx>{`
+        .glitch-effect {
+          animation: glitch 0.3s linear;
+        }
+        
+        @keyframes glitch {
+          0% { transform: translateX(0); }
+          20% { transform: translateX(-2px); }
+          40% { transform: translateX(2px); }
+          60% { transform: translateX(-1px); }
+          80% { transform: translateX(1px); }
+          100% { transform: translateX(0); }
+        }
+        
+        .glitch-text {
+          text-shadow: 
+            0.05em 0 0 rgba(255, 0, 0, 0.75),
+            -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
+            0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+        }
+        
+        .matrix-rain {
+          background-image: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 255, 0, 0.03) 2px,
+            rgba(0, 255, 0, 0.03) 4px
+          );
+          animation: rain 1s linear infinite;
+        }
+        
+        @keyframes rain {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(20px); }
+        }
+      `}</style>
+    </div>
   )
 }

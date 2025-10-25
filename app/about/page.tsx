@@ -140,8 +140,11 @@ export default function AboutPage() {
               The best way to expose it is with Python."
             </blockquote>
             <cite className="text-green-400/60 text-lg">
-              — Ghost, Founder of The Data Underground
+              — Ghost 👻 (Anonymous Collective)
             </cite>
+            <p className="text-xs text-green-400/40 mt-4 font-mono">
+              ghost@datavism.org
+            </p>
           </section>
         </div>
       </div>

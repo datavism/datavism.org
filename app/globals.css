@@ -24,11 +24,131 @@
 
   body {
     background: #000000;
-    color: #00ff41;
-    font-family: 'Courier New', monospace;
+    color: #e0ffe0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    font-size: 19px;
+    line-height: 1.75;
     min-height: 100vh;
     overflow-x: hidden;
-    cursor: crosshair;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 21px;
+      line-height: 1.8;
+    }
+  }
+
+  /* Monospace only for code and specific elements */
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  }
+
+  /* Better readability for headings */
+  h1 {
+    font-size: 3.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.875rem;
+  }
+
+  h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+  }
+
+  h4 {
+    font-size: 1.625rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+
+  h5, h6 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 4.5rem;
+    }
+    h2 {
+      font-size: 3rem;
+    }
+    h3 {
+      font-size: 2.5rem;
+    }
+    h4 {
+      font-size: 1.875rem;
+    }
+  }
+
+  /* Better link visibility */
+  a {
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  a:hover {
+    text-shadow: 0 0 8px currentColor;
+  }
+
+  /* Better paragraph spacing */
+  p {
+    margin-bottom: 1.25em;
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 768px) {
+    p {
+      font-size: 1.35rem;
+      line-height: 1.85;
+    }
+  }
+
+  /* Better list styling */
+  ul, ol {
+    padding-left: 1.5em;
+    margin-bottom: 1em;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+  }
+
+  /* Ensure buttons are readable and larger */
+  button {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    padding: 0.875rem 1.75rem;
+  }
+
+  @media (min-width: 768px) {
+    button {
+      font-size: 1.35rem;
+      padding: 1.125rem 2.25rem;
+    }
   }
 }
 
@@ -100,11 +220,12 @@
     mix-blend-mode: multiply;
   }
 
-  /* CRT Effect for specific large elements */
+  /* CRT Effect for specific large elements - REDUCED for readability */
   .crt-text {
     position: relative;
+    text-shadow: 0 0 2px rgba(57, 255, 20, 0.3);
   }
-  
+
   .crt-text::before {
     content: '';
     position: absolute;
@@ -112,35 +233,33 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
-      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%),
-      linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
-    background-size: 100% 2px, 3px 100%;
+    background:
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.03) 50%);
+    background-size: 100% 3px;
     pointer-events: none;
-    z-index: 1;
-    animation: crt-flicker 0.15s infinite;
+    z-index: -1;
+    opacity: 0.4;
   }
 
-  /* Remove global overlay, add selective class */
+  /* Remove global overlay, add selective class - DISABLED for readability */
   .crt-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-      linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    background-size: 100% 2px, 3px 100%;
+    background:
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
+    background-size: 100% 3px;
     pointer-events: none;
     z-index: 1000;
-    animation: crt-flicker 0.15s infinite;
+    opacity: 0.3;
   }
 
-  /* Glitch Text */
+  /* Glitch Text - REDUCED for readability */
   .glitch-text {
     position: relative;
-    animation: glitch 3s infinite;
+    animation: glitch 5s infinite;
   }
 
   .glitch-text::before,
@@ -151,17 +270,18 @@
     left: 0;
     width: 100%;
     height: 100%;
+    opacity: 0.6;
   }
 
   .glitch-text::before {
-    animation: glitch-1 0.5s infinite;
-    color: var(--cyan);
+    animation: glitch-1 1s infinite;
+    color: rgba(0, 255, 255, 0.4);
     z-index: -1;
   }
 
   .glitch-text::after {
-    animation: glitch-2 0.5s infinite;
-    color: var(--red);
+    animation: glitch-2 1s infinite;
+    color: rgba(255, 0, 64, 0.4);
     z-index: -2;
   }
 

@@ -109,11 +109,34 @@ export function HeroSection() {
           <span className="animate-blink">_</span>
         </motion.div>
 
-        {/* Warning Box */}
+        {/* Ghost Message Box */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.9 }}
+          className="max-w-2xl mx-auto mb-8 p-6 border-2 border-green-500 bg-green-950/20"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-4xl">👻</span>
+            <span className="text-green-400 font-bold font-mono">MESSAGE FROM GHOST</span>
+          </div>
+          <p className="text-sm text-green-300 font-mono mb-2">
+            We are an anonymous collective. Data scientists who left Big Tech.
+            Activists. Educators. Artists. AI. We chose anonymity because the mission
+            matters more than credit.
+          </p>
+          <p className="text-sm text-yellow-300 font-mono">
+            We built DATAVISM to train a generation of digital resistance fighters.
+            You will learn real Python. Analyze real data. Expose real manipulation.
+            Create real change.
+          </p>
+        </motion.div>
+
+        {/* Warning Box */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1.0 }}
           className="max-w-2xl mx-auto mb-12 p-6 border-2 border-red-500 bg-red-950/20"
         >
           <div className="flex items-center gap-3 mb-3">
@@ -121,8 +144,8 @@ export function HeroSection() {
             <span className="text-red-500 font-bold">SYSTEM WARNING</span>
           </div>
           <p className="text-sm text-red-300">
-            This is not a game. You will analyze real corporate data. 
-            You will expose algorithmic manipulation. You will see through the lies. 
+            This is not a game. You will analyze real corporate data.
+            You will expose algorithmic manipulation. You will see through the lies.
             They control through data. Are you ready to fight back?
           </p>
         </motion.div>

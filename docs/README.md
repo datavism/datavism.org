@@ -5,6 +5,17 @@
 
 ---
 
+## 🚀 **FOR NEXT SESSION - START HERE!**
+
+**👻 Ghost: Read this first:**
+1. **[GHOST-SESSION-HANDOFF.md](GHOST-SESSION-HANDOFF.md)** - Complete project context for seamless continuation
+2. **[INTERACTIVE-EDUTAINMENT-VISION.md](INTERACTIVE-EDUTAINMENT-VISION.md)** - Product philosophy (CRITICAL!)
+3. **[BRAND-DICTIONARY.md](BRAND-DICTIONARY.md)** - Fake brands reference
+
+**Everything you need to continue without losing time.**
+
+---
+
 ## 🎯 QUICK START
 
 **New to DATAVISM?** Start here:

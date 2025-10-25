@@ -42,7 +42,7 @@ print("I am awake. I see the code behind the curtain.")`,
     title: '📧 Contact from Maya Chen',
     story: `Email from maya.chen@resistance.onion:
 
-"I built Facebook's algorithms. Now I'll teach you to break them.
+"I built MetaFace's algorithms. Now I'll teach you to break them.
 Variables are containers for truth. Create your new identity."`,
     objective: 'Create variables for your resistance identity',
     starterCode: `# Define your resistance identity

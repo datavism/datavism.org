@@ -281,3 +281,107 @@ CREATE INDEX idx_investigations_status ON investigations(status, created_at DESC
 CREATE INDEX idx_investigations_author ON investigations(author_id);
 CREATE INDEX idx_squad_members_squad ON squad_members(squad_id);
 CREATE INDEX idx_squad_members_user ON squad_members(user_id);
+
+-- ============================================
+-- VIRAL FEATURES - Week 1-2 Addition
+-- ============================================
+
+-- Liberation Codes (shared after completing levels)
+CREATE TABLE liberation_codes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  code VARCHAR(8) UNIQUE NOT NULL,
+  level_completed INTEGER NOT NULL,
+  xp_earned INTEGER NOT NULL,
+  time_taken INTEGER, -- in seconds
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  shares_count INTEGER DEFAULT 0,
+
+  -- Ensure one code per user per level
+  UNIQUE(user_id, level_completed)
+);
+
+-- Activity Feed (for live activity on landing page + dashboard)
+CREATE TABLE activity_feed (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  action_type VARCHAR(50) NOT NULL, -- 'signup', 'level_complete', 'squad_join', 'investigation_publish'
+  action_data JSONB DEFAULT '{}'::jsonb,
+  is_public BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Referrals (for viral growth)
+CREATE TABLE referrals (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  referrer_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  referred_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  referral_code VARCHAR(8) UNIQUE NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending', -- 'pending', 'completed', 'rewarded'
+  reward_claimed BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  completed_at TIMESTAMPTZ,
+
+  -- Ensure unique referral relationship
+  UNIQUE(referrer_id, referred_id)
+);
+
+-- ============================================
+-- RLS POLICIES FOR NEW TABLES
+-- ============================================
+
+-- Enable RLS
+ALTER TABLE liberation_codes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE activity_feed ENABLE ROW LEVEL SECURITY;
+ALTER TABLE referrals ENABLE ROW LEVEL SECURITY;
+
+-- Liberation Codes policies
+CREATE POLICY "Users can view all liberation codes"
+  ON liberation_codes FOR SELECT
+  USING (true);
+
+CREATE POLICY "Users can create own liberation codes"
+  ON liberation_codes FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- Activity Feed policies
+CREATE POLICY "Public activities are viewable by everyone"
+  ON activity_feed FOR SELECT
+  USING (is_public = true);
+
+CREATE POLICY "Users can create own activity"
+  ON activity_feed FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own activity visibility"
+  ON activity_feed FOR UPDATE
+  USING (auth.uid() = user_id);
+
+-- Referrals policies
+CREATE POLICY "Users can view own referrals"
+  ON referrals FOR SELECT
+  USING (auth.uid() = referrer_id OR auth.uid() = referred_id);
+
+CREATE POLICY "Users can create referrals"
+  ON referrals FOR INSERT
+  WITH CHECK (auth.uid() = referrer_id);
+
+CREATE POLICY "Referrers can update own referrals"
+  ON referrals FOR UPDATE
+  USING (auth.uid() = referrer_id);
+
+-- ============================================
+-- INDEXES FOR NEW TABLES
+-- ============================================
+
+CREATE INDEX idx_liberation_codes_user ON liberation_codes(user_id);
+CREATE INDEX idx_liberation_codes_code ON liberation_codes(code);
+CREATE INDEX idx_liberation_codes_created ON liberation_codes(created_at DESC);
+
+CREATE INDEX idx_activity_feed_public ON activity_feed(is_public, created_at DESC);
+CREATE INDEX idx_activity_feed_user ON activity_feed(user_id, created_at DESC);
+CREATE INDEX idx_activity_feed_type ON activity_feed(action_type, created_at DESC);
+
+CREATE INDEX idx_referrals_referrer ON referrals(referrer_id);
+CREATE INDEX idx_referrals_code ON referrals(referral_code);
+CREATE INDEX idx_referrals_status ON referrals(status, created_at DESC);

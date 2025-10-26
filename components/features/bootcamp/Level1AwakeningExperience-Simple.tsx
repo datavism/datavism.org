@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Terminal, Zap, Trophy, Brain, Loader2, Wifi, WifiOff, ChevronRight, Eye, Lock, CheckCircle } from 'lucide-react'
 import { CodeEditor } from '@/components/ui/CodeEditor'
 import { usePython, RESISTANCE_SNIPPETS } from '@/lib/hooks/usePython'
+import { MayaDialogue } from '@/components/ui/MayaDialogue'
 
 interface Challenge {
   id: string
@@ -223,6 +224,85 @@ print("Welcome to the resistance!")`,
   }
 ]
 
+// Maya Chen dialogue intros for each challenge
+const mayaDialogues = [
+  {
+    // Challenge 0: Awakening
+    character: 'maya' as const,
+    text: [
+      "Welcome to the resistance.",
+      "I'm Maya Chen. Former MetaFace engineer. Current whistleblower.",
+      "I built the algorithms that manipulate millions. Now I'll teach you to break them.",
+      "Your phone just vibrated 47 times. That's not an accident.",
+      "Let's start with your awakening. Show me you're ready."
+    ],
+    emotion: 'neutral' as const
+  },
+  {
+    // Challenge 1: Maya Contact
+    character: 'maya' as const,
+    text: [
+      "Good. You're listening.",
+      "In this world, you're just a number: user_4847392.",
+      "But in the resistance, you have power. You have identity.",
+      "Let me teach you about variables - containers for truth.",
+      "Create your new resistance identity. Leave your old self behind."
+    ],
+    emotion: 'neutral' as const
+  },
+  {
+    // Challenge 2: Manipulation Detector
+    character: 'maya' as const,
+    text: [
+      "You see those words? BREAKING. URGENT. LAST CHANCE.",
+      "They're not random. They're weapons.",
+      "Designed to hijack your amygdala. To bypass rational thought.",
+      "I helped create this system. Now I'll teach you to detect it.",
+      "Build your first function. Make it recognize manipulation."
+    ],
+    emotion: 'urgent' as const,
+    glitchEffect: true
+  },
+  {
+    // Challenge 3: Digital Footprint
+    character: 'maya' as const,
+    text: [
+      "Let's talk about what they took from you.",
+      "Every post. Every like. Every second of scrolling.",
+      "They quantified your life and sold it.",
+      "I've built a resistance toolkit. It calculates the damage.",
+      "Prepare yourself. The truth hurts."
+    ],
+    emotion: 'worried' as const
+  },
+  {
+    // Challenge 4: Data Analysis
+    character: 'maya' as const,
+    text: [
+      "I've leaked some data. Real manipulation patterns.",
+      "See that? They strike when you're vulnerable.",
+      "Late at night. After breakups. When you're lonely.",
+      "The algorithm knows your weak moments better than you do.",
+      "Use pandas. Analyze the patterns. See the truth."
+    ],
+    emotion: 'angry' as const,
+    glitchEffect: true
+  },
+  {
+    // Challenge 5: Liberation Code
+    character: 'maya' as const,
+    text: [
+      "This is it. Your final test.",
+      "Everything you've learned. Everything you've discovered.",
+      "Now we encode it. Make it permanent. Make it shareable.",
+      "Your liberation code proves you've broken free.",
+      "Generate it. Share it. Free others.",
+      "Welcome to the resistance, recruit."
+    ],
+    emotion: 'proud' as const
+  }
+]
+
 interface Level1Props {
   onComplete?: (finalXp: number) => void
 }
@@ -235,6 +315,8 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
   const [completedChallenges, setCompletedChallenges] = useState<string[]>([])
   const [showingSolution, setShowingSolution] = useState(false)
   const [challengeStatus, setChallengeStatus] = useState<'pending' | 'completed' | 'solved-with-help'>('pending')
+  const [showingDialogue, setShowingDialogue] = useState(true)
+  const [dialogueCompleted, setDialogueCompleted] = useState(false)
 
   const { isReady, isLoading, loadingStatus, loadingProgress, execute} = usePython()
   
@@ -266,10 +348,15 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
     setCode(challenge.starterCode)
     setOutput('')
     setShowingSolution(false)
-    
+    setShowingDialogue(true)
+    setDialogueCompleted(false)
+
     // Check if this challenge was already completed
     if (completedChallenges.includes(challenge.id)) {
       setChallengeStatus('completed')
+      // Skip dialogue for completed challenges
+      setShowingDialogue(false)
+      setDialogueCompleted(true)
     } else {
       setChallengeStatus('pending')
     }
@@ -394,13 +481,45 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
+          {/* Maya Dialogue Intro */}
+          {showingDialogue && !dialogueCompleted && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8"
+            >
+              <MayaDialogue
+                character={mayaDialogues[currentChallenge].character}
+                text={mayaDialogues[currentChallenge].text}
+                emotion={mayaDialogues[currentChallenge].emotion}
+                glitchEffect={mayaDialogues[currentChallenge].glitchEffect}
+                onComplete={() => {
+                  setDialogueCompleted(true)
+                  setTimeout(() => setShowingDialogue(false), 1000)
+                }}
+              />
+              <div className="mt-4 text-center">
+                <button
+                  onClick={() => {
+                    setShowingDialogue(false)
+                    setDialogueCompleted(true)
+                  }}
+                  className="px-4 py-2 text-sm border border-gray-600 text-gray-400 hover:border-green-400 hover:text-green-400 transition-all"
+                >
+                  Skip Intro →
+                </button>
+              </div>
+            </motion.div>
+          )}
+
           {/* Challenge Info */}
-          <motion.div
-            key={currentChallenge}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
+          {(!showingDialogue || dialogueCompleted) && (
+            <motion.div
+              key={currentChallenge}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8"
+            >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-3xl font-bold">{challenge.title}</h2>
               {challengeStatus === 'completed' && (
@@ -428,18 +547,21 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
               </div>
             </div>
           </motion.div>
+          )}
 
           {/* Code Editor */}
-          <div className="mb-6">
-            <CodeEditor
-              value={code}
-              onChange={setCode}
-              language="python"
-              height="300px"
-            />
-          </div>
+          {(!showingDialogue || dialogueCompleted) && (
+          <>
+            <div className="mb-6">
+              <CodeEditor
+                value={code}
+                onChange={setCode}
+                language="python"
+                height="300px"
+              />
+            </div>
 
-          {/* Action Buttons */}
+            {/* Action Buttons */}
           <div className="flex justify-center gap-4 mb-6">
             <button
               onClick={handleRunCode}
@@ -573,6 +695,8 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
                 Continue to Level 2 →
               </button>
             </motion.div>
+          )}
+          </>
           )}
         </div>
       </div>

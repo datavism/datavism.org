@@ -1,7 +1,7 @@
-import { Level1AwakeningExperience } from '@/components/features/bootcamp/Level1AwakeningExperience-Simple'
+import { Level1Enhanced } from '@/components/features/bootcamp/Level1Enhanced'
 
 export default function Level1Page() {
-  return <Level1AwakeningExperience />
+  return <Level1Enhanced />
 }
 
 export const metadata = {

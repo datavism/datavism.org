@@ -1,4 +1,4 @@
-import { createBrowserSupabaseClient } from './supabase/client'
+import { createClient } from './supabase/client'
 
 /**
  * Liberation Code Service
@@ -32,7 +32,7 @@ export async function generateLiberationCode(params: {
   timeTaken: number // in seconds
 }): Promise<{ code: string; error: string | null }> {
   try {
-    const supabase = createBrowserSupabaseClient()
+    const supabase = createClient()
 
     // Check if user already has a code for this level
     const { data: existing } = await supabase
@@ -110,7 +110,7 @@ export async function generateLiberationCode(params: {
  */
 export async function getLiberationCode(userId: string, level: number): Promise<string | null> {
   try {
-    const supabase = createBrowserSupabaseClient()
+    const supabase = createClient()
 
     const { data } = await supabase
       .from('liberation_codes')
@@ -132,7 +132,7 @@ export async function getLiberationCode(userId: string, level: number): Promise<
  */
 export async function trackCodeShare(code: string): Promise<void> {
   try {
-    const supabase = createBrowserSupabaseClient()
+    const supabase = createClient()
 
     const { data } = await supabase
       .from('liberation_codes')
@@ -157,7 +157,7 @@ export async function trackCodeShare(code: string): Promise<void> {
  */
 export async function getLiberationLeaderboard(level: number, limit: number = 10) {
   try {
-    const supabase = createBrowserSupabaseClient()
+    const supabase = createClient()
 
     const { data } = await supabase
       .from('liberation_codes')
@@ -192,7 +192,7 @@ async function createActivityFeedEntry(params: {
   actionData: Record<string, any>
 }) {
   try {
-    const supabase = createBrowserSupabaseClient()
+    const supabase = createClient()
 
     await supabase
       .from('activity_feed')

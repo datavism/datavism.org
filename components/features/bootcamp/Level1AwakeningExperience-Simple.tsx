@@ -223,7 +223,11 @@ print("Welcome to the resistance!")`,
   }
 ]
 
-export function Level1AwakeningExperience() {
+interface Level1Props {
+  onComplete?: (finalXp: number) => void
+}
+
+export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
   const [currentChallenge, setCurrentChallenge] = useState(0)
   const [code, setCode] = useState(challenges[0].starterCode)
   const [output, setOutput] = useState('')
@@ -231,8 +235,8 @@ export function Level1AwakeningExperience() {
   const [completedChallenges, setCompletedChallenges] = useState<string[]>([])
   const [showingSolution, setShowingSolution] = useState(false)
   const [challengeStatus, setChallengeStatus] = useState<'pending' | 'completed' | 'solved-with-help'>('pending')
-  
-  const { isReady, isLoading, loadingStatus, loadingProgress, execute } = usePython()
+
+  const { isReady, isLoading, loadingStatus, loadingProgress, execute} = usePython()
   
   const challenge = challenges[currentChallenge]
 
@@ -300,6 +304,11 @@ export function Level1AwakeningExperience() {
   const handleNextChallenge = () => {
     if (currentChallenge < challenges.length - 1) {
       setCurrentChallenge(prev => prev + 1)
+    } else {
+      // Last challenge complete - trigger onComplete callback
+      if (onComplete) {
+        onComplete(totalXp)
+      }
     }
   }
 

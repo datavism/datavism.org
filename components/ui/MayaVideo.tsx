@@ -7,7 +7,7 @@ import { Play, Pause, Volume2, VolumeX, Maximize, X, SkipForward } from 'lucide-
 interface MayaVideoProps {
   videoSrc?: string  // Path to video file
   poster?: string    // Thumbnail image
-  title: string
+  title?: string
   duration?: string  // e.g. "3:24"
   onComplete?: () => void
   onSkip?: () => void
@@ -19,7 +19,7 @@ interface MayaVideoProps {
 export function MayaVideo({
   videoSrc,
   poster = '/images/maya-placeholder.jpg',
-  title,
+  title = 'Maya Chen Video',
   duration,
   onComplete,
   onSkip,

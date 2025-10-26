@@ -246,7 +246,7 @@ print("🔍 YOUR DIGITAL FOOTPRINT EXPOSED:")
 print(f"📊 Total posts: {footprint['total_posts']:,}")
 print(f"🔢 Data points collected: {footprint['data_points']:,}")
 print(f"⏰ Days of life lost: {footprint['days_lost']:.1f}")
-print(f"💰 Value extracted from you: ${footprint['value_extracted']:,.2f}")
+print(f"💰 Value extracted from you: \${footprint['value_extracted']:,.2f}")
 print("\\n😱 They turned your life into profit!")`,
     test: (output) => {
       return output.includes('Total posts') && 

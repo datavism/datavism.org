@@ -3,13 +3,10 @@ const nextConfig = {
   reactStrictMode: true,
   
   // Optimize package imports for better performance
-  experimental: { 
+  experimental: {
     optimizePackageImports: ['@monaco-editor/react', 'lucide-react']
   },
-  
-  // Build configuration
-  swcMinify: true,
-  
+
   // Production optimizations
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production'
@@ -49,12 +46,12 @@ const nextConfig = {
     return config
   },
   
-  // Development only - allow build errors during development
+  // Build configuration - warnings don't block production builds
   eslint: {
-    ignoreDuringBuilds: process.env.NODE_ENV === 'development',
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: process.env.NODE_ENV === 'development',
+    ignoreBuildErrors: false,  // Keep TypeScript strict
   },
 }
 

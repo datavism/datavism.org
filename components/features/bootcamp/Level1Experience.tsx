@@ -183,7 +183,7 @@ export function Level1Experience() {
   const [isBossMode, setIsBossMode] = useState(false)
   const [showVideo, setShowVideo] = useState(false)
   
-  const { ready, runCode } = usePyodide()
+  const { isReady, runPython } = usePyodide()
   const { addXP, completeChallenge, userProgress } = useAcademyStore()
   const { loading: syncLoading } = useAcademySync()
 
@@ -195,7 +195,7 @@ export function Level1Experience() {
   }, [currentChallenge])
 
   const handleRunCode = async () => {
-    if (!ready) {
+    if (!isReady) {
       setOutput('⚡ Initializing Python environment...')
       return
     }
@@ -204,7 +204,7 @@ export function Level1Experience() {
     const challenge = module1Challenges[currentChallenge]
     
     try {
-      const result = await runCode(code)
+      const result = await runPython(code)
       
       if (challenge.test(code)) {
         // Success!
@@ -301,15 +301,16 @@ You're ready for Level 2: Advanced Data Visualization."
             isRunning={isRunning}
           />
 
-          <OutputTerminal output={output} ready={ready} loading={syncLoading} />
+          <OutputTerminal output={output} ready={isReady} loading={syncLoading} />
         </div>
 
         {/* Right Panel - Stats */}
         <div className="lg:col-span-3">
           <XPTracker />
-          <HandlerMessage 
+          <HandlerMessage
             message={getHandlerMessage(currentChallenge)}
             handler="Maya Chen"
+            avatar="👩‍💻"
           />
           <ModuleProgress 
             currentChallenge={currentChallenge}

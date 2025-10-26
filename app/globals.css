@@ -491,18 +491,60 @@
   }
 
   @keyframes destruction {
-    0% { 
+    0% {
       transform: scale(1) rotate(0deg);
       opacity: 1;
     }
-    50% { 
+    50% {
       transform: scale(1.2) rotate(180deg);
       opacity: 0.5;
       filter: hue-rotate(180deg);
     }
-    100% { 
+    100% {
       transform: scale(0) rotate(360deg);
       opacity: 0;
     }
+  }
+
+  /* Scanline animation for dialogue boxes */
+  .animate-scan {
+    animation: scanline 8s linear infinite;
+  }
+
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+
+  /* Glitch border effect */
+  .glitch-border {
+    position: relative;
+  }
+
+  .glitch-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, var(--green), var(--cyan), var(--green));
+    border-radius: inherit;
+    opacity: 0;
+    animation: glitch-border-pulse 3s infinite;
+    z-index: -1;
+  }
+
+  @keyframes glitch-border-pulse {
+    0%, 90%, 100% { opacity: 0; }
+    91%, 93%, 95% { opacity: 0.5; }
+    92%, 94%, 96% { opacity: 0; }
+  }
+
+  /* Typing cursor blink */
+  .cursor-blink {
+    animation: cursor-blink 1s steps(2) infinite;
+  }
+
+  @keyframes cursor-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
   }
 }

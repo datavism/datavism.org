@@ -1135,7 +1135,7 @@ export function Level2PriceManipulationExperience() {
   const [stealthMode, setStealthMode] = useState(false)
   const [notifications, setNotifications] = useState<string[]>([])
   
-  const { ready, runCode } = usePyodide()
+  const { isReady, runPython } = usePyodide()
   const { addXP, completeChallenge, userProgress } = useAcademyStore()
   const { loading: syncLoading } = useAcademySync()
 
@@ -1158,7 +1158,7 @@ export function Level2PriceManipulationExperience() {
 // ... existing code ...
 const handleRunCode = async () => {
   console.log('🔍 ANALYZE button clicked!')
-  console.log('ready:', ready)
+  console.log('ready:', isReady)
   console.log('code:', code)
   console.log('currentChallengeData:', currentChallengeData)
   
@@ -1166,7 +1166,7 @@ const handleRunCode = async () => {
   setOutput('�� ANALYZE button was clicked! Testing...')
   
   // Debug: Temporarily bypass ready check
-  if (!ready) {
+  if (!isReady) {
     console.log('⚠️ Pyodide not ready, but continuing for debug...')
     setOutput('⚡ Initializing surveillance environment... (Debug mode)')
     // return // Comment this out temporarily
@@ -1178,13 +1178,13 @@ const handleRunCode = async () => {
   try {
     console.log('🚀 Attempting to run code...')
     
-    // Debug: If runCode is not available, simulate it
+    // Debug: If runPython is not available, simulate it
     let result
-    if (typeof runCode === 'function') {
-      result = await runCode(code)
+    if (typeof runPython === 'function') {
+      result = await runPython(code)
     } else {
-      result = 'Debug: Code execution simulated\n' + code
-      console.log('⚠️ runCode function not available, simulating result')
+      result = { output: 'Debug: Code execution simulated\n' + code, error: null }
+      console.log('⚠️ runPython function not available, simulating result')
     }
     
     console.log('✅ Result:', result)
@@ -1373,9 +1373,9 @@ Handler: Dr. Greta Silva (Climate Data Scientist)
           />
 
 
-          <TerminalOutput 
-            output={output} 
-            ready={ready} 
+          <TerminalOutput
+            output={output}
+            ready={isReady}
             loading={syncLoading}
             phase={phase}
           />

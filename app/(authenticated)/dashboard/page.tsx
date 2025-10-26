@@ -6,7 +6,7 @@ import { AchievementGrid } from '@/components/features/dashboard/AchievementGrid
 import { SkillProgress } from '@/components/features/dashboard/SkillProgress'
 
 export default async function DashboardPage() {
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) return null

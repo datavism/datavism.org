@@ -32,7 +32,7 @@ const nextConfig = {
   },
   
   // Webpack configuration for better Pyodide support
-  webpack: (config, { isServer }) => {
+  webpack: (config: any, { isServer }: { isServer: boolean }) => {
     if (!isServer) {
       // Pyodide needs these headers for proper functionality
       config.resolve.fallback = {

@@ -6,7 +6,7 @@ import { CreateSquadButton } from '@/components/features/community/CreateSquadBu
 import { Users, Trophy, Activity, Plus } from 'lucide-react'
 
 export default async function CommunityPage() {
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) return null

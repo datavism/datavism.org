@@ -7,7 +7,7 @@ export default async function AuthenticatedLayout({
 }: {
   children: React.ReactNode
 }) {
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   const { data: { user }, error } = await supabase.auth.getUser()
 
   if (!user || error) {

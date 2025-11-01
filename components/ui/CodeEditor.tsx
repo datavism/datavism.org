@@ -122,7 +122,7 @@ export function CodeEditor({ value, onChange, language = 'python', height = '300
       {/* Footer */}
       <div className="flex items-center justify-between px-4 py-2 border-t border-current/30 text-xs">
         <div className="font-mono opacity-60">
-          Lines: {value.split('\\n').length} | Characters: {value.length}
+          Lines: {value.split('\n').length} | Characters: {value.length}
         </div>
         <div className="font-mono opacity-60">
           Encoding: UTF-8 | EOL: LF

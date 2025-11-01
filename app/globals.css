@@ -12,6 +12,18 @@
     --magenta: #ff00ff;
   }
 
+  /* Respect user's motion preferences (WCAG 2.1 - Animation from Interactions) */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   * {
     margin: 0;
     padding: 0;
@@ -107,6 +119,26 @@
 
   a:hover {
     text-shadow: 0 0 8px currentColor;
+  }
+
+  /* Keyboard focus indicators for accessibility (WCAG 2.1 - Focus Visible) */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(0, 255, 65, 0.2);
+  }
+
+  /* Remove default focus styles only when using mouse */
+  a:focus:not(:focus-visible),
+  button:focus:not(:focus-visible),
+  input:focus:not(:focus-visible),
+  textarea:focus:not(:focus-visible) {
+    outline: none;
   }
 
   /* Better paragraph spacing */

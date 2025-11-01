@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { 
-  Menu, 
-  X, 
-  User, 
-  LogOut, 
-  Settings, 
+import {
+  Menu,
+  X,
+  User,
+  LogOut,
+  Settings,
   Trophy,
   Users,
   Search,
@@ -30,6 +31,7 @@ export function AuthenticatedNavigation({ user, profile }: AuthenticatedNavigati
   const [isOpen, setIsOpen] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
   const supabase = createClient()
 
   const handleSignOut = async () => {
@@ -43,6 +45,8 @@ export function AuthenticatedNavigation({ user, profile }: AuthenticatedNavigati
     { href: '/community', label: 'SQUADS', icon: Users },
     { href: '/investigations', label: 'OPS', icon: Search },
   ]
+
+  const isActive = (href: string) => pathname.startsWith(href)
 
   return (
     <nav className="border-b border-green-400/30 bg-black/95 backdrop-blur-sm sticky top-0 z-50">
@@ -66,10 +70,22 @@ export function AuthenticatedNavigation({ user, profile }: AuthenticatedNavigati
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center gap-2 text-green-400 hover:text-yellow-400 transition-colors duration-300 font-mono tracking-wider"
+                  className={`relative flex items-center gap-2 font-mono tracking-wider transition-colors duration-300 py-2 ${
+                    isActive(item.href)
+                      ? 'text-yellow-400 shadow-glow'
+                      : 'text-green-400 hover:text-yellow-400 hover:shadow-glow'
+                  }`}
                 >
                   <Icon size={16} />
                   {item.label}
+                  {isActive(item.href) && (
+                    <motion.div
+                      layoutId="activeAuthNavIndicator"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-yellow-400"
+                      initial={false}
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
                 </Link>
               )
             })}
@@ -140,10 +156,12 @@ export function AuthenticatedNavigation({ user, profile }: AuthenticatedNavigati
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - 44x44px minimum touch target (WCAG) */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-green-400 hover:text-yellow-400 transition-colors"
+            className="md:hidden text-green-400 hover:text-yellow-400 transition-colors p-3 -mr-3"
+            aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={isOpen}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -165,21 +183,26 @@ export function AuthenticatedNavigation({ user, profile }: AuthenticatedNavigati
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-2 text-green-400 hover:text-yellow-400 transition-colors font-mono tracking-wider py-2"
+                    className={`flex items-center gap-2 font-mono tracking-wider py-3 px-4 transition-all duration-300 rounded ${
+                      isActive(item.href)
+                        ? 'text-yellow-400 bg-yellow-400/10 border-l-4 border-yellow-400'
+                        : 'text-green-400 hover:text-yellow-400 hover:bg-green-400/5'
+                    }`}
                   >
                     <Icon size={16} />
                     {item.label}
+                    {isActive(item.href) && <span className="ml-auto">←</span>}
                   </Link>
                 )
               })}
-              
+
               <div className="border-t border-green-400/30 pt-3 mt-3">
-                <div className="text-yellow-400 font-mono text-sm mb-2">
+                <div className="text-yellow-400 font-mono text-sm mb-3 px-4">
                   {profile?.username || 'Agent'} • Level {profile?.level || 1}
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="flex items-center gap-2 text-red-400 font-mono"
+                  className="flex items-center gap-2 text-red-400 font-mono py-3 px-4 hover:bg-red-400/10 transition-all w-full rounded"
                 >
                   <LogOut size={16} />
                   Sign Out

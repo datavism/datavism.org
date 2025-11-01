@@ -317,10 +317,20 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
   const [challengeStatus, setChallengeStatus] = useState<'pending' | 'completed' | 'solved-with-help'>('pending')
   const [showingDialogue, setShowingDialogue] = useState(true)
   const [dialogueCompleted, setDialogueCompleted] = useState(false)
+  const [isExecuting, setIsExecuting] = useState(false)
 
   const { isReady, isLoading, loadingStatus, loadingProgress, execute} = usePython()
-  
+
   const challenge = challenges[currentChallenge]
+
+  // Debounced code update to reduce re-renders
+  const [debouncedCode, setDebouncedCode] = useState(code)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedCode(code)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [code])
 
   // Load progress from localStorage
   useEffect(() => {
@@ -363,22 +373,29 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
   }, [currentChallenge, challenge.starterCode, challenge.id, completedChallenges])
 
   const handleRunCode = async () => {
-    if (!isReady) return
-    
-    const result = await execute(code)
-    const outputText = result.error || result.output
-    setOutput(outputText)
-    
-    // Check if challenge is complete
-    if (!result.error && challenge.checkAnswer(outputText)) {
-      // Calculate XP based on whether solution was shown
-      const earnedXp = showingSolution ? Math.floor(challenge.xp * 0.5) : challenge.xp
-      
-      if (!completedChallenges.includes(challenge.id)) {
-        setTotalXp(prev => prev + earnedXp)
-        setCompletedChallenges(prev => [...prev, challenge.id])
-        setChallengeStatus(showingSolution ? 'solved-with-help' : 'completed')
+    if (!isReady || isExecuting) return
+
+    setIsExecuting(true)
+    setOutput('⏳ Executing code...')
+
+    try {
+      const result = await execute(code)
+      const outputText = result.error || result.output
+      setOutput(outputText)
+
+      // Check if challenge is complete
+      if (!result.error && challenge.checkAnswer(outputText)) {
+        // Calculate XP based on whether solution was shown
+        const earnedXp = showingSolution ? Math.floor(challenge.xp * 0.5) : challenge.xp
+
+        if (!completedChallenges.includes(challenge.id)) {
+          setTotalXp(prev => prev + earnedXp)
+          setCompletedChallenges(prev => [...prev, challenge.id])
+          setChallengeStatus(showingSolution ? 'solved-with-help' : 'completed')
+        }
       }
+    } finally {
+      setIsExecuting(false)
     }
   }
 
@@ -483,33 +500,41 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
         <div className="max-w-4xl mx-auto">
           {/* Maya Dialogue Intro */}
           {showingDialogue && !dialogueCompleted && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-8"
-            >
-              <MayaDialogue
-                character={mayaDialogues[currentChallenge].character}
-                text={mayaDialogues[currentChallenge].text}
-                emotion={mayaDialogues[currentChallenge].emotion}
-                glitchEffect={mayaDialogues[currentChallenge].glitchEffect}
-                onComplete={() => {
-                  setDialogueCompleted(true)
-                  setTimeout(() => setShowingDialogue(false), 1000)
-                }}
-              />
-              <div className="mt-4 text-center">
+            <div className="mb-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <MayaDialogue
+                  character={mayaDialogues[currentChallenge].character}
+                  text={mayaDialogues[currentChallenge].text}
+                  emotion={mayaDialogues[currentChallenge].emotion}
+                  glitchEffect={mayaDialogues[currentChallenge].glitchEffect}
+                  onComplete={() => {
+                    setDialogueCompleted(true)
+                    setTimeout(() => setShowingDialogue(false), 1000)
+                  }}
+                />
+              </motion.div>
+              {/* Skip button - immediately visible for better UX */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className="mt-4 text-center"
+              >
                 <button
                   onClick={() => {
                     setShowingDialogue(false)
                     setDialogueCompleted(true)
                   }}
-                  className="px-4 py-2 text-sm border border-gray-600 text-gray-400 hover:border-green-400 hover:text-green-400 transition-all"
+                  className="px-4 py-2 text-sm border border-gray-600 text-gray-400 hover:border-green-400 hover:text-green-400 transition-all focus-visible:outline-green-400"
+                  aria-label="Skip dialogue introduction"
                 >
                   Skip Intro →
                 </button>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           )}
 
           {/* Challenge Info */}
@@ -565,14 +590,23 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
           <div className="flex justify-center gap-4 mb-6">
             <button
               onClick={handleRunCode}
-              disabled={!isReady}
-              className={`px-8 py-3 font-bold text-lg transition-all ${
-                isReady 
-                  ? 'bg-green-400 text-black hover:bg-green-300' 
+              disabled={!isReady || isExecuting}
+              className={`px-8 py-3 font-bold text-lg transition-all flex items-center gap-2 ${
+                isReady && !isExecuting
+                  ? 'bg-green-400 text-black hover:bg-green-300'
                   : 'bg-gray-600 text-gray-400 cursor-not-allowed'
               }`}
             >
-              {isReady ? '🚀 RUN CODE' : '⏳ Loading Python...'}
+              {isExecuting ? (
+                <>
+                  <Loader2 className="animate-spin" size={20} />
+                  Executing...
+                </>
+              ) : isReady ? (
+                '🚀 RUN CODE'
+              ) : (
+                '⏳ Loading Python...'
+              )}
             </button>
             
             {!completedChallenges.includes(challenge.id) && (

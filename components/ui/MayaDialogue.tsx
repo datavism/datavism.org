@@ -136,15 +136,15 @@ export function MayaDialogue({
             {textArray.length === 1 ? (
               <TypewriterText
                 text={textArray[0]}
-                speed={20}
+                speed={50}
                 onComplete={handleComplete}
                 className="whitespace-pre-wrap"
               />
             ) : (
               <TypewriterSequence
                 lines={textArray}
-                speed={20}
-                lineDelay={300}
+                speed={50}
+                lineDelay={500}
                 onComplete={handleComplete}
                 className="space-y-2"
               />

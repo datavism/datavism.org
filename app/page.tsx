@@ -1,4 +1,4 @@
-import { HeroRevolution } from '../components/features/landing/HeroRevolution'
+import { HeroAwakening } from '../components/features/landing/HeroAwakening'
 import { DataTrackingSimulation } from '../components/features/landing/DataTrackingSimulation'
 import { LiveActivityFeed } from '../components/features/landing/LiveActivityFeed'
 import { StatsSection } from '../components/features/landing/StatsSection'
@@ -9,8 +9,7 @@ import { CTASection } from '../components/features/landing/CTASection'
 export default function HomePage() {
   return (
     <>
-      <HeroRevolution />
-      <DataTrackingSimulation />
+      <HeroAwakening />
 
       {/* Live Activity Feed Section */}
       <section className="py-16 bg-gradient-to-b from-black to-gray-950">

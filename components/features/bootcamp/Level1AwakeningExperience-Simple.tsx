@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Terminal, Zap, Trophy, Brain, Loader2, Wifi, WifiOff, ChevronRight, Eye, Lock, CheckCircle } from 'lucide-react'
 import { CodeEditor } from '@/components/ui/CodeEditor'
 import { usePython, RESISTANCE_SNIPPETS } from '@/lib/hooks/usePython'
 import { MayaDialogue } from '@/components/ui/MayaDialogue'
+import Confetti from 'react-confetti'
 
 interface Challenge {
   id: string
@@ -318,10 +319,22 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
   const [showingDialogue, setShowingDialogue] = useState(true)
   const [dialogueCompleted, setDialogueCompleted] = useState(false)
   const [isExecuting, setIsExecuting] = useState(false)
+  const [showConfetti, setShowConfetti] = useState(false)
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
 
   const { isReady, isLoading, loadingStatus, loadingProgress, execute} = usePython()
 
   const challenge = challenges[currentChallenge]
+
+  // Track window size for confetti
+  useEffect(() => {
+    const updateSize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+    }
+    updateSize()
+    window.addEventListener('resize', updateSize)
+    return () => window.removeEventListener('resize', updateSize)
+  }, [])
 
   // Debounced code update to reduce re-renders
   const [debouncedCode, setDebouncedCode] = useState(code)
@@ -392,6 +405,10 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
           setTotalXp(prev => prev + earnedXp)
           setCompletedChallenges(prev => [...prev, challenge.id])
           setChallengeStatus(showingSolution ? 'solved-with-help' : 'completed')
+
+          // Celebration confetti!
+          setShowConfetti(true)
+          setTimeout(() => setShowConfetti(false), 5000)
         }
       }
     } finally {
@@ -438,6 +455,18 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
 
   return (
     <div className="min-h-screen bg-black text-green-400">
+      {/* Confetti Celebration */}
+      {showConfetti && (
+        <Confetti
+          width={windowSize.width}
+          height={windowSize.height}
+          recycle={false}
+          numberOfPieces={500}
+          colors={['#00ff41', '#ffff00', '#00ffff', '#ff00ff']}
+          gravity={0.3}
+        />
+      )}
+
       {/* Loading Overlay */}
       {isLoading && (
         <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
@@ -445,7 +474,7 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
             <Loader2 className="w-16 h-16 animate-spin text-green-400 mx-auto mb-4" />
             <div className="text-xl font-bold text-green-400 mb-2">{loadingStatus}</div>
             <div className="w-64 h-2 bg-green-950 border border-green-400">
-              <div 
+              <div
                 className="h-full bg-green-400 transition-all"
                 style={{ width: `${loadingProgress}%` }}
               />
@@ -664,38 +693,67 @@ export function Level1AwakeningExperience({ onComplete }: Level1Props = {}) {
             </button>
             
             <div className="flex gap-2">
-              {challenges.map((c, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => completedChallenges.includes(challenges[idx].id) || idx === 0 ? setCurrentChallenge(idx) : null}
-                  className={`w-8 h-8 rounded-full transition-all cursor-pointer ${
-                    completedChallenges.includes(c.id)
-                      ? 'bg-green-400'
-                      : idx === currentChallenge
-                      ? 'bg-yellow-400 animate-pulse'
-                      : 'bg-green-950 border border-green-400'
-                  }`}
-                  title={c.title}
-                >
-                  {completedChallenges.includes(c.id) && '✓'}
-                </button>
-              ))}
+              {challenges.map((c, idx) => {
+                const isCompleted = completedChallenges.includes(c.id)
+                const isActive = idx === currentChallenge
+                const isUnlocked = isCompleted || idx === 0 || completedChallenges.includes(challenges[idx - 1]?.id)
+                const isLocked = !isUnlocked
+
+                return (
+                  <div key={idx} className="relative group">
+                    <button
+                      onClick={() => isUnlocked ? setCurrentChallenge(idx) : null}
+                      disabled={isLocked}
+                      className={`w-8 h-8 rounded-full transition-all ${
+                        isCompleted
+                          ? 'bg-green-400 cursor-pointer hover:scale-110'
+                          : isActive
+                          ? 'bg-yellow-400 animate-pulse cursor-default'
+                          : isLocked
+                          ? 'bg-gray-800 border border-gray-600 cursor-not-allowed opacity-50'
+                          : 'bg-green-950 border border-green-400 cursor-pointer hover:bg-green-900'
+                      }`}
+                      aria-label={`Challenge ${idx}: ${c.title}`}
+                    >
+                      {isCompleted ? '✓' : isLocked ? '🔒' : idx + 1}
+                    </button>
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-black border border-green-400 px-3 py-2 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 text-xs">
+                      <div className="text-green-400 font-bold mb-1">{c.title}</div>
+                      {isCompleted && <div className="text-green-300">✅ Completed (+{c.xp} XP)</div>}
+                      {isActive && !isCompleted && <div className="text-yellow-400">⚡ Current Challenge</div>}
+                      {isLocked && <div className="text-gray-400">🔒 Complete previous first</div>}
+                    </div>
+                  </div>
+                )
+              })}
             </div>
 
-            <button
-              onClick={handleNextChallenge}
-              disabled={!canGoNext || currentChallenge === challenges.length - 1}
-              className={`px-4 py-2 border font-bold transition-all ${
-                canGoNext && currentChallenge < challenges.length - 1
-                  ? 'border-green-400 text-green-400 hover:bg-green-400 hover:text-black'
-                  : 'border-gray-600 text-gray-600 cursor-not-allowed'
-              }`}
-            >
-              {!canGoNext && (
-                <Lock className="inline mr-2" size={16} />
+            <div className="relative group">
+              <button
+                onClick={handleNextChallenge}
+                disabled={!canGoNext || currentChallenge === challenges.length - 1}
+                className={`px-4 py-2 border font-bold transition-all ${
+                  canGoNext && currentChallenge < challenges.length - 1
+                    ? 'border-green-400 text-green-400 hover:bg-green-400 hover:text-black'
+                    : 'border-gray-600 text-gray-600 cursor-not-allowed'
+                }`}
+              >
+                {!canGoNext && currentChallenge < challenges.length - 1 && (
+                  <Lock className="inline mr-2" size={16} />
+                )}
+                {currentChallenge === challenges.length - 1 ? '🎉 Complete!' : 'Next →'}
+              </button>
+              {/* Progression Hint Tooltip */}
+              {!canGoNext && currentChallenge < challenges.length - 1 && (
+                <div className="absolute bottom-full mb-2 right-0 w-64 bg-black border-2 border-yellow-400 p-3 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                  <div className="text-yellow-400 text-sm font-mono mb-1">🔒 Challenge Locked</div>
+                  <div className="text-green-300 text-xs">
+                    Complete the current challenge to unlock the next one. Run your code and pass the test!
+                  </div>
+                </div>
               )}
-              Next →
-            </button>
+            </div>
           </div>
 
           {/* Challenge Status Info */}

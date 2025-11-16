@@ -2,6 +2,9 @@
 
 import { use } from 'react'
 import { FirstMissionWarrior } from '@/components/features/missions/FirstMission-Warrior'
+import { FirstMissionRebel } from '@/components/features/missions/FirstMission-Rebel'
+import { FirstMissionArtist } from '@/components/features/missions/FirstMission-Artist'
+import { FirstMissionExplorer } from '@/components/features/missions/FirstMission-Explorer'
 import { useResistance } from '@/lib/store/useResistance'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -28,17 +31,16 @@ export default function FirstMissionPage({ params }: { params: Promise<{ role: s
     )
   }
 
-  // For now, all roles get the warrior mission
-  // TODO: Create role-specific missions for rebel, artist, explorer
+  // Route to role-specific missions
   switch (resolvedParams.role) {
     case 'warrior':
       return <FirstMissionWarrior />
     case 'rebel':
-      return <FirstMissionWarrior /> // TODO: Create FirstMissionRebel
+      return <FirstMissionRebel />
     case 'artist':
-      return <FirstMissionWarrior /> // TODO: Create FirstMissionArtist
+      return <FirstMissionArtist />
     case 'explorer':
-      return <FirstMissionWarrior /> // TODO: Create FirstMissionExplorer
+      return <FirstMissionExplorer />
     default:
       return <FirstMissionWarrior />
   }

@@ -4,7 +4,7 @@
 @theme {
   --color-ink: #050805;        /* page background */
   --color-phosphor: #9ef0a8;   /* primary terminal green */
-  --color-phosphor-dim: #4f7a55;
+  --color-phosphor-dim: #5c8c63; /* ≥4.5:1 on ink (WCAG AA, review fix) */
   --color-phosphor-hi: #d9ffe0;
   --color-signal: #ffd23f;     /* warm accent (links, line G) */
   --color-line-k: #46c8ff;     /* Key cyan */

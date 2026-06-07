@@ -95,8 +95,8 @@ Beide Modi muessen gleichwertig funktionieren. Modularer Aufbau.
 ## 7. PLATFORM & TECH
 
 **Platform:** Mobile-First Web (PWA). Spaeter: Native via Capacitor (iOS/Android) + Desktop.
-**Stack:** Next.js 15, TypeScript, Tailwind CSS, Framer Motion, Zustand, Supabase
-**KI:** Open-Source Modelle via NVIDIA NIM API (aktuell Llama 3.3 70B). Claude = Dev-Tool only.
+**Stack (Neubau):** TBD per ADR — Kandidat: data-snack-Engine (Astro 5 + Svelte 5 + Pixi 8 + Firebase, per `engine-vs-content` fuer zweiten Consumer vorbereitet). Der alte Next.js/Supabase-Stack liegt auf Branch `legacy-2026`.
+**KI (GHOST):** wird auf **GCP** entwickelt — Vertex AI (Gemini + eigene ML-Komponenten), Firestore (State + Identity-Bridge), BigQuery (Telemetrie). GHOST ist ubiquitaere System-Intelligenz, siehe `docs/STORY.md` §4. Claude = Dev-Tool only.
 **Erweiterbar durch:** Capacitor fuer native APIs (Haptics, Push, Kamera, Share Sheet)
 
 **Tech-Prinzip:** Fuer jedes neue Feature wird recherchiert was 2026 state-of-the-art ist. Nicht das Erstbeste nehmen, sondern das Optimale.

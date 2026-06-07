@@ -1,258 +1,43 @@
-# 🚀 **DATAVISM.ORG - DEPLOYMENT GUIDE**
+# DATAVISM — The Data Underground
 
-## **🎯 QUICK START (5 MINUTEN)**
+> *The revolution will be computed.*
+
+**datavism.org** is the school of the **Data Underground** — the AI-era data
+skills bootcamp of the [data-snack.com](https://data-snack.com) universe.
+You won't learn to code here. You'll learn to **command**: AI, data, and the
+right questions.
+
+## Status (2026-06-07)
+
+The old site is offline. `main` currently serves a minimal **holding page**
+(in-universe teaser). The full rebuild is planned — stack decision pending
+(ADR), see the docs below.
+
+- The previous Next.js app (incl. its last uncommitted refactor state) is
+  preserved on branch [`legacy-2026`](../../tree/legacy-2026).
+
+## Read this first
+
+| Doc | What |
+|---|---|
+| [`docs/VISION.md`](docs/VISION.md) | Lead document — positioning, transit-map curriculum, funding, roadmap |
+| [`docs/STORY.md`](docs/STORY.md) | Storyworld bible — Data Underground, GHOST, lines & stations, slogans |
+| [`docs/MANIFESTO.md`](docs/MANIFESTO.md) | The manifesto (v2, EN, site-ready) |
+| [`program.md`](program.md) | Steering doc for dev sessions (quality bar, anti-patterns, ethics) |
+| [`docs/README.md`](docs/README.md) | Full docs index (incl. research + archive) |
+
+Platform-role canon (sister repo `data-snack.com`): ADR 006, CROSSWALK.
+
+## Holding page (this branch)
 
 ```bash
-# 1. Repository klonen
-git clone https://github.com/datavism/datavism.org
-cd datavism.org
-
-# 2. Dependencies installieren
 npm install
-
-# 3. Supabase Setup (siehe SUPABASE_SETUP.md)
-cp .env.example .env.local
-# Edit .env.local mit deinen Supabase Keys
-
-# 4. Development starten
-npm run dev
+npm run dev    # localhost:3000
+npm run build  # static
 ```
 
-**✅ Öffne http://localhost:3000**
-
-## **🏗️ FEATURES OVERVIEW**
-
-### **✅ IMPLEMENTED**
-- 🔐 **Authentication System** (Supabase Auth)
-- 📊 **User Dashboard** mit XP, Level, Progress
-- 🎓 **Academy System** mit Week 1 (5 Challenges)
-- 🐍 **Python Code Execution** (Pyodide)
-- 👥 **Community Features** (Squads, Leaderboard)
-- 💾 **Database Integration** (Progress speichern)
-- 📱 **Responsive Design** (Mobile ready)
-- ⚡ **Real-time Updates** (Live Feed)
-
-### **🔧 TECH STACK**
-- **Frontend**: Next.js 15, React 19, TypeScript
-- **Styling**: Tailwind CSS, Framer Motion
-- **Database**: Supabase (PostgreSQL + Auth)
-- **Code Execution**: Pyodide (Python in Browser)
-- **State Management**: Zustand
-- **Deployment**: Vercel
-
-## **📁 PROJECT STRUCTURE**
-
-```
-datavism.org/
-├── app/
-│   ├── (authenticated)/          # Protected routes
-│   │   ├── dashboard/           # User dashboard
-│   │   └── community/           # Community features
-│   ├── academy/                 # Academy system
-│   ├── auth/                    # Authentication
-│   └── layout.tsx              # Root layout
-├── components/
-│   ├── features/               # Feature components
-│   │   ├── academy/           # Academy components
-│   │   ├── community/         # Community components
-│   │   ├── dashboard/         # Dashboard components
-│   │   └── landing/           # Landing page
-│   ├── layout/                # Layout components
-│   └── ui/                    # Reusable UI
-├── lib/
-│   ├── hooks/                 # Custom hooks
-│   ├── services/              # External services
-│   └── store/                 # State management
-├── supabase/
-│   └── schema.sql             # Database schema
-└── types/
-    └── database.ts            # TypeScript types
-```
-
-## **🔑 ENVIRONMENT VARIABLES**
-
-```bash
-# Required
-NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1...
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# Optional
-NEXT_PUBLIC_POSTHOG_KEY=phc_xxx
-NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com
-```
-
-## **🚀 DEPLOYMENT**
-
-### **Vercel (Recommended)**
-```bash
-# 1. Install Vercel CLI
-npm i -g vercel
-
-# 2. Login
-vercel login
-
-# 3. Deploy
-vercel
-
-# 4. Set Environment Variables
-vercel env add NEXT_PUBLIC_SUPABASE_URL
-vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY
-vercel env add NEXT_PUBLIC_APP_URL
-
-# 5. Deploy to Production
-vercel --prod
-```
-
-### **Other Platforms**
-- **Netlify**: Works out of box
-- **Railway**: Perfect for full-stack
-- **Cloudflare Pages**: Great performance
-- **Self-hosted**: Docker available
-
-## **🗄️ DATABASE SETUP**
-
-1. **Create Supabase Project**: [supabase.com](https://supabase.com)
-2. **Run Schema**: Copy `supabase/schema.sql` → SQL Editor → Run
-3. **Configure Auth**: Enable Email, set URLs
-4. **Test Connection**: Register user, check tables
-
-**➡️ Detailed guide: `SUPABASE_SETUP.md`**
-
-## **🧪 TESTING**
-
-```bash
-# Unit Tests
-npm run test
-
-# Type Checking
-npm run type-check
-
-# Linting
-npm run lint
-
-# Build Test
-npm run build
-```
-
-## **📊 PERFORMANCE TARGETS**
-
-- **Lighthouse Score**: 90+ (all categories)
-- **First Load**: < 2s
-- **Code Execution**: < 5s (Pyodide startup)
-- **Database Queries**: < 500ms
-- **Mobile Performance**: 85+
-
-## **🔒 SECURITY**
-
-- ✅ **Row Level Security** (Supabase RLS)
-- ✅ **JWT Authentication** 
-- ✅ **Environment Variables**
-- ✅ **HTTPS Enforcement**
-- ✅ **SQL Injection Protection**
-- ✅ **XSS Protection**
-
-## **🐛 TROUBLESHOOTING**
-
-### **Common Issues:**
-
-**"Supabase not defined"**
-```bash
-# Check environment variables
-echo $NEXT_PUBLIC_SUPABASE_URL
-```
-
-**"Table doesn't exist"**
-```bash
-# Re-run database schema
-# Copy supabase/schema.sql to Supabase SQL Editor
-```
-
-**"Python execution fails"**
-```bash
-# Pyodide loading issue - check browser console
-# Usually resolves automatically after first load
-```
-
-**"Build fails"**
-```bash
-# Clear Next.js cache
-rm -rf .next
-npm run build
-```
-
-## **📈 MONITORING**
-
-### **Analytics Setup**
-- **Supabase**: Built-in database metrics
-- **Vercel**: Performance monitoring
-- **PostHog**: User analytics (optional)
-- **Sentry**: Error tracking (optional)
-
-### **Key Metrics**
-- User registrations
-- Challenge completions
-- Session duration
-- Code execution success rate
-- Database performance
-
-## **🔄 CI/CD PIPELINE**
-
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy
-on:
-  push:
-    branches: [main]
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: npm ci
-      - run: npm run build
-      - run: npm run test
-      - uses: amondnet/vercel-action@v25
-```
-
-## **🎯 SUCCESS METRICS**
-
-### **Week 1 Goals**
-- [ ] 100 user registrations
-- [ ] 50 Week 1 completions
-- [ ] 10 active squads
-- [ ] 90% uptime
-
-### **Month 1 Goals**
-- [ ] 1,000 users
-- [ ] 500 academy graduates
-- [ ] 100 investigations started
-- [ ] Media coverage
-
-## **🆘 SUPPORT**
-
-- **Documentation**: [docs.datavism.org](https://docs.datavism.org)
-- **Discord**: [discord.gg/datavism](https://discord.gg/datavism)
-- **Issues**: [GitHub Issues](https://github.com/datavism/datavism.org/issues)
-- **Email**: hello@datavism.org
+Deployed via Vercel git integration (push to `main` → production).
 
 ---
 
-## **🎉 READY TO LAUNCH?**
-
-```bash
-# Final checklist:
-✅ Supabase configured
-✅ Environment variables set
-✅ Tests passing
-✅ Build successful
-✅ Database schema deployed
-✅ Domain configured
-✅ Analytics setup
-
-# Launch command:
-vercel --prod
-```
-
-**🚀 Welcome to the revolution!** 🔴
+*A Non-Profit Digital Art Project.*

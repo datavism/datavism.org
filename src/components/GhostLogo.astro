@@ -31,9 +31,9 @@ const { size = 72 } = Astro.props
 <style>
   .ghost-logo .eyes {
     transform-origin: 94px 64px;
-    animation: blink 6s infinite;
+    animation: ghost-blink 6s infinite;
   }
-  @keyframes blink {
+  @keyframes ghost-blink {
     0%, 92%, 100% { transform: scaleY(1); }
     95%, 97% { transform: scaleY(0.08); }
   }

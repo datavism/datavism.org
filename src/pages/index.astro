@@ -36,7 +36,7 @@ import { COPY } from '../lib/copy/en'
 
 <style>
   .cursor { display:inline-block; width:.6em; height:1.1em; background: var(--color-phosphor);
-    vertical-align:text-bottom; animation: blink 1.1s steps(1) infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
+    vertical-align:text-bottom; animation: cursor-blink 1.1s steps(1) infinite; }
+  @keyframes cursor-blink { 50% { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
 </style>

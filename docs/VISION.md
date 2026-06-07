@@ -200,13 +200,18 @@ allein fördern „shallow learning"):
 - **data-snack-Bridge-Cards** (CROSSWALK): jeder Snack endet mit einer
   Track-Empfehlung in Cast-Stimme → narrativer Zweit-Funnel.
 - **Mobile-first, jeder Moment teilbar** (bleibt aus der alten program.md gültig).
-- **Subscribe/Waitlist (entschieden 2026-06-07, gewartet):** „Get notified when
-  LINE G opens" kommt auf die Landing, **sobald** (a) die Resend-Integration
-  (parallele data-snack-Session) fertig ist und (b) Datenschutzerklärung +
-  Impressum live sind (Pflicht vor E-Mail-Sammlung; Double-Opt-In).
-  **Audience-Modell: eine gemeinsame Resend-Audience** für beide Plattformen
-  mit getaggten Segmenten (`snack-drops`, `underground-waitlist`) — passt zur
-  Identity-Bridge. Kein eigener zweiter E-Mail-Stack auf datavism.
+- **Subscribe/Waitlist (eingebaut 2026-06-07, env-gated):** Landing hat den
+  Waitlist-Block („One email when LINE G opens") + `api/subscribe.ts`
+  (Vercel-Function → Resend-Audience `underground-waitlist`, Honeypot,
+  Honesty-Microcopy am Formular). **Live-Schaltung = `RESEND_API_KEY` im
+  Vercel-Projekt setzen** (optional `RESEND_AUDIENCE_ID`); bis dahin antwortet
+  die Route 503 und das Formular sagt ehrlich „wire not connected yet".
+  Audience-Modell: Segmente als Resend-Audiences (`snack-drops`,
+  `underground-waitlist`), ein Account für beide Plattformen. **Offen:**
+  Datenschutzerklärung + Impressum (Pflicht, braucht Betreiber-Daten) und
+  Double-Opt-In-Bestätigung (kommt mit der Resend-Session / verifizierter
+  Domain — bis dahin Single-Opt-In in die Waitlist, vor erstem Versand
+  bestätigen lassen).
 
 ---
 

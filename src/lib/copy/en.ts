@@ -18,8 +18,24 @@ export const COPY = {
       'You won’t learn to code here. You’ll learn to command — ' +
       'AI, data, and the right questions.',
     slogan: 'The revolution will be computed.',
+    status: 'pre-launch — the school is being built.',
     ctaManifesto: 'Read the manifesto',
     ctaUpstairs: 'meanwhile, upstairs: data-snack.com',
+  },
+  waitlist: {
+    heading: 'JOIN THE WAITLIST',
+    sub: 'One email when LINE G opens. Nothing else. No drip, no funnel.',
+    placeholder: 'you@somewhere.net',
+    button: 'notify me',
+    sending: 'transmitting…',
+    ok: 'in. watch your inbox when the line opens.',
+    errInvalid: 'that address doesn’t parse.',
+    errServer: 'the wire is down. try again later.',
+    errNotWired: 'subscription wire not connected yet — try again soon.',
+    privacy:
+      'your address goes to one place (Resend, our mail processor), is used ' +
+      'for exactly one thing (the launch email), and you can vanish anytime: ' +
+      'ghost@datavism.org',
   },
   counter: {
     lead: 'trackable signals emitted on this page so far:',

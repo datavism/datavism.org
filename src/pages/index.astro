@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro'
 import GhostLogo from '../components/GhostLogo.astro'
 import TrackCounter from '../components/TrackCounter.svelte'
 import NetworkMapTeaser from '../components/NetworkMapTeaser.astro'
+import SubscribeForm from '../components/SubscribeForm.svelte'
 import { COPY } from '../lib/copy/en'
 ---
 <Base>
@@ -15,7 +16,12 @@ import { COPY } from '../lib/copy/en'
     </div>
   </div>
 
-  <p class="text-phosphor-hi text-lg mt-8">{COPY.hero.hook}</p>
+  <p class="mt-8 text-sm">
+    <span class="text-phosphor-dim">&gt; status:</span>
+    <span class="text-signal font-bold"> {COPY.hero.status}</span>
+  </p>
+
+  <p class="text-phosphor-hi text-lg mt-6">{COPY.hero.hook}</p>
   <p class="mt-3 leading-relaxed">{COPY.hero.sub}</p>
   <p class="text-signal mt-3">&gt; {COPY.hero.slogan}<span class="cursor" aria-hidden="true"></span></p>
 
@@ -24,6 +30,13 @@ import { COPY } from '../lib/copy/en'
   </div>
 
   <NetworkMapTeaser />
+
+  <section class="mt-12 border border-signal/40 rounded p-4" aria-label="Launch waitlist">
+    <h2 class="text-phosphor-hi text-xl font-bold">{COPY.waitlist.heading}</h2>
+    <p class="text-phosphor-dim text-sm mt-1">{COPY.waitlist.sub}</p>
+    <SubscribeForm client:visible />
+    <p class="text-phosphor-dim text-xs mt-3 leading-relaxed">{COPY.waitlist.privacy}</p>
+  </section>
 
   <nav class="mt-12 text-sm space-y-2">
     <p><a class="text-signal underline decoration-dashed underline-offset-4" href="/manifesto">{COPY.hero.ctaManifesto}</a></p>

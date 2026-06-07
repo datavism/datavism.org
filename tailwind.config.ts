@@ -6,6 +6,33 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  // Safelist für dynamisch generierte Klassen (Rollen-Farben)
+  safelist: [
+    // Cyan (Data Warrior)
+    'text-cyan-400', 'text-cyan-300', 'text-cyan-500',
+    'bg-cyan-400', 'bg-cyan-500', 'bg-cyan-500/20', 'bg-cyan-900/30',
+    'border-cyan-400', 'border-cyan-500',
+    'from-cyan-500', 'to-cyan-600',
+    // Yellow (Code Rebel)
+    'text-yellow-400', 'text-yellow-300', 'text-yellow-500',
+    'bg-yellow-400', 'bg-yellow-500', 'bg-yellow-500/20', 'bg-yellow-900/30',
+    'border-yellow-400', 'border-yellow-500',
+    'from-yellow-500', 'to-yellow-600',
+    // Green (Viz Artist)
+    'text-green-400', 'text-green-300', 'text-green-500',
+    'bg-green-400', 'bg-green-500', 'bg-green-500/20', 'bg-green-900/30',
+    'border-green-400', 'border-green-500',
+    'from-green-500', 'to-green-600',
+    // Purple (Truth Explorer)
+    'text-purple-400', 'text-purple-300', 'text-purple-500',
+    'bg-purple-400', 'bg-purple-500', 'bg-purple-500/20', 'bg-purple-900/30',
+    'border-purple-400', 'border-purple-500',
+    'from-purple-500', 'to-purple-600',
+    // Red (Boss Battle)
+    'text-red-400', 'text-red-300', 'text-red-500',
+    'bg-red-400', 'bg-red-500', 'bg-red-500/20', 'bg-red-900/30',
+    'border-red-400', 'border-red-500',
+  ],
   theme: {
     extend: {
       colors: {
@@ -64,18 +91,27 @@ const config: Config = {
         sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'sans-serif'],
       },
       fontSize: {
-        'xs': ['0.95rem', { lineHeight: '1.6' }],
-        'sm': ['1.1rem', { lineHeight: '1.7' }],
-        'base': ['1.25rem', { lineHeight: '1.75' }],
-        'lg': ['1.4rem', { lineHeight: '1.7' }],
-        'xl': ['1.65rem', { lineHeight: '1.65' }],
-        '2xl': ['2rem', { lineHeight: '1.5' }],
-        '3xl': ['2.5rem', { lineHeight: '1.4' }],
-        '4xl': ['3rem', { lineHeight: '1.3' }],
-        '5xl': ['3.75rem', { lineHeight: '1.2' }],
-        '6xl': ['4.5rem', { lineHeight: '1.1' }],
-        '7xl': ['5rem', { lineHeight: '1.1' }],
-        '8xl': ['6.5rem', { lineHeight: '1' }],
+        // Mobile-first: readable on small screens, scale up for desktop
+        'xs': ['0.8rem', { lineHeight: '1.5' }],    // 12.8px — minimum readable
+        'sm': ['0.9rem', { lineHeight: '1.6' }],     // 14.4px
+        'base': ['1rem', { lineHeight: '1.7' }],     // 16px
+        'lg': ['1.15rem', { lineHeight: '1.65' }],   // 18.4px
+        'xl': ['1.35rem', { lineHeight: '1.6' }],    // 21.6px
+        '2xl': ['1.65rem', { lineHeight: '1.5' }],   // 26.4px
+        '3xl': ['2rem', { lineHeight: '1.4' }],      // 32px
+        '4xl': ['2.5rem', { lineHeight: '1.3' }],    // 40px
+        '5xl': ['3rem', { lineHeight: '1.2' }],      // 48px
+        '6xl': ['3.75rem', { lineHeight: '1.1' }],   // 60px
+        '7xl': ['4.5rem', { lineHeight: '1.1' }],    // 72px
+        '8xl': ['5.5rem', { lineHeight: '1' }],      // 88px
+      },
+      screens: {
+        'xs': '375px',  // iPhone SE
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
       },
       animation: {
         blink: 'blink 1s infinite',

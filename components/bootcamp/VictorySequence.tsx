@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Trophy, Share2, Copy, Twitter, Linkedin, MessageCircle, Check } from 'lucide-react'
-import { useSound } from '@/lib/hooks/useSound'
+import { success as successSound, scan } from '@/lib/audio/procedural'
 import {
   generateLiberationCode,
   generateShareMessages,
@@ -31,8 +31,6 @@ export function VictorySequence({
   const [isGenerating, setIsGenerating] = useState(true)
   const [copied, setCopied] = useState(false)
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
-  const { playSound } = useSound()
-
   useEffect(() => {
     // Set window size for confetti
     setWindowSize({
@@ -42,7 +40,7 @@ export function VictorySequence({
 
     // Generate liberation code
     const generate = async () => {
-      playSound('success')
+      successSound()
 
       const { code, error } = await generateLiberationCode({
         userId,
@@ -56,7 +54,7 @@ export function VictorySequence({
         setTimeout(() => {
           setLiberationCode(code)
           setIsGenerating(false)
-          playSound('notification')
+          scan()
         }, 2000)
       } else {
         setIsGenerating(false)
@@ -65,13 +63,13 @@ export function VictorySequence({
     }
 
     generate()
-  }, [userId, level, xpEarned, timeTaken, playSound])
+  }, [userId, level, xpEarned, timeTaken])
 
   const handleCopy = async () => {
     const success = await copyToClipboard(liberationCode)
     if (success) {
       setCopied(true)
-      playSound('success')
+      successSound()
       setTimeout(() => setCopied(false), 2000)
     }
   }
@@ -79,7 +77,7 @@ export function VictorySequence({
   const handleShare = async (platform: 'twitter' | 'linkedin' | 'reddit' | 'whatsapp') => {
     const messages = generateShareMessages(liberationCode, level, timeTaken)
     await trackCodeShare(liberationCode)
-    playSound('notification')
+    scan()
 
     const urls = {
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(messages.twitter)}`,
@@ -284,10 +282,10 @@ export function VictorySequence({
             )}
 
             <button
-              onClick={() => window.location.href = '/bootcamp/level/2'}
+              onClick={() => window.location.href = '/ops'}
               className="px-8 py-3 bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition-all rounded flex items-center gap-2"
             >
-              Continue to Level 2
+              Continue to Missions
               <span>→</span>
             </button>
           </div>

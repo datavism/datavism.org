@@ -38,18 +38,20 @@
     background: #000000;
     color: #e0ffe0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-    font-size: 19px;
-    line-height: 1.75;
+    font-size: 16px;
+    line-height: 1.6;
     min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent; /* Clean taps on mobile */
   }
 
   @media (min-width: 768px) {
     body {
-      font-size: 21px;
-      line-height: 1.8;
+      font-size: 18px;
+      line-height: 1.75;
     }
   }
 
@@ -60,55 +62,48 @@
 
   /* Better readability for headings */
   h1 {
-    font-size: 3.25rem;
+    font-size: 2rem;
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: -0.02em;
-    margin-bottom: 1rem;
-  }
-
-  h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    margin-bottom: 0.875rem;
-  }
-
-  h3 {
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.4;
     margin-bottom: 0.75rem;
   }
 
-  h4 {
+  h2 {
     font-size: 1.625rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.625rem;
+  }
+
+  h3 {
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+
+  h4 {
+    font-size: 1.125rem;
     font-weight: 600;
     line-height: 1.4;
     margin-bottom: 0.5rem;
   }
 
   h5, h6 {
-    font-size: 1.375rem;
+    font-size: 1rem;
     font-weight: 600;
     line-height: 1.5;
     margin-bottom: 0.5rem;
   }
 
   @media (min-width: 768px) {
-    h1 {
-      font-size: 4.5rem;
-    }
-    h2 {
-      font-size: 3rem;
-    }
-    h3 {
-      font-size: 2.5rem;
-    }
-    h4 {
-      font-size: 1.875rem;
-    }
+    h1 { font-size: 3.25rem; }
+    h2 { font-size: 2.5rem; }
+    h3 { font-size: 2rem; }
+    h4 { font-size: 1.5rem; }
+    h5, h6 { font-size: 1.25rem; }
   }
 
   /* Better link visibility */
@@ -143,9 +138,9 @@
 
   /* Better paragraph spacing */
   p {
-    margin-bottom: 1.25em;
-    font-size: 1.2rem;
-    line-height: 1.8;
+    margin-bottom: 1em;
+    font-size: 1rem;
+    line-height: 1.7;
   }
 
   p:last-child {
@@ -154,8 +149,8 @@
 
   @media (min-width: 768px) {
     p {
-      font-size: 1.35rem;
-      line-height: 1.85;
+      font-size: 1.15rem;
+      line-height: 1.8;
     }
   }
 
@@ -169,22 +164,75 @@
     margin-bottom: 0.5em;
   }
 
-  /* Ensure buttons are readable and larger */
+  /* Ensure buttons are readable and touch-friendly */
   button {
-    font-size: 1.2rem;
+    font-size: 1rem;
     line-height: 1.5;
-    padding: 0.875rem 1.75rem;
   }
 
   @media (min-width: 768px) {
     button {
-      font-size: 1.35rem;
-      padding: 1.125rem 2.25rem;
+      font-size: 1.1rem;
     }
   }
 }
 
 @layer components {
+  /* ── Mobile-First Utilities ──────────────────────────────────── */
+
+  /* Touch target: WCAG minimum 44x44px */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Safe area padding for notched devices */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  /* Full mobile viewport height (accounts for browser chrome) */
+  .h-screen-safe {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .min-h-screen-safe {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* Bottom sheet backdrop */
+  .bottom-sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 50;
+  }
+
+  /* Bottom nav safe area */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    background: rgba(0, 0, 0, 0.95);
+    border-top: 1px solid rgba(0, 255, 65, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
   /* Ghost Logo Animation */
   .animated-ghost {
     filter: drop-shadow(0 0 10px rgba(57, 255, 20, 0.5));

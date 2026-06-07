@@ -1,11 +1,14 @@
-import { type NextRequest, NextResponse } from 'next/server'
-// import { updateSession } from '@/lib/services/supabase/middleware'
+import { NextResponse, type NextRequest } from 'next/server'
+import { updateSession } from '@/lib/services/supabase/middleware'
+import { isSupabaseConfigured } from '@/lib/env'
 
-// TODO: Update Supabase middleware for Next.js 15 async cookies API
-// Temporarily disabled to allow build
 export async function middleware(request: NextRequest) {
-  // return await updateSession(request)
-  return NextResponse.next()
+  // Skip Supabase session handling when not configured (e.g. deploy without env vars)
+  if (!isSupabaseConfigured()) {
+    return NextResponse.next()
+  }
+
+  return await updateSession(request)
 }
 
 export const config = {

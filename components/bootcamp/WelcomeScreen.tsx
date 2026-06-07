@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Terminal, Code, Trophy, Users, X } from 'lucide-react'
-import { useSound } from '@/lib/hooks/useSound'
+import { scan, success, glitch } from '@/lib/audio/procedural'
 
 interface WelcomeScreenProps {
   onComplete: () => void
@@ -40,20 +40,19 @@ const tourSteps = [
 
 export function WelcomeScreen({ onComplete, onSkip, userName }: WelcomeScreenProps) {
   const [currentStep, setCurrentStep] = useState(0)
-  const { playSound } = useSound()
 
   const handleNext = () => {
-    playSound('notification')
+    scan()
     if (currentStep < tourSteps.length - 1) {
       setCurrentStep(currentStep + 1)
     } else {
-      playSound('success')
+      success()
       onComplete()
     }
   }
 
   const handleSkip = () => {
-    playSound('glitch')
+    glitch()
     onSkip ? onSkip() : onComplete()
   }
 

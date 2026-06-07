@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Lock, Unlock, Zap } from 'lucide-react'
-import { useSound } from '@/lib/hooks/useSound'
+import { typing, success, glitch, scan } from '@/lib/audio/procedural'
 
 interface DecryptPuzzleProps {
   onSolved: () => void
@@ -22,12 +22,10 @@ export function DecryptPuzzle({
   const [isDecrypting, setIsDecrypting] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
   const [showHint, setShowHint] = useState(false)
-  const { playSound } = useSound()
-
   const handleLetterClick = (index: number) => {
     if (isComplete) return
 
-    playSound('typing')
+    typing()
 
     if (selectedLetters.includes(index)) {
       setSelectedLetters(selectedLetters.filter(i => i !== index))
@@ -40,13 +38,13 @@ export function DecryptPuzzle({
     if (selectedLetters.length === 0) return
 
     setIsDecrypting(true)
-    playSound('glitch')
+    glitch()
 
     // Simulate decryption process
     setTimeout(() => {
       setIsDecrypting(false)
       setIsComplete(true)
-      playSound('success')
+      success()
 
       // Call onSolved after showing result
       setTimeout(() => {
@@ -125,7 +123,7 @@ export function DecryptPuzzle({
               <button
                 onClick={() => {
                   setShowHint(true)
-                  playSound('notification')
+                  scan()
                 }}
                 className="text-sm text-gray-600 hover:text-gray-400 transition-colors"
               >

@@ -29,8 +29,8 @@ export function NextActions({ profile, progress }: NextActionsProps) {
     if (completedChallenges === 0) {
       return {
         title: 'START YOUR JOURNEY',
-        description: 'Begin Level 1: Digital Detox',
-        href: '/bootcamp/level/1',
+        description: 'Begin your first mission',
+        href: '/ops',
         icon: BookOpen,
         color: 'red',
         priority: 'URGENT'
@@ -39,9 +39,9 @@ export function NextActions({ profile, progress }: NextActionsProps) {
 
     if (weekProgress < 5) {
       return {
-        title: `CONTINUE LEVEL ${currentWeek}`,
-        description: `Complete challenge ${weekProgress + 1} of 5`,
-        href: `/bootcamp/level/${currentWeek}`,
+        title: 'CONTINUE MISSIONS',
+        description: `Complete your next mission`,
+        href: '/ops',
         icon: BookOpen,
         color: 'yellow',
         priority: 'HIGH'
@@ -50,9 +50,9 @@ export function NextActions({ profile, progress }: NextActionsProps) {
 
     if (currentWeek < 12) {
       return {
-        title: `START LEVEL ${currentWeek + 1}`,
+        title: 'NEW MISSIONS AVAILABLE',
         description: 'New missions available',
-        href: `/bootcamp/level/${currentWeek + 1}`,
+        href: '/ops',
         icon: Zap,
         color: 'green',
         priority: 'READY'

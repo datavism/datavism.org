@@ -1,151 +1,111 @@
-'use client'
-
-import { Shield, Target, Users } from 'lucide-react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 
-
+export const metadata: Metadata = {
+  title: 'DATAVISM | About',
+  description: 'Datavism is data activism powered by AI. We expose corporate manipulation, fight algorithmic injustice, and wield data as a weapon of truth.',
+}
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen py-20 px-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold mb-6 text-yellow-400 glitch-text">
-            THE MANIFESTO
-          </h1>
-          <p className="text-xl text-green-300 max-w-2xl mx-auto">
-            Why algorithms control you. How data activism frees you. What we're building together.
+    <div className="min-h-screen bg-black">
+      {/* Nav */}
+      <nav className="px-6 py-4 flex items-center justify-between border-b border-green-500/10">
+        <Link href="/" className="font-mono text-green-400/40 text-sm tracking-[0.3em] hover:text-green-400/60 transition-colors">
+          DATAVISM
+        </Link>
+        <div className="flex gap-6">
+          <Link href="/manifesto" className="font-mono text-green-400/40 text-xs hover:text-green-400/60 transition-colors">MANIFESTO</Link>
+          <Link href="/contact" className="font-mono text-green-400/40 text-xs hover:text-green-400/60 transition-colors">CONTACT</Link>
+        </div>
+      </nav>
+
+      <div className="max-w-2xl mx-auto px-6 py-20 font-mono">
+        <h1
+          className="text-4xl md:text-5xl font-bold mb-12"
+          style={{ color: '#00ff41', textShadow: '0 0 30px rgba(0,255,65,0.2)' }}
+        >
+          About DATAVISM
+        </h1>
+
+        <div className="space-y-8 text-green-400/80 text-sm leading-relaxed">
+          <p>
+            Datavism is not a platform. It&apos;s a practice.
+          </p>
+
+          <p>
+            We build tools and experiences that empower people to use AI and data
+            as instruments of accountability. Every investigation on DATAVISM targets
+            real-world manipulation — greenwashing, price discrimination, surveillance
+            overreach, dark patterns.
+          </p>
+
+          <div className="border-l-2 border-green-500/40 pl-6 py-2">
+            <p className="text-green-400">
+              The premise is simple: you don&apos;t need to be a data scientist to fight
+              back. You need AI as your superpower and a mission worth fighting for.
+            </p>
+          </div>
+
+          <p>
+            DATAVISM was created because the same AI tools that corporations use to
+            manipulate behavior can be turned around to expose that manipulation. The
+            barrier to entry isn&apos;t technical knowledge anymore — it&apos;s knowing how to
+            direct AI toward the right targets.
+          </p>
+
+          <h2 className="text-xl font-bold text-green-400 pt-4">
+            How it works
+          </h2>
+
+          <div className="space-y-3">
+            <div className="flex gap-3">
+              <span className="text-green-500/50 shrink-0">01</span>
+              <span>You experience the reality of digital surveillance firsthand</span>
+            </div>
+            <div className="flex gap-3">
+              <span className="text-green-500/50 shrink-0">02</span>
+              <span>You create your operative identity and meet GHOST — your AI agent</span>
+            </div>
+            <div className="flex gap-3">
+              <span className="text-green-500/50 shrink-0">03</span>
+              <span>You take on real missions: investigating corporations, exposing manipulation, building evidence</span>
+            </div>
+            <div className="flex gap-3">
+              <span className="text-green-500/50 shrink-0">04</span>
+              <span>Your findings join the Gallery of Impact — a growing archive of accountability</span>
+            </div>
+          </div>
+
+          <h2 className="text-xl font-bold text-green-400 pt-4">
+            Open source
+          </h2>
+
+          <p>
+            DATAVISM is built in the open. The code is public. The investigations are
+            transparent. We practice what we preach about accountability.
+          </p>
+
+          <p className="text-green-400/40 text-xs pt-8">
+            Built with Next.js, Supabase, and open-source AI models.
+            <br />
+            No tracking. No ads. No data harvesting. Obviously.
           </p>
         </div>
 
-        {/* Main Content */}
-        <div className="space-y-12">
-          {/* The Problem */}
-          <section className="border-l-4 border-red-500 pl-8 bg-red-950/10 py-8 pr-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Shield className="text-red-500" size={32} />
-              <h2 className="text-3xl font-bold text-red-400">THE PROBLEM</h2>
-            </div>
-            <div className="space-y-4 text-green-300 leading-relaxed text-lg">
-              <p>
-                In 2025, <strong className="text-red-400">algorithms control more of your life than you realize</strong>. 
-                What you see on social media, what prices you pay, what jobs you get offered, what news you read—
-                all determined by code designed to manipulate your behavior for profit.
-              </p>
-              <p>
-                <strong className="text-red-400">Your data is weaponized against you</strong>. 
-                Companies know you better than you know yourself. They use sophisticated machine learning 
-                to predict and influence your decisions. They create filter bubbles that polarize society. 
-                They manipulate prices based on your location, device, and browsing history.
-              </p>
-              <p>
-                <strong className="text-red-400">Meanwhile, citizens are kept in the dark</strong>. 
-                These algorithms are black boxes. The data is locked away. The manipulation techniques 
-                are trade secrets. We're told to "trust the algorithm" while being systematically exploited.
-              </p>
-              <p className="text-red-300 font-bold">
-                You are not the customer—you are the product being optimized.
-              </p>
-            </div>
-          </section>
-
-          {/* The Solution */}
-          <section className="border-l-4 border-yellow-500 pl-8 bg-yellow-950/10 py-8 pr-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Target className="text-yellow-500" size={32} />
-              <h2 className="text-3xl font-bold text-yellow-400">THE SOLUTION</h2>
-            </div>
-            <div className="space-y-4 text-green-300 leading-relaxed text-lg">
-              <p>
-                <strong className="text-yellow-400">Datavism is the first educational platform that teaches data science through activism</strong>. 
-                You don't learn Python by analyzing flower datasets. You don't master SQL with employee records. 
-                You don't build machine learning models with wine quality data.
-              </p>
-              <p>
-                <strong className="text-yellow-400">You learn by exposing real algorithmic manipulation</strong>. 
-                Every challenge you complete reveals actual corporate deception. Every algorithm you build 
-                helps detect real bias in AI systems. Every visualization you create exposes authentic 
-                digital manipulation.
-              </p>
-              <p>
-                <strong className="text-yellow-400">This is education with impact</strong>. 
-                When you complete Level 12 of our bootcamp, you won't just have a certificate. 
-                You'll have helped expose algorithmic bias, revealed corporate greenwashing, and contributed 
-                to digital transparency worldwide.
-              </p>
-              <p className="text-yellow-300 font-bold">
-                Your homework assignments make the digital world more transparent.
-              </p>
-            </div>
-          </section>
-
-          {/* The Mission */}
-          <section className="border-l-4 border-green-500 pl-8 bg-green-950/10 py-8 pr-8">
-            <div className="flex items-center gap-3 mb-6">
-              <Users className="text-green-500" size={32} />
-              <h2 className="text-3xl font-bold text-green-400">THE MISSION</h2>
-            </div>
-            <div className="space-y-4 text-green-300 leading-relaxed text-lg">
-              <p>
-                <strong className="text-green-400">Transform 100,000 citizens into data activists</strong>. 
-                Create a global network of people who can see through algorithmic manipulation. 
-                Make digital transparency unstoppable.
-              </p>
-              <p>
-                <strong className="text-green-400">Build the infrastructure for algorithmic accountability</strong>. 
-                When thousands of trained data activists can analyze every major algorithm, 
-                corporate manipulation becomes impossible to hide.
-              </p>
-              <p>
-                <strong className="text-green-400">Democratize the tools of digital literacy</strong>. 
-                The same data science techniques used by corporations to manipulate you should be 
-                in your hands to hold them accountable.
-              </p>
-              <p className="text-green-300 font-bold">
-                When every citizen can analyze algorithms, manipulation has nowhere to hide.
-              </p>
-            </div>
-          </section>
-
-          {/* Call to Action */}
-          <section className="text-center bg-black/50 border border-green-400/30 p-12 mt-16">
-            <h3 className="text-3xl font-bold text-yellow-400 mb-6">
-              READY TO JOIN THE REVOLUTION?
-            </h3>
-            <p className="text-xl text-green-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Every algorithm you decode. Every bias you expose. 
-              Every manipulation you uncover. You're not just learning—you're fighting back.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/bootcamp"
-                className="px-8 py-4 bg-transparent border-2 border-yellow-400 text-yellow-400 font-bold text-lg hover:bg-yellow-400 hover:text-black transition-all duration-300"
-              >
-                START YOUR TRAINING
-              </Link>
-              <Link
-                href="/contact"
-                className="px-8 py-4 bg-transparent border-2 border-green-400 text-green-400 font-bold text-lg hover:bg-green-400 hover:text-black transition-all duration-300"
-              >
-                SECURE CONTACT
-              </Link>
-            </div>
-          </section>
-
-          {/* Quote */}
-          <section className="text-center mt-16">
-            <blockquote className="text-2xl text-green-400 font-mono max-w-3xl mx-auto mb-4">
-              "The best way to hide manipulation is in an algorithm. 
-              The best way to expose it is with Python."
-            </blockquote>
-            <cite className="text-green-400/60 text-lg">
-              — Ghost 👻 (Anonymous Collective)
-            </cite>
-            <p className="text-xs text-green-400/40 mt-4 font-mono">
-              ghost@datavism.org
-            </p>
-          </section>
+        <div className="mt-16 flex gap-4">
+          <Link
+            href="/"
+            className="font-mono text-sm text-green-400/70 border border-green-500/30 px-6 py-3 hover:bg-green-500/10 transition-colors"
+          >
+            BEGIN EXPERIENCE
+          </Link>
+          <Link
+            href="/manifesto"
+            className="font-mono text-sm text-green-400/40 border border-green-500/15 px-6 py-3 hover:border-green-500/30 transition-colors"
+          >
+            READ MANIFESTO
+          </Link>
         </div>
       </div>
     </div>

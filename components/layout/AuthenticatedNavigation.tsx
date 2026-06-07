@@ -41,7 +41,7 @@ export function AuthenticatedNavigation({ user, profile }: AuthenticatedNavigati
 
   const navItems = [
     { href: '/dashboard', label: 'HQ', icon: User },
-    { href: '/bootcamp', label: 'BOOTCAMP', icon: Trophy },
+    { href: '/ops', label: 'MISSIONS', icon: Trophy },
     { href: '/community', label: 'SQUADS', icon: Users },
     { href: '/investigations', label: 'OPS', icon: Search },
   ]

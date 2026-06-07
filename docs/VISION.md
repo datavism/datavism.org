@@ -210,21 +210,32 @@ allein fördern „shallow learning"):
   „wire not connected yet". Backend ist brand-aware (data-snack
   `functions/subscribe`, Commit b2f4cf9).
 
-  **Aktivierungs-Reihenfolge (Frank — NICHT vorher den Endpoint setzen):**
-  1. In Resend das Segment **`underground-waitlist`** anlegen.
-  2. Cloud-Function-Env setzen: `RESEND_UNDERGROUND_SEGMENT_IDS=<segment-id>`
-     (optional `MAIL_FROM_DATAVISM` = verifizierter datavism.org-Absender,
-     `PUBLIC_DATAVISM_URL=https://datavism.org`) und **Functions neu deployen**
-     (`functions/subscribe`, `npm run deploy:all`).
+  **Legal: erledigt.** `/legal` (Impressum + Datenschutz, EN+DE) ist live,
+  zugeschnitten auf datavisms reale Datenflüsse (kein Tracking; nur Waitlist).
+  Betreiber-Block von data-snack übernommen. Footer verlinkt sitewide.
+
+  **Aktivierungs-Reihenfolge — der finale Schalter (NICHT vorher Endpoint setzen):**
+  1. **Backend-Redeploy mit der brand-aware Version** (data-snack-Commit b2f4cf9).
+     ⚠️ **Achtung Env-Wipe:** das committete `deploy:subscribe`-Script setzt
+     `--set-env-vars=NODE_ENV=production` — das **überschreibt alle Live-Env-Vars**
+     (MAIL_FROM, RESEND_SNACK_SEGMENT_IDS, CONFIRM_URL …) und bricht den
+     data-snack-Newsletter. **Stattdessen `--update-env-vars` verwenden** (merge)
+     bzw. die volle Env-Liste mitgeben. **Reitet am besten auf dem nächsten
+     Deploy der parallelen Resend-Session mit** (die `functions/subscribe`
+     gerade aktiv bearbeitet) — dann geht b2f4cf9 automatisch live.
+  2. In Resend Segment **`underground-waitlist`** anlegen, dann auf den
+     Functions `RESEND_UNDERGROUND_SEGMENT_IDS=<id>` setzen (`--update-env-vars`).
+     Optional `MAIL_FROM_DATAVISM` (verifizierter datavism.org-Absender),
+     `PUBLIC_DATAVISM_URL=https://datavism.org`. *(Ohne Segment-Env werden
+     bestätigte Anmeldungen fail-soft in Firestore erfasst und später
+     gebackfillt — nichts geht verloren.)*
   3. Auf dem **datavism**-Vercel-Projekt `SUBSCRIBE_ENDPOINT` =
      `https://subscribe-pkj46ucxaq-ey.a.run.app` setzen, Redeploy.
-  4. E2E testen (subscribe → Confirm-Klick → im `underground-waitlist`-Segment).
+  4. E2E testen (subscribe → GHOST-Confirm-Mail → Klick → im Segment / in Firestore).
 
-  **Offen (Pflicht vor öffentlichem Sammeln):** Datenschutzerklärung +
-  Impressum (braucht Betreiber-Daten) und TIA/DPO-Review (siehe data-snack
-  STATUS). Bis dahin Endpoint **nicht** scharfschalten. Confirm-Mail kommt
-  ohne `MAIL_FROM_DATAVISM` vorerst von `chef@data-snack.com` — für saubere
-  Absenderoptik datavism.org-Domain bei Resend verifizieren.
+  Confirm-Mail kommt ohne `MAIL_FROM_DATAVISM` vorerst von `chef@data-snack.com`
+  (gleicher Betreiber, im Datenschutz offengelegt) — für saubere Absenderoptik
+  datavism.org-Domain bei Resend verifizieren.
 
 ---
 

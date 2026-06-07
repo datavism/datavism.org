@@ -1,0 +1,37 @@
+---
+// src/components/NetworkMapTeaser.astro — static teaser; the interactive
+// map is Phase 2. Five horizontal lines, line G highlighted.
+import { COPY } from '../lib/copy/en'
+const L = COPY.map.lines
+const rows: Array<{ key: string; color: string; name: string; topic: string; boss: string }> = [
+  { key: 'g', color: 'var(--color-signal)',  ...L.g },
+  { key: 'k', color: 'var(--color-line-k)',  ...L.k },
+  { key: 'r', color: 'var(--color-line-r)',  ...L.r },
+  { key: 'b', color: 'var(--color-line-b)',  ...L.b },
+  { key: 'v', color: 'var(--color-line-v)',  ...L.v },
+]
+---
+<section class="mt-12" aria-label="Curriculum network map (teaser)">
+  <h2 class="text-phosphor-hi text-xl font-bold">{COPY.map.heading}</h2>
+  <p class="text-phosphor-dim text-sm mt-1">{COPY.map.sub}</p>
+
+  <div class="mt-6 space-y-5">
+    {rows.map((r) => (
+      <div>
+        <svg viewBox="0 0 320 12" class="w-full h-3" role="img" aria-label={r.name}>
+          <line x1="4" y1="6" x2="300" y2="6" stroke={r.color} stroke-width="2" />
+          {[40, 105, 170, 235].map((x) => (
+            <circle cx={x} cy="6" r="4" fill="var(--color-ink)" stroke={r.color} stroke-width="2" />
+          ))}
+          <circle cx="300" cy="6" r="6" fill={r.color} />
+        </svg>
+        <p class="text-xs mt-1">
+          <span style={`color:${r.color}`}>{r.name}</span>
+          <span class="text-phosphor-dim"> · {r.topic} · {r.boss}</span>
+        </p>
+      </div>
+    ))}
+  </div>
+
+  <p class="text-signal text-xs mt-4">▸ {COPY.map.openingFirst}</p>
+</section>

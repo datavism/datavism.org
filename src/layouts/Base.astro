@@ -1,0 +1,26 @@
+---
+// src/layouts/Base.astro
+import '../styles/global.css'
+import { COPY } from '../lib/copy/en'
+const { title = COPY.meta.title, description = COPY.meta.description } = Astro.props
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="DATAVISM" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <main class="flex-1 w-full max-w-2xl mx-auto px-5 py-12">
+      <slot />
+    </main>
+    <footer class="w-full max-w-2xl mx-auto px-5 pb-10 text-xs text-phosphor-dim leading-relaxed">
+      <p>{COPY.footer.org}<br />{COPY.footer.tracking}</p>
+    </footer>
+  </body>
+</html>

@@ -200,6 +200,13 @@ allein fördern „shallow learning"):
 - **data-snack-Bridge-Cards** (CROSSWALK): jeder Snack endet mit einer
   Track-Empfehlung in Cast-Stimme → narrativer Zweit-Funnel.
 - **Mobile-first, jeder Moment teilbar** (bleibt aus der alten program.md gültig).
+- **Subscribe/Waitlist (entschieden 2026-06-07, gewartet):** „Get notified when
+  LINE G opens" kommt auf die Landing, **sobald** (a) die Resend-Integration
+  (parallele data-snack-Session) fertig ist und (b) Datenschutzerklärung +
+  Impressum live sind (Pflicht vor E-Mail-Sammlung; Double-Opt-In).
+  **Audience-Modell: eine gemeinsame Resend-Audience** für beide Plattformen
+  mit getaggten Segmenten (`snack-drops`, `underground-waitlist`) — passt zur
+  Identity-Bridge. Kein eigener zweiter E-Mail-Stack auf datavism.
 
 ---
 

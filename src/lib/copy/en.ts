@@ -28,14 +28,14 @@ export const COPY = {
     placeholder: 'you@somewhere.net',
     button: 'notify me',
     sending: 'transmitting…',
-    ok: 'in. watch your inbox when the line opens.',
+    ok: 'almost — check your inbox and confirm. one click, then you’re on the list.',
     errInvalid: 'that address doesn’t parse.',
     errServer: 'the wire is down. try again later.',
     errNotWired: 'subscription wire not connected yet — try again soon.',
     privacy:
-      'your address goes to one place (Resend, our mail processor), is used ' +
-      'for exactly one thing (the launch email), and you can vanish anytime: ' +
-      'ghost@datavism.org',
+      'double opt-in: you confirm by email first. handled by our shared mail ' +
+      'backend (Resend), used for exactly one thing — the launch email — and ' +
+      'you can vanish anytime: ghost@datavism.org',
   },
   counter: {
     lead: 'trackable signals emitted on this page so far:',

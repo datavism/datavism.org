@@ -1,44 +1,21 @@
 // api/subscribe.ts — Vercel serverless function (Node runtime).
-// Adds a contact to the Resend audience "underground-waitlist".
+//
+// Thin server-side proxy to the SHARED data-snack drop-notifier Cloud Function
+// (double-opt-in, shared Resend pool, per-brand segments). datavism does NOT
+// run its own email stack or hold a Resend key — it posts brand:'datavism' to
+// the same endpoint, which tags confirmed contacts into the
+// `underground-waitlist` segment. See data-snack functions/subscribe/.
+//
+// Why proxy server-side instead of the browser calling the Cloud Function
+// directly: keeps the form same-origin (no CORS on the shared backend), and
+// no secret ever lives here — the endpoint URL is the only config.
 //
 // Env (Vercel project settings):
-//   RESEND_API_KEY      — required to go live; without it we answer 503
-//   RESEND_AUDIENCE_ID  — optional; if unset we look up / create the
-//                         audience by AUDIENCE_NAME below
-//
-// Decision basis: VISION.md §5 (one shared Resend audience model, tagged
-// segments → Resend-native: one audience per segment). Honesty rule: this
-// endpoint stores exactly one field (the email) at exactly one processor.
+//   SUBSCRIBE_ENDPOINT — required to go live; the deployed Cloud Function
+//                        `subscribe` URL (e.g. https://subscribe-…-ey.a.run.app)
+//                        Without it we answer 503 and the form says so.
 
-const AUDIENCE_NAME = 'underground-waitlist'
-const RESEND_API = 'https://api.resend.com'
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
-
-async function resend(path: string, key: string, init?: RequestInit) {
-  const res = await fetch(`${RESEND_API}${path}`, {
-    ...init,
-    headers: {
-      Authorization: `Bearer ${key}`,
-      'content-type': 'application/json',
-      ...(init?.headers ?? {}),
-    },
-  })
-  const body = await res.json().catch(() => ({}))
-  return { status: res.status, body: body as any }
-}
-
-async function resolveAudienceId(key: string): Promise<string | null> {
-  const envId = process.env.RESEND_AUDIENCE_ID
-  if (envId) return envId
-  const list = await resend('/audiences', key)
-  const found = list.body?.data?.find?.((a: any) => a.name === AUDIENCE_NAME)
-  if (found?.id) return found.id
-  const created = await resend('/audiences', key, {
-    method: 'POST',
-    body: JSON.stringify({ name: AUDIENCE_NAME }),
-  })
-  return created.body?.id ?? null
-}
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
@@ -48,7 +25,7 @@ export default async function handler(req: any, res: any) {
 
   const { email, phone } = (req.body ?? {}) as { email?: string; phone?: string }
 
-  // Honeypot filled → pretend success, store nothing.
+  // Honeypot filled → pretend success, forward nothing.
   if (phone) {
     res.status(200).json({ ok: true })
     return
@@ -60,26 +37,29 @@ export default async function handler(req: any, res: any) {
     return
   }
 
-  const key = process.env.RESEND_API_KEY
-  if (!key) {
+  const endpoint = process.env.SUBSCRIBE_ENDPOINT
+  if (!endpoint) {
     res.status(503).json({ error: 'not_wired' })
     return
   }
 
   try {
-    const audienceId = await resolveAudienceId(key)
-    if (!audienceId) {
-      res.status(502).json({ error: 'upstream' })
-      return
-    }
-    const add = await resend(`/audiences/${audienceId}/contacts`, key, {
+    const upstream = await fetch(endpoint, {
       method: 'POST',
-      body: JSON.stringify({ email: addr, unsubscribed: false }),
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        email: addr,
+        brand: 'datavism',
+        source: 'datavism-waitlist',
+      }),
     })
-    // 2xx = created; Resend answers 409/422 for existing contacts — both
-    // mean "this address is on the list", which is success for the user.
-    if (add.status < 300 || add.status === 409 || add.status === 422) {
-      res.status(200).json({ ok: true })
+    // The Cloud Function returns 202 on "confirmation-sent" / "queued", 200 on
+    // "already-confirmed". Anything 2xx means "we've got them" from the user's
+    // point of view — the next step is the confirm email (double-opt-in).
+    if (upstream.status >= 200 && upstream.status < 300) {
+      res.status(200).json({ ok: true, pending: upstream.status === 202 })
+    } else if (upstream.status === 400) {
+      res.status(400).json({ error: 'invalid_email' })
     } else {
       res.status(502).json({ error: 'upstream' })
     }

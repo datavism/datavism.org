@@ -1,5 +1,14 @@
 # Data Underground Site Rebuild — Phase 1 (Foundation & Landing) Implementation Plan
 
+> **STATUS: ✅ AUSGEFÜHRT (2026-06-07, subagent-driven).** Branch `rebuild`,
+> 8 Commits (`81760e1..bb6ffd6`), Final-Review bestanden (Honesty-Regel im
+> Build verifiziert: null Netzwerk-/Storage-APIs). Review-Fixes eingearbeitet:
+> AA-Kontrast phosphor-dim → `#5c8c63`, Favicon-Link. Vercel-Preview ✅ Ready
+> (Astro-Build via `vercel.json`-Override; Git-Integration baute den Branch
+> nicht automatisch — Previews ggf. projektseitig deaktiviert, CLI-Deploy
+> funktioniert). Production (`main`, Holding-Page) unverändert.
+> **Nächster Schritt: Phase-2-Plan** (Netzplan & Line G).
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Astro-5-Scaffold auf Branch `rebuild` mit Landing Page (Slogans, Manifest, ehrlicher Signal-Counter, Netzplan-Teaser) — preview-deploybar, `main` behält die Holding-Page.

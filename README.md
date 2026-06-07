@@ -10,8 +10,11 @@ right questions.
 ## Status (2026-06-07)
 
 The old site is offline. `main` currently serves a minimal **holding page**
-(in-universe teaser). The full rebuild is planned — stack decision pending
-(ADR), see the docs below.
+(in-universe teaser). The rebuild is underway on branch
+[`rebuild`](../../tree/rebuild) (Astro 5 + Svelte 5 + Tailwind 4, per ADR 001):
+**Phase 1 (Foundation & Landing) is built** — landing with honest signal
+counter, network-map teaser, manifesto page. Merging `rebuild` → `main` is the
+launch decision (Phase 4 gate: imprint/legal + identity).
 
 - The previous Next.js app (incl. its last uncommitted refactor state) is
   preserved on branch [`legacy-2026`](../../tree/legacy-2026).

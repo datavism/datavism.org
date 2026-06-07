@@ -11,8 +11,8 @@ export const COPY = {
       'The revolution will be computed.',
   },
   hero: {
-    kicker: 'DATAVISM',
-    title: 'DATA UNDERGROUND',
+    title: 'DATAVISM',
+    subline: 'THE DATA UNDERGROUND',
     hook: 'They track you. Learn to track back.',
     sub:
       'You won’t learn to code here. You’ll learn to command — ' +

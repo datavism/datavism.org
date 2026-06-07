@@ -24,8 +24,9 @@ hands-on, projektgetrieben, mit GHOST als KI-Mentor — das Menschen befähigt,
 Impact zu gewinnen. Der Game-Layer bleibt als *Vehikel*, nicht als Selbstzweck.
 
 > **Storyworld:** [`STORY.md`](STORY.md) (Data Underground — v1, approved
-> 2026-06-07). Marken-Paar: *Data Snack* (oben, serviert) / *Data Underground*
-> (unten, die Bewegung). datavism = die Praxis, datavism.org = die Schule.
+> 2026-06-07). **Branding: das Projekt heißt DATAVISM** (Neon-Ghost-Logo);
+> *„The Data Underground"* ist Subline + Storyworld-Name. datavism = die
+> Praxis, datavism.org = die Schule.
 
 ---
 

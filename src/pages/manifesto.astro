@@ -1,10 +1,16 @@
 ---
 // src/pages/manifesto.astro — copy source of truth: docs/MANIFESTO.md (v2)
 import Base from '../layouts/Base.astro'
+import GhostLogo from '../components/GhostLogo.astro'
 ---
 <Base title="The Datavism Manifesto — Data Underground">
-  <p class="text-phosphor-dim tracking-[0.35em] text-xs">DATAVISM</p>
-  <h1 class="text-phosphor-hi text-3xl font-bold mt-2">THE MANIFESTO</h1>
+  <div class="flex items-center gap-4">
+    <GhostLogo size={44} />
+    <div>
+      <p class="text-phosphor-dim tracking-[0.35em] text-xs">DATAVISM</p>
+      <h1 class="text-phosphor-hi text-3xl font-bold mt-1">THE MANIFESTO</h1>
+    </div>
+  </div>
 
   <section class="mt-10 space-y-4 leading-relaxed">
     <h2 class="text-signal font-bold">THE PROBLEM</h2>

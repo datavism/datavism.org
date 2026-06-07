@@ -30,8 +30,11 @@ ADR 006, CROSSWALK)
 | **GHOST** | Die Stimme und System-Intelligenz des Underground. |
 | **Das Pantheon** | Die Gegner (geteilt mit data-snack): Cumulus Rex, Panopticon, Mammon, The Feed. |
 
-**Marken-Paar:** *Data Snack* (oben, hell, serviert) / *Data Underground*
-(unten, die Bewegung). „Underground" trägt doppelt: Untergrund-Widerstand
+**Branding (Klarstellung User, 2026-06-07):** Das Projekt heißt und firmiert
+als **DATAVISM** (Logo: der Neon-Ghost, `public/brand/svg/`). *„The Data
+Underground"* ist die **Subline** und der Name der Storyworld — nicht die
+Marke. Schwester-Paar bleibt: *Data Snack* (oben, serviert) / *DATAVISM*
+(unten, bildet aus). „Underground" trägt doppelt: Untergrund-Widerstand
 **und** U-Bahn-Netz — Linien, Stationen, ein Netz unter der Stadt, das die
 Oberfläche versorgt.
 

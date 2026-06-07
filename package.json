@@ -1,16 +1,27 @@
 {
-  "name": "datavism-holding",
+  "name": "datavism",
+  "type": "module",
   "version": "0.1.0",
-  "private": true,
-  "description": "Holding page — the basement is being rebuilt. See docs/VISION.md and docs/STORY.md.",
+  "engines": {
+    "node": ">=18.17.1"
+  },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "vitest run"
   },
   "dependencies": {
-    "next": "^15.5.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@astrojs/svelte": "^7.2.5",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^5.18.2",
+    "svelte": "^5.56.2",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "vitest": "^4.1.8"
   }
 }

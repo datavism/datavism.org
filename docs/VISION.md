@@ -200,18 +200,31 @@ allein fördern „shallow learning"):
 - **data-snack-Bridge-Cards** (CROSSWALK): jeder Snack endet mit einer
   Track-Empfehlung in Cast-Stimme → narrativer Zweit-Funnel.
 - **Mobile-first, jeder Moment teilbar** (bleibt aus der alten program.md gültig).
-- **Subscribe/Waitlist (eingebaut 2026-06-07, env-gated):** Landing hat den
-  Waitlist-Block („One email when LINE G opens") + `api/subscribe.ts`
-  (Vercel-Function → Resend-Audience `underground-waitlist`, Honeypot,
-  Honesty-Microcopy am Formular). **Live-Schaltung = `RESEND_API_KEY` im
-  Vercel-Projekt setzen** (optional `RESEND_AUDIENCE_ID`); bis dahin antwortet
-  die Route 503 und das Formular sagt ehrlich „wire not connected yet".
-  Audience-Modell: Segmente als Resend-Audiences (`snack-drops`,
-  `underground-waitlist`), ein Account für beide Plattformen. **Offen:**
-  Datenschutzerklärung + Impressum (Pflicht, braucht Betreiber-Daten) und
-  Double-Opt-In-Bestätigung (kommt mit der Resend-Session / verifizierter
-  Domain — bis dahin Single-Opt-In in die Waitlist, vor erstem Versand
-  bestätigen lassen).
+- **Subscribe/Waitlist (eingebaut 2026-06-07, an geteiltes Backend verdrahtet):**
+  Landing hat den Waitlist-Block („One email when LINE G opens"). `api/subscribe.ts`
+  ist ein **server-seitiger Proxy** zur **geteilten** data-snack-Drop-Notifier-
+  Cloud-Function (Double-Opt-In, geteilter Resend-Pool). datavism postet
+  `brand:'datavism'` → bei Confirm Tagging ins **`underground-waitlist`**-Segment.
+  **Kein Resend-Key auf datavism** — nur `SUBSCRIBE_ENDPOINT` (die deployte
+  Cloud-Function-URL). Bis der gesetzt ist: Route 503, Formular sagt ehrlich
+  „wire not connected yet". Backend ist brand-aware (data-snack
+  `functions/subscribe`, Commit b2f4cf9).
+
+  **Aktivierungs-Reihenfolge (Frank — NICHT vorher den Endpoint setzen):**
+  1. In Resend das Segment **`underground-waitlist`** anlegen.
+  2. Cloud-Function-Env setzen: `RESEND_UNDERGROUND_SEGMENT_IDS=<segment-id>`
+     (optional `MAIL_FROM_DATAVISM` = verifizierter datavism.org-Absender,
+     `PUBLIC_DATAVISM_URL=https://datavism.org`) und **Functions neu deployen**
+     (`functions/subscribe`, `npm run deploy:all`).
+  3. Auf dem **datavism**-Vercel-Projekt `SUBSCRIBE_ENDPOINT` =
+     `https://subscribe-pkj46ucxaq-ey.a.run.app` setzen, Redeploy.
+  4. E2E testen (subscribe → Confirm-Klick → im `underground-waitlist`-Segment).
+
+  **Offen (Pflicht vor öffentlichem Sammeln):** Datenschutzerklärung +
+  Impressum (braucht Betreiber-Daten) und TIA/DPO-Review (siehe data-snack
+  STATUS). Bis dahin Endpoint **nicht** scharfschalten. Confirm-Mail kommt
+  ohne `MAIL_FROM_DATAVISM` vorerst von `chef@data-snack.com` — für saubere
+  Absenderoptik datavism.org-Domain bei Resend verifizieren.
 
 ---
 

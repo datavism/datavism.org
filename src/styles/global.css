@@ -1,0 +1,18 @@
+/* src/styles/global.css */
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #050805;        /* page background */
+  --color-phosphor: #9ef0a8;   /* primary terminal green */
+  --color-phosphor-dim: #4f7a55;
+  --color-phosphor-hi: #d9ffe0;
+  --color-signal: #ffd23f;     /* warm accent (links, line G) */
+  --color-line-k: #46c8ff;     /* Key cyan */
+  --color-line-r: #c0c8d8;     /* Rook steel */
+  --color-line-b: #ff4fd2;     /* Bite magenta */
+  --color-line-v: #b48cff;     /* Vesper violet */
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html { background: var(--color-ink); color: var(--color-phosphor); }
+body { font-family: var(--font-mono); margin: 0; }

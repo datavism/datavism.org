@@ -18,10 +18,14 @@
 ## 0. Der Pivot in einem Satz
 
 datavism.org war ein „Serious Game über Daten-Aktivismus mit Python-Lektionen".
-**Es wird das AI-Era Data Skills Bootcamp** — hands-on, projektgetrieben,
-mit GHOST als KI-Mentor — das Menschen befähigt, **mit KI als Superkraft** schnell
-aus Daten Erkenntnisse, Lösungen und echten Impact zu gewinnen. Der Game-Layer
-bleibt als *Vehikel*, nicht als Selbstzweck.
+**Es wird die Schule des DATA UNDERGROUND** — das AI-Era Data Skills Bootcamp,
+hands-on, projektgetrieben, mit GHOST als KI-Mentor — das Menschen befähigt,
+**mit KI als Superkraft** schnell aus Daten Erkenntnisse, Beweise und echten
+Impact zu gewinnen. Der Game-Layer bleibt als *Vehikel*, nicht als Selbstzweck.
+
+> **Storyworld:** [`STORY.md`](STORY.md) (Data Underground — v1, approved
+> 2026-06-07). Marken-Paar: *Data Snack* (oben, serviert) / *Data Underground*
+> (unten, die Bewegung). datavism = die Praxis, datavism.org = die Schule.
 
 ---
 
@@ -62,8 +66,10 @@ ML-Engineer".
 | **Sekundär** | Journalist:innen, NGOs, Aktivist:innen | brauchen Daten-Skills für reale Recherchen | Bridge-Cards, Institutional |
 | **Sekundär** | Educators / Institutionen | wollen wirksame AI-Literacy-Programme | Institutional Sales, OSS-Curriculum |
 
-**Region:** primär DACH/EU, englischsprachig skalierbar. **Prinzip:** kein
-Gatekeeping — Rollen/Schwierigkeitsgrade holen alle ab.
+**Region:** primär DACH/EU, global anschlussfähig. **Sprache: EN-first**
+(Entscheidung 2026-06-07 — die Schule startet englisch, DE als zweite Welle;
+interne Docs bleiben deutsch). **Prinzip:** kein Gatekeeping —
+Linien-Affinität/Schwierigkeitsgrade holen alle ab.
 
 ---
 
@@ -82,24 +88,38 @@ Gatekeeping — Rollen/Schwierigkeitsgrade holen alle ab.
 6. **Versteckte Didaktik.** Skill wird im Erlebnis vermittelt; der Game-Layer
    trägt, ohne sich wie „Lektion 3 von 12" anzufühlen.
 
-### 3.2 Curriculum-Tracks (Working-Titles)
+### 3.2 Curriculum = Netzplan (Linien & Stationen)
 
-Spine aus ADR 006 + Snack-Bridge-Mapping (CROSSWALK). **Nummerierung
-provisorisch**, finalisiert mit den ersten Snack-Slugs.
+> **Kern-Reframe (User, 2026-06-07):** Im neuen datavism geht es **nicht mehr
+> darum, coden zu lernen** — sondern um die Skills, mit denen man KI effektiv
+> einsetzt, um Probleme zu lösen: **Vibe Coding + AI Engineering für Data
+> Engineering, Data Analytics und Data Science.** Ein innovatives Curriculum,
+> um 2026 und in Zukunft mit diesen Technologien zu arbeiten — für
+> Problemlösung, **Kunst und Aktivismus**.
 
-| Track | Titel (Working) | Kern-Skill | Snack-Bridge (Beispiel) |
-|---|---|---|---|
-| **00 Foundation** | *Vibe Coding & AI-Orchestrierung* | Prompting, Co-Pilot-Workflow, „richtige Fragen" | (alle) |
-| **02** | Source-Stacking, Joins & Demographic Pattern Mining | Daten verbinden & Muster finden | Rook · Wealth Transfer / Vesper · Quiet Collapse |
-| **03** | Crawling + Entity Resolution mit LLM | Datenbeschaffung mit Co-Pilot | Bite · TikTok Autopsy / Key · Data-Broker Anatomy |
-| **04** | AI-gestütztes Wrangling (Climate Data) | Cleaning/Transform mit KI | Vesper · AMOC Collapse |
-| **05** | Financial Time Series mit Co-Pilot | Zeitreihen, Signale | Rook · De-Dollarization |
-| **06** | OSINT mit AI-Assistance | offene Quellen, Verifikation | Key · Pegasus Tracker |
-| **07** | Real-Time Stream Analysis | Live-Daten | Bite · Sports Betting Boom |
-| **08** | Critical-AI-Literacy + Eval | KI prüfen, Halluzinationen, Bias | Schrödi · AI Hallucination Rates |
+Das Curriculum ist ein **U-Bahn-Netzplan des Data Underground** (Storyworld:
+`STORY.md` §6). Tracks = Linien, Lektionen = Stationen (immer hands-on, nie
+passives Video), Endstation = Capstone-Investigation gegen den
+Pantheon-Gegner der Linie.
 
-Querschnitt **Artistic Research**: Visualisierung/Sonifikation/Narrativ als
-Ausspielform jeder Investigation (Gallery, siehe §5).
+| Linie | Pate | Domäne (AI-gestützt) | Capstone-Gegner | Snack-Bridge (Beispiel) |
+|---|---|---|---|---|
+| **Line G** (Foundation) | GHOST | Vibe Coding & AI-Orchestrierung: Prompting, Co-Pilot-Workflows, Spec-Driven, „die richtige Frage" | — (speist alle Linien) | (alle) |
+| **Line K** | Key | Tracking-Forensik, OSINT, Crawling + Entity Resolution mit LLM | **Panopticon** | Pegasus Tracker · Data-Broker Anatomy |
+| **Line R** | Rook | Ökonomie: Source-Stacking, Joins, Financial Time Series mit Co-Pilot | **Mammon** | Wealth Transfer · De-Dollarization |
+| **Line B** | Bite | Feeds & Streams: Crawler-Bau, Real-Time-Analyse, Retention-Autopsie | **The Feed** | TikTok Autopsy · Sports Betting Boom |
+| **Line V** | Vesper | Klima/Demografie: AI-gestütztes Wrangling, Langzeit, Archiv | **Cumulus Rex** | AMOC Collapse · Quiet Collapse Korea |
+
+Querschnitte (auf allen Linien):
+- **Critical-AI-Literacy + Eval** — KI prüfen, Halluzinationen, Bias; GHOST
+  selbst ist Eval-Übungsobjekt (Schrödi markiert: „nicht stabil.").
+- **Artistic Research** — Visualisierung, Sonifikation, generative/narrative
+  Formen als gleichwertige Ausspielform jeder Investigation. Eine Capstone
+  darf ein Kunstwerk sein. (Selbstbeschreibung bleibt: *„A Non-Profit Digital
+  Art Project."*)
+- **Abschluss = Ticket, nicht Zertifikat:** Fortschritt als stempelbarer
+  Fahrschein (Receipt-Ästhetik, teilbar). Graduierung = Vault-Schlüssel +
+  eigenes Case File.
 
 ### 3.3 Tier-Modell (aus ADR 006 — verbindlich)
 
@@ -119,34 +139,44 @@ Premium-Cohort-**Verkauf** läuft über `data-snack.com` (Brand-Reichweite),
 
 ---
 
-## 4. Narrative-Alignment (an das data-snack-Universum)
+## 4. Narrative: DATA UNDERGROUND (→ `STORY.md`)
 
-**Entscheidung 2026-06-07:** datavism wird ins data-snack-Universum eingegliedert.
-Die alte Reality-Wars-Welt (Maya Chen, Algorithmic Consortium, Fake Brands) wird
-**ausgemustert** (→ `docs/archive/`).
+**Entscheidung 2026-06-07 (Brainstorm, approved):** datavism wird ins
+data-snack-Universum eingegliedert — als **Data Underground**. Die alte
+Reality-Wars-Welt (Maya Chen, Algorithmic Consortium, Fake Brands) ist
+ausgemustert (→ `docs/archive/`). Vollständige Storyworld: [`STORY.md`](STORY.md).
 
-- **GHOST = alleiniger Mentor auf datavism.** Gehört datavism, nicht dem
-  data-snack-Cast. Läuft auf Open-Source-Modellen (NVIDIA NIM; Claude nur als
-  Dev-Tool).
-- **Gemeinsame Gegner = das Pantheon:** **Cumulus Rex** (Cloud/CDN-Überwachung),
-  **Panopticon** (architektonische Kontrolle), **Mammon** (ökonomische
-  Extraktion), **The Feed** (Retention/Sucht). Dieselben Antagonisten wie in den
-  Snacks — ein Universum, zwei Säulen.
-- **Verortung:** datavism ist das **Bootcamp Classroom im Basement** des
-  data-snack-Diners. Bootcamp-Abschluss = *permanenter Key* zum Vault
-  (data-snack-Belohnungslogik).
-- **Cast-Crossover behutsam** (CROSSWALK): GHOST bleibt primär; pro Cohort
-  *eine* Snack-Cast-Gast-Session (z. B. Vesper liest eine Methodologie-Anmerkung,
-  Rook annotiert Source-Choices).
-- **Identity-Bridge:** ein Profil über beide Plattformen. Firestore
-  `crew/{emailHash}`; **Codename bleibt** (`MINSKY-DRIFT` bleibt `MINSKY-DRIFT`).
-  datavism-Erweiterung: `{ role, motivation, enrolledTracks, completedTracks,
-  cohortIds }`. Rollen (warrior/rebel/artist/explorer) und Motivation
-  (truth/justice/freedom/impact) bleiben das Onboarding-Gerüst.
+Kurzfassung:
+
+- **Data Underground = die Bewegung** unter der Oberfläche; das Diner-Basement
+  ist ihr Eingang (`↓ BASEMENT — STAFF ONLY ↓`); datavism.org ist die Schule;
+  **Datavist** ist, wer dazugehört.
+- **GHOST = die KI hinter allem** — für datavism, was CHEF für data-snack ist:
+  ubiquitäre System-Intelligenz (Routing, Mentor-Dialog, Feedback, Eval) **und**
+  Charakter. Origin: desertiertes Pantheon-Profiling-Modell (von Key geborgen),
+  das seither aus den Vault-Case-Files lernt — jeder Graduate macht GHOST
+  klüger. Technisch real auf **GCP** entwickelt (Vertex AI/Gemini + ML,
+  Firestore, BigQuery).
+- **Gemeinsame Gegner = das Pantheon:** Cumulus Rex (Cloud/CDN-Überwachung),
+  Panopticon (architektonische Kontrolle), Mammon (ökonomische Extraktion),
+  The Feed (Retention/Sucht). Jede Linie endet in einer Capstone gegen ihren
+  Gegner.
+- **Cast-Crossover behutsam** (CROSSWALK): GHOST bleibt primär; pro
+  Linie/Cohort eine Gast-Session der Diner-Crew; Schrödi markiert auch unten.
+- **Identity-Bridge:** ein Codename über beide Plattformen (Firestore
+  `crew/{emailHash}`). **Linien-Affinität ersetzt die alten Rollen**
+  (warrior/rebel/artist/explorer ausgemustert): Onboarding fragt *„Welche
+  Frage treibt dich?"* — Wem nützt es? (R) · Wie ist es gebaut? (K) · Warum
+  bleiben wir? (B) · Was bleibt? (V).
+- **Ehrlichkeits-Regel (neu, verbindlich):** keine erfundenen Stats, keine
+  Fake-Live-Feeds (die alte Site hatte beides). Echte Zahlen oder keine —
+  data-snack-Qualitätsregel gilt auch unten. Der ehrliche Live-Demo-Counter
+  („You've been tracked N times on this page alone") bleibt als Konzept.
 
 > **Migrations-Hinweis (Technik, späterer Code-Schritt):** bestehende
 > `useDatavist`-localStorage-Profile werden beim Magic-Link server-side auf
-> `crew/{emailHash}.datavism` gemappt (CROSSWALK §Migrationspfad).
+> `crew/{emailHash}.datavism` gemappt (CROSSWALK §Migrationspfad); `role` wird
+> dabei auf Linien-Affinität gemappt.
 
 ---
 

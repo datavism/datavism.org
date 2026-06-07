@@ -8,9 +8,12 @@
 
 | Dokument | Zweck |
 |---|---|
-| [`VISION.md`](VISION.md) | **Leit-Dokument** — Positionierung, Bootcamp-Konzept, Narrative, Viral/Launch, Community, Finanzierung, Roadmap |
+| [`VISION.md`](VISION.md) | **Leit-Dokument** — Positionierung, Netzplan-Curriculum, Narrative, Viral/Launch, Community, Finanzierung, Roadmap |
+| [`STORY.md`](STORY.md) | **Storyworld-Bible** — Data Underground, GHOST, Maschinenraum, Linien, Slogans, Ton-Regeln |
+| [`MANIFESTO.md`](MANIFESTO.md) | Das Manifest (v2, EN, site-ready) |
 | [`../program.md`](../program.md) | Steuerungsdokument für Entwicklungs-Sessions (Anti-Patterns, Qualitätskriterien, Tech, Ethik) |
 | [`research/2026-06-07-repositioning-research.md`](research/2026-06-07-repositioning-research.md) | Verifizierte Recherche (Skills, Viral, Community, Finanzierung), Stand 2026 |
+| [`research/2026-06-07-legacy-site-copy.md`](research/2026-06-07-legacy-site-copy.md) | Text-Sicherung der alten Live-Site (vor Abschaltung) |
 
 **Canon der Plattform-Rollen** liegt im Schwester-Repo `data-snack.com`
 (`docs/adr/006-platform-roles-snack-vs-datavism.md`,

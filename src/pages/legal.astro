@@ -1,0 +1,108 @@
+---
+// src/pages/legal.astro — Imprint + Privacy for datavism.org.
+// Operator block adopted from data-snack (same controller, Frank Bültge).
+// Privacy is TRIMMED to datavism's actual data reality: no analytics, no
+// cookies, no tracking — the only personal-data flow is the optional waitlist
+// email (double opt-in) via the SHARED data-snack drop-notifier backend.
+import Base from '../layouts/Base.astro'
+import GhostLogo from '../components/GhostLogo.astro'
+const updated = '2026-06-08'
+---
+<Base title="Imprint & Privacy — DATAVISM" description="Legal notice, imprint and privacy policy for datavism.org. No tracking, no cookies — only an optional double-opt-in waitlist email.">
+  <div class="flex items-center gap-4">
+    <GhostLogo size={44} />
+    <div>
+      <p class="text-phosphor-dim tracking-[0.35em] text-xs">DATAVISM</p>
+      <h1 class="text-phosphor-hi text-3xl font-bold mt-1">IMPRINT &amp; PRIVACY</h1>
+    </div>
+  </div>
+  <p class="text-phosphor-dim text-xs mt-2">
+    Last updated: {updated}. English first; the German sections (Impressum /
+    Datenschutz) are legally controlling for this German operator.
+  </p>
+
+  <!-- ── SITE NOTICE (EN) ─────────────────────────── -->
+  <section class="mt-10 space-y-3 leading-relaxed">
+    <h2 class="text-signal font-bold">// SITE NOTICE (§ 5 TMG)</h2>
+    <div class="border-l-2 border-phosphor-dim/50 pl-4 text-sm text-phosphor-hi">
+      <p>Frank Bültge<br />Personal project (non-commercial)<br />Neuhof 7<br />18276 Zehna OT Neuhof<br />Germany</p>
+      <p class="mt-3">Email: ghost@datavism.org<br />Website: datavism.org<br />Author: frankbueltge.de</p>
+      <p class="mt-3">Responsible for content per § 55(2) RStV: Frank Bültge, address as above.</p>
+    </div>
+    <p class="text-sm">datavism.org is the bootcamp of the Data Underground — a non-profit digital art &amp; education project, sister site of <a class="text-signal" href="https://data-snack.com">data-snack.com</a>.</p>
+  </section>
+
+  <!-- ── PRIVACY (EN) ─────────────────────────────── -->
+  <section class="mt-10 space-y-3 leading-relaxed">
+    <h2 class="text-signal font-bold">// PRIVACY POLICY</h2>
+
+    <h3 class="text-phosphor-hi font-bold mt-4">The short version</h3>
+    <p class="text-sm">This site runs <strong>no analytics, no cookies, no tracking</strong>. The signal counter on the homepage counts events <em>in your browser</em> and transmits nothing — “no tracking on this page” is literal. The only personal data we ever process is the email you voluntarily give us for the launch waitlist, and only with double opt-in.</p>
+
+    <h3 class="text-phosphor-hi font-bold mt-4">1. Controller</h3>
+    <p class="text-sm">Frank Bültge, Neuhof 7, 18276 Zehna OT Neuhof, Germany · ghost@datavism.org. A Data Protection Officer is not required under § 38 BDSG; contact the address above for any privacy request.</p>
+
+    <h3 class="text-phosphor-hi font-bold mt-4">2. Server logs (essential)</h3>
+    <p class="text-sm">When you load the site, our hosting provider automatically logs technical request data (truncated IP, timestamp, URL, status code, user agent, referrer domain). Purpose: operating and securing the site. Legal basis: Art. 6(1)(f) GDPR (legitimate interest). Retention: short-term (max. 14 days), then deleted.</p>
+
+    <h3 class="text-phosphor-hi font-bold mt-4">3. Waitlist email (consent, double opt-in)</h3>
+    <p class="text-sm">If you enter your email in the waitlist form, we send you one confirmation email. Only after you click the confirmation link is your address activated and stored — that is double opt-in. We then use it for <strong>exactly one purpose</strong>: a single email when the first bootcamp line opens. No drip, no funnel, no profiling, no sale.</p>
+    <p class="text-sm">Legal basis: Art. 6(1)(a) GDPR (consent) and § 7(2) Nr. 3 UWG. You can withdraw at any time (link in every email, or write to ghost@datavism.org) with effect for the future.</p>
+    <p class="text-sm">The waitlist is operated on the <strong>shared mail backend of our sister site data-snack.com</strong>: your address is held in one global contact pool, tagged into the <code>underground-waitlist</code> segment. The double-opt-in record (status, timestamp) is stored as the system of record in Google&nbsp;Cloud Firestore (EU region); delivery runs through Resend.</p>
+
+    <h3 class="text-phosphor-hi font-bold mt-4">4. Processors &amp; recipients</h3>
+    <div class="text-sm overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead><tr class="text-phosphor-dim">
+          <th class="py-1 pr-4">Service</th><th class="py-1 pr-4">Provider</th><th class="py-1 pr-4">Location</th><th class="py-1">Safeguard</th>
+        </tr></thead>
+        <tbody class="text-phosphor-hi/90">
+          <tr><td class="py-1 pr-4">Hosting + waitlist proxy</td><td class="py-1 pr-4">Vercel Inc.</td><td class="py-1 pr-4">USA / EU edge</td><td class="py-1">DPA · SCC · DPF</td></tr>
+          <tr><td class="py-1 pr-4">Waitlist record (system of record)</td><td class="py-1 pr-4">Google Cloud (Functions, Firestore)</td><td class="py-1 pr-4">EU (europe-west)</td><td class="py-1">DPA · EU storage</td></tr>
+          <tr><td class="py-1 pr-4">Email delivery</td><td class="py-1 pr-4">Resend, Inc.</td><td class="py-1 pr-4">USA inc. · EU storage (eu-west-1)</td><td class="py-1">DPA · SCC · EU storage</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="text-phosphor-hi font-bold mt-4">5. Third-country transfers</h3>
+    <p class="text-sm">Some providers above are US-incorporated. Transfers are safeguarded by EU Standard Contractual Clauses (SCC, 2021/914), the EU-US Data Privacy Framework where applicable, EU data storage, and data minimization. Residual risk under Schrems II / FISA 702 cannot be fully excluded; we mitigate it by collecting as little as possible (one email, with consent).</p>
+
+    <h3 class="text-phosphor-hi font-bold mt-4">6. Your rights</h3>
+    <p class="text-sm">You have the rights to access (Art. 15), rectification (16), erasure (17), restriction (18), portability (20), objection (21), and to withdraw consent (Art. 7(3)) at any time. Write to ghost@datavism.org. You may also lodge a complaint with a supervisory authority — for this operator: <em>Der Landesbeauftragte für Datenschutz und Informationsfreiheit Mecklenburg-Vorpommern</em>.</p>
+
+    <h3 class="text-phosphor-hi font-bold mt-4">7. Cookies &amp; storage</h3>
+    <p class="text-sm">This site sets no cookies and no tracking storage. There is therefore no cookie banner — there is nothing to consent to.</p>
+
+    <h3 class="text-phosphor-hi font-bold mt-4">8. Minors</h3>
+    <p class="text-sm">Intended for users aged 16+. We do not knowingly collect data from children under 16.</p>
+  </section>
+
+  <!-- ── DE DIVIDER ───────────────────────────────── -->
+  <div class="mt-10 mb-6 text-center text-phosphor-dim text-xs tracking-[0.2em]">// DEUTSCHE VERSION · IMPRESSUM + DATENSCHUTZ (maßgeblich)</div>
+
+  <!-- ── IMPRESSUM (DE) ───────────────────────────── -->
+  <section class="space-y-3 leading-relaxed" lang="de">
+    <h2 class="text-signal font-bold">// IMPRESSUM (§ 5 TMG)</h2>
+    <div class="border-l-2 border-phosphor-dim/50 pl-4 text-sm text-phosphor-hi">
+      <p>Frank Bültge<br />Neuhof 7<br />18276 Zehna OT Neuhof<br />Deutschland</p>
+      <p class="mt-3">E-Mail: ghost@datavism.org<br />Website: datavism.org<br />Autor: frankbueltge.de</p>
+      <p class="mt-3">datavism.org ist ein persönliches, nicht-kommerzielles Kunst- und Bildungsprojekt. Verantwortlich nach § 55 Abs. 2 RStV: Frank Bültge, Adresse wie oben.</p>
+    </div>
+    <h3 class="text-phosphor-hi font-bold mt-4">Haftung &amp; Urheberrecht</h3>
+    <p class="text-sm">Als Diensteanbieter bin ich gemäß § 7 Abs. 1 TMG für eigene Inhalte verantwortlich, nach §§ 8–10 TMG aber nicht verpflichtet, fremde Informationen zu überwachen. Für externe Links haften deren Betreiber. Eigene Inhalte unterliegen dem deutschen Urheberrecht.</p>
+  </section>
+
+  <!-- ── DATENSCHUTZ (DE) ─────────────────────────── -->
+  <section class="mt-8 space-y-3 leading-relaxed" lang="de">
+    <h2 class="text-signal font-bold">// DATENSCHUTZERKLÄRUNG · DSGVO</h2>
+    <p class="text-sm"><strong>Kurzfassung:</strong> Diese Seite nutzt <strong>keine Analyse, keine Cookies, kein Tracking</strong>. Der Signal-Zähler zählt nur im Browser und sendet nichts. Einzige Verarbeitung personenbezogener Daten: die freiwillig angegebene E-Mail für die Launch-Warteliste, ausschließlich per Double-Opt-in.</p>
+    <p class="text-sm"><strong>Verantwortlicher:</strong> Frank Bültge, Neuhof 7, 18276 Zehna OT Neuhof · ghost@datavism.org. Ein Datenschutzbeauftragter ist nach § 38 BDSG nicht erforderlich.</p>
+    <p class="text-sm"><strong>Server-Logfiles (essenziell):</strong> technische Zugriffsdaten (gekürzte IP, Zeit, URL, Statuscode, User-Agent, Referrer-Domain). Zweck: Betrieb und Sicherheit. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO. Speicherung: kurzfristig (max. 14 Tage).</p>
+    <p class="text-sm"><strong>Warteliste (Einwilligung, Double-Opt-in):</strong> Nach Eingabe der E-Mail senden wir eine Bestätigungsmail; erst nach Klick auf den Link wird die Adresse aktiv gespeichert. Verwendung für genau einen Zweck: eine Mail, wenn die erste Bootcamp-Linie öffnet. Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO, § 7 Abs. 2 Nr. 3 UWG. Widerruf jederzeit mit Wirkung für die Zukunft (Link in jeder Mail oder ghost@datavism.org). Betrieb über das <strong>geteilte Mail-Backend der Schwesterseite data-snack.com</strong> (geteilter Kontakt-Pool, Segment <code>underground-waitlist</code>; Double-Opt-in-Nachweis in Google Cloud Firestore, EU-Region; Versand über Resend).</p>
+    <p class="text-sm"><strong>Auftragsverarbeiter:</strong> Vercel Inc. (Hosting/Proxy, USA/EU, DPA·SCC·DPF), Google Cloud (Wartelisten-Datensatz, EU-Region, DPA), Resend, Inc. (Versand, US-Gesellschaft mit EU-Speicherung, DPA·SCC). Drittlandtransfers via SCC/DPF, EU-Speicherung und Datenminimierung abgesichert; Restrisiko nach Schrems II nicht vollständig ausschließbar.</p>
+    <p class="text-sm"><strong>Ihre Rechte:</strong> Auskunft, Berichtigung, Löschung, Einschränkung, Übertragbarkeit, Widerspruch, Widerruf der Einwilligung (Art. 15–21, Art. 7 Abs. 3 DSGVO) — ghost@datavism.org. Beschwerderecht bei der Aufsichtsbehörde: Der Landesbeauftragte für Datenschutz und Informationsfreiheit Mecklenburg-Vorpommern.</p>
+    <p class="text-sm"><strong>Cookies:</strong> Es werden keine Cookies und kein Tracking-Storage gesetzt; daher kein Cookie-Banner.</p>
+  </section>
+
+  <p class="mt-10 text-sm"><a class="text-signal underline decoration-dashed underline-offset-4" href="/">← back to the entrance</a></p>
+</Base>

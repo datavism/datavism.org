@@ -57,5 +57,6 @@ export const COPY = {
   footer: {
     org: 'datavism.org · a non-profit digital art project',
     tracking: 'no tracking on this page. not even ironically.',
+    legal: 'imprint & privacy',
   },
 } as const

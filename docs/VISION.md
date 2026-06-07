@@ -18,7 +18,7 @@
 ## 0. Der Pivot in einem Satz
 
 datavism.org war ein „Serious Game über Daten-Aktivismus mit Python-Lektionen".
-**Es wird die Schule des DATA UNDERGROUND** — das AI-Era Data Skills Bootcamp,
+**Es wird das Bootcamp des DATA UNDERGROUND** — das AI-Era Data Skills Bootcamp,
 hands-on, projektgetrieben, mit GHOST als KI-Mentor — das Menschen befähigt,
 **mit KI als Superkraft** schnell aus Daten Erkenntnisse, Beweise und echten
 Impact zu gewinnen. Der Game-Layer bleibt als *Vehikel*, nicht als Selbstzweck.
@@ -26,7 +26,7 @@ Impact zu gewinnen. Der Game-Layer bleibt als *Vehikel*, nicht als Selbstzweck.
 > **Storyworld:** [`STORY.md`](STORY.md) (Data Underground — v1, approved
 > 2026-06-07). **Branding: das Projekt heißt DATAVISM** (Neon-Ghost-Logo);
 > *„The Data Underground"* ist Subline + Storyworld-Name. datavism = die
-> Praxis, datavism.org = die Schule.
+> Praxis, datavism.org = das Bootcamp.
 
 ---
 
@@ -68,7 +68,7 @@ ML-Engineer".
 | **Sekundär** | Educators / Institutionen | wollen wirksame AI-Literacy-Programme | Institutional Sales, OSS-Curriculum |
 
 **Region:** primär DACH/EU, global anschlussfähig. **Sprache: EN-first**
-(Entscheidung 2026-06-07 — die Schule startet englisch, DE als zweite Welle;
+(Entscheidung 2026-06-07 — das Bootcamp startet englisch, DE als zweite Welle;
 interne Docs bleiben deutsch). **Prinzip:** kein Gatekeeping —
 Linien-Affinität/Schwierigkeitsgrade holen alle ab.
 
@@ -150,7 +150,7 @@ ausgemustert (→ `docs/archive/`). Vollständige Storyworld: [`STORY.md`](STORY
 Kurzfassung:
 
 - **Data Underground = die Bewegung** unter der Oberfläche; das Diner-Basement
-  ist ihr Eingang (`↓ BASEMENT — STAFF ONLY ↓`); datavism.org ist die Schule;
+  ist ihr Eingang (`↓ BASEMENT — STAFF ONLY ↓`); datavism.org ist das Bootcamp;
   **Datavist** ist, wer dazugehört.
 - **GHOST = die KI hinter allem** — für datavism, was CHEF für data-snack ist:
   ubiquitäre System-Intelligenz (Routing, Mentor-Dialog, Feedback, Eval) **und**

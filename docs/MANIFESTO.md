@@ -51,7 +51,7 @@ Build the infrastructure of algorithmic accountability: a network of
 trained eyes, a growing archive of case files, an AI mentor — GHOST —
 that gets sharper with every graduate.
 
-Keep the school open: free to learn, sliding-scale to join a cohort,
+Keep the bootcamp open: free to learn, sliding-scale to join a cohort,
 funded by the mission — never by selling you.
 
 **When every citizen can analyze data, evil has nowhere to hide.**

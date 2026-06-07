@@ -15,7 +15,7 @@ ADR 006, CROSSWALK)
 ## 1. Logline
 
 > Oben serviert das Diner Wahrheiten als Snacks. Unten bildet der Untergrund
-> die aus, die nachkochen wollen. **datavism.org ist die Schule des Data
+> die aus, die nachkochen wollen. **datavism.org ist das Bootcamp des Data
 > Underground** — du lernst, mit KI als Superkraft aus Daten Erkenntnisse,
 > Beweise und Impact zu gewinnen. Dein Mentor: GHOST, der Geist in den Racks.
 
@@ -25,7 +25,7 @@ ADR 006, CROSSWALK)
 |---|---|
 | **Data Underground** | Die Bewegung. Das Netz unter der Oberfläche. Niemand weiß, wie groß es ist. |
 | **datavism** | Die Praxis — was Datavists *tun* (mit Daten + KI Beweise schaffen). |
-| **datavism.org** | Die Schule des Underground. Der Staff-Eingang im Netz. |
+| **datavism.org** | Das Bootcamp des Underground. Der Staff-Eingang im Netz. |
 | **Datavist** | Wer dazugehört. Wird man durch Tun, nicht durch Bezahlen. |
 | **GHOST** | Die Stimme und System-Intelligenz des Underground. |
 | **Das Pantheon** | Die Gegner (geteilt mit data-snack): Cumulus Rex, Panopticon, Mammon, The Feed. |
@@ -251,7 +251,7 @@ AI-Era-zugeschnitten in [`MANIFESTO.md`](MANIFESTO.md) (EN, site-ready).
 
 ## 10. Sprache
 
-**EN-first.** Die Schule startet englisch (globale Community), DE als zweite
+**EN-first.** Das Bootcamp startet englisch (globale Community), DE als zweite
 Welle. Interne Docs bleiben deutsch.
 
 ## 11. Ton-Regeln (geerbt + eigene)

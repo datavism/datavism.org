@@ -2,7 +2,7 @@
 
 > *The revolution will be computed.*
 
-**datavism.org** is the school of the **Data Underground** — the AI-era data
+**datavism.org** is the bootcamp of the **Data Underground** — the AI-era data
 skills bootcamp of the [data-snack.com](https://data-snack.com) universe.
 You won't learn to code here. You'll learn to **command**: AI, data, and the
 right questions.

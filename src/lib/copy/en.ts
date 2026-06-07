@@ -6,7 +6,7 @@ export const COPY = {
   meta: {
     title: 'DATAVISM — The Data Underground',
     description:
-      'The school of the Data Underground. You won’t learn to code — ' +
+      'The bootcamp of the Data Underground. You won’t learn to code — ' +
       'you’ll learn to command: AI, data, and the right questions. ' +
       'The revolution will be computed.',
   },
@@ -18,7 +18,7 @@ export const COPY = {
       'You won’t learn to code here. You’ll learn to command — ' +
       'AI, data, and the right questions.',
     slogan: 'The revolution will be computed.',
-    status: 'pre-launch — the school is being built.',
+    status: 'pre-launch — the bootcamp is being built.',
     ctaManifesto: 'Read the manifesto',
     ctaUpstairs: 'meanwhile, upstairs: data-snack.com',
   },

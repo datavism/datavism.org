@@ -200,21 +200,25 @@ allein fördern „shallow learning"):
 - **data-snack-Bridge-Cards** (CROSSWALK): jeder Snack endet mit einer
   Track-Empfehlung in Cast-Stimme → narrativer Zweit-Funnel.
 - **Mobile-first, jeder Moment teilbar** (bleibt aus der alten program.md gültig).
-- **Subscribe/Waitlist (eingebaut 2026-06-07, an geteiltes Backend verdrahtet):**
-  Landing hat den Waitlist-Block („One email when LINE G opens"). `api/subscribe.ts`
-  ist ein **server-seitiger Proxy** zur **geteilten** data-snack-Drop-Notifier-
-  Cloud-Function (Double-Opt-In, geteilter Resend-Pool). datavism postet
-  `brand:'datavism'` → bei Confirm Tagging ins **`underground-waitlist`**-Segment.
-  **Kein Resend-Key auf datavism** — nur `SUBSCRIBE_ENDPOINT` (die deployte
-  Cloud-Function-URL). Bis der gesetzt ist: Route 503, Formular sagt ehrlich
-  „wire not connected yet". Backend ist brand-aware (data-snack
-  `functions/subscribe`, Commit b2f4cf9).
+- **Subscribe/Waitlist — ✅ LIVE (2026-06-09):** Landing hat den Waitlist-Block
+  („One email when LINE G opens"). `api/subscribe.ts` ist ein **server-seitiger
+  Proxy** zur **geteilten** data-snack-Drop-Notifier-Cloud-Function
+  (Double-Opt-In, geteilter Resend-Pool). datavism postet `brand:'datavism'` →
+  bei Confirm Tagging ins **`underground-waitlist`**-Segment (`da3ede3e…`).
+  **Kein Resend-Key auf datavism** — nur `SUBSCRIBE_ENDPOINT` (gesetzt auf dem
+  Vercel-Projekt = `https://subscribe-pkj46ucxaq-ey.a.run.app`). End-to-end
+  live-verifiziert: gültige Mail → 200 (GHOST-Confirm ausgelöst), ungültig → 400,
+  Honeypot → 200 ohne Forward. Backend brand-aware (data-snack
+  `functions/subscribe`, Commit b2f4cf9, redeployt von der Resend-Session).
+  **Offen (kosmetisch):** datavism-Absender — Confirms kommen vorerst von
+  `chef@data-snack.com` (`MAIL_FROM_DATAVISM` ungesetzt; datavism.org bei Resend
+  noch nicht verifiziert).
 
   **Legal: erledigt.** `/legal` (Impressum + Datenschutz, EN+DE) ist live,
   zugeschnitten auf datavisms reale Datenflüsse (kein Tracking; nur Waitlist).
   Betreiber-Block von data-snack übernommen. Footer verlinkt sitewide.
 
-  **Aktivierungs-Reihenfolge — der finale Schalter (NICHT vorher Endpoint setzen):**
+  **Aktivierungs-Reihenfolge — ✅ ALLE SCHRITTE ERLEDIGT (2026-06-09):**
   1. **Backend-Redeploy mit der brand-aware Version** (data-snack-Commit b2f4cf9).
      ⚠️ **Achtung Env-Wipe:** das committete `deploy:subscribe`-Script setzt
      `--set-env-vars=NODE_ENV=production` — das **überschreibt alle Live-Env-Vars**

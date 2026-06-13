@@ -54,6 +54,27 @@ export const COPY = {
       v: { name: 'LINE V', topic: 'Climate · demographics · archive', boss: 'terminus: CUMULUS REX' },
     },
   },
+  lineG: {
+    title: 'LINE G',
+    tagline: 'Foundation · GHOST’s line · topic: judgment machines',
+    intro:
+      'Learn to command AI by dissecting the systems that judge people — ' +
+      'the machine class GHOST deserted. Five stations. The other lines are ' +
+      'locked, honestly.',
+    statusOpen: 'OPEN',
+    statusAnnounced: 'ANNOUNCED',
+    statusLocked: 'LOCKED',
+    stamp: 'self-stamped',
+    ticketCta: 'your ticket ▸',
+  },
+  ticket: {
+    heading: 'YOUR TICKET',
+    empty: 'No stamps yet. Ride LINE G — finish a station and it self-stamps here.',
+    note:
+      'Stamps are self-stamped and stored only in this browser. Nothing is sent. ' +
+      'Clear your browser, lose your ticket — for now.',
+    stationDone: 'stamped',
+  },
   footer: {
     org: 'datavism.org · a non-profit digital art project',
     tracking: 'no tracking on this page. not even ironically.',

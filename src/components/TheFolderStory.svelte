@@ -510,28 +510,12 @@
         <p class="lead" style="margin:0;">Scrolling is panic. Panic is useless here. So stop.</p>
         <p style="margin:.3rem 0 0;">Pick <em>one</em> label that claims to know you. Then ask the only thing that matters:</p>
         <p class="question">Who assigned it — on what data — and who paid to use it?</p>
-        <div class="mission-teaser">
-          <b>NEXT — the mission (not in this spike):</b> choose your category, write the
-          provable question, open <b>Case File #1</b>. That's where you stop being the
-          folder and start reading one.
-        </div>
       </div>
       <p class="stamp reveal" style="border:none;margin-top:2rem;">
-        LINE G · Station G1 · story-kern spike · <span style="color:var(--line-g)">datavism underground</span>
+        LINE G · Station G1 · <span style="color:var(--line-g)">datavism underground</span>
       </p>
     </section>
 
-    <footer>
-      <b>SPIKE — feel-test (design §8 step 1).</b> The data is real &amp; sourced
-      (verification pass 2026-06-13, see <code>VERIFY-G1.md</code>): segment names are verbatim
-      from the Xandr/Microsoft marketplace file exposed in 2023 —
-      <a href="https://themarkup.org/privacy/2023/06/08/from-heavy-purchasers-of-pregnancy-tests-to-the-depression-prone-we-found-650000-ways-advertisers-label-you" target="_blank" rel="noopener">The Markup</a>
-      &amp; <a href="https://netzpolitik.org/2023/microsofts-datenmarktplatz-xandr-das-sind-650-000-kategorien-in-die-uns-die-online-werbeindustrie-einsortiert/" target="_blank" rel="noopener">netzpolitik.org</a>;
-      RTB frequency from the <a href="https://www.iccl.ie/news/iccl-report-on-the-scale-of-real-time-bidding-data-broadcasts-in-the-u-s-and-europe/" target="_blank" rel="noopener">ICCL 2022 report</a>.
-      The folder-on-you and audio are your own live signals / synthesized in-browser.
-      No tracking, no storage, no network beyond the CDN libs — open DevTools and check.
-      The GHOST fragment is still a DRAFT.
-    </footer>
   </div>
 </div>
 
@@ -627,15 +611,9 @@
   .ghost p { margin:.5rem 0; }
   .question { font-size:clamp(22px,5.5vw,32px); font-weight:800; line-height:1.2;
     margin:1rem 0; color:var(--line-g); }
-  .mission-teaser { color:var(--dim); border-top:1px dashed var(--edge); padding-top:1.2rem; margin-top:1.4rem; }
-  .mission-teaser b { color:var(--ink); }
   .stamp { font-size:11px; color:var(--fainter); letter-spacing:.03em; margin-top:1.2rem;
     border-top:1px solid var(--edge); padding-top:8px; }
   .stamp b { color:var(--dim); }
-
-  footer { position:relative; z-index:3; max-width:760px; margin:0 auto; padding:5rem 24px 7rem;
-    color:var(--fainter); font-size:12px; line-height:1.7; border-top:1px solid var(--edge); }
-  footer b { color:var(--danger); }
 
   .fs-root.no-webgl #bg { display:none; }
   .fs-root.no-webgl { background:#08080e; }

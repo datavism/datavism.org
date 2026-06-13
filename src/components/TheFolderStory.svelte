@@ -538,6 +538,7 @@
 <style>
   .fs-root {
     position: relative;
+    width: 100vw; margin-left: calc(50% - 50vw); /* full-bleed out of the reading column */
     --bg:#050805; --ink:#f1f1f3; --dim:#9a9aa2; --fainter:#5a5a64;
     --line-g:#ffd23f; --danger:#ff5a4d; --paper:rgba(16,16,24,.74); --edge:#2b2b36;
     --mono: ui-monospace,"SF Mono","JetBrains Mono","Fira Code",Menlo,Consolas,monospace;
@@ -547,7 +548,10 @@
   .fs-root * { box-sizing:border-box; }
   .fs-root a { color:var(--line-g); }
 
-  .fs-stage { position:sticky; top:0; height:100vh; width:100%; z-index:0; }
+  /* sticky pinned stage; margin-bottom:-100vh => zero flow, scroller overlaps it.
+     No z-index here on purpose: keeps the stage from making a stacking context,
+     so .hud (z5) sits above .fs-scroller (z3) and the sound button stays clickable. */
+  .fs-stage { position:sticky; top:0; height:100vh; width:100%; margin-bottom:-100vh; }
 
   #bg { position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0; }
   #vignette { position:absolute; inset:0; z-index:1; pointer-events:none;

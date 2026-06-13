@@ -1,0 +1,76 @@
+---
+// src/pages/line-g/[station].astro — station template, six beats (design §4).
+// Story-kern is the island; the surrounding beats are server-rendered.
+import { getCollection } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import { COPY } from '../../lib/copy/en'
+import TheFolderStory from '../../components/TheFolderStory.svelte'
+import StationSelfCheck from '../../components/StationSelfCheck.svelte'
+
+export async function getStaticPaths() {
+  const open = (await getCollection('stations')).filter((s) => s.data.status === 'open')
+  return open.map((s) => ({ params: { station: s.id }, props: { station: s } }))
+}
+
+const { station } = Astro.props
+const d = station.data
+const L = COPY.lineG
+const stationId = `g${d.index}-${station.id}`
+const lineColor = 'var(--color-signal)' // LINE G
+---
+<Base title={`${d.title} — LINE G — DATAVISM`} description={d.skill}>
+  <!-- BEAT 1 · Einfahrt -->
+  <header class="border-l-4 pl-4" style={`border-color:${lineColor}`}>
+    <a class="text-phosphor-dim text-xs hover:text-signal" href="/line-g">&lt; LINE G</a>
+    <h1 class="text-signal text-3xl font-bold mt-2">G{d.index} · {d.title}</h1>
+    <p class="text-phosphor-dim text-sm mt-1">{d.skill}</p>
+    <p class="text-phosphor-dim text-xs mt-2">// GHOST · FILE {d.index}/5</p>
+  </header>
+
+  <!-- BEAT 2+3 · Story-kern (incl. GHOST fragment + folder-on-you) -->
+  <div class="mt-8">
+    <TheFolderStory client:only="svelte" ghostFragment={d.ghostFragment} />
+  </div>
+
+  <!-- BEAT 4 · Briefing (mission with your own tools) -->
+  <section class="mt-12 card-beat">
+    <h2 class="text-phosphor-hi text-xl font-bold">The mission</h2>
+    <p class="text-phosphor-dim text-sm mt-1">~{d.missionMinutes} · your own tools · free tiers are fine</p>
+    <p class="text-phosphor-hi mt-3">{d.mission.goal}</p>
+    <ol class="mt-3 space-y-2 list-decimal list-inside text-phosphor">
+      {d.mission.steps.map((s) => <li>{s}</li>)}
+    </ol>
+  </section>
+
+  <!-- BEAT 5 · Self-Check → stamp -->
+  <section class="mt-10 card-beat">
+    <h2 class="text-phosphor-hi text-xl font-bold">Self-check</h2>
+    <StationSelfCheck
+      client:visible
+      stationId={stationId}
+      checks={d.selfChecks}
+      artifactName={d.artifactName}
+      stampWord={L.stamp}
+    />
+  </section>
+
+  <!-- BEAT 6 · Ausfahrt -->
+  <footer class="mt-12 border-t border-phosphor-dim/30 pt-6">
+    {d.nextTeaser && <p class="text-phosphor-dim text-sm">▸ {d.nextTeaser}</p>}
+    <p class="mt-3"><a class="text-signal text-sm" href="/ticket">{L.ticketCta}</a></p>
+    {d.sources.length > 0 && (
+      <details class="mt-6 text-xs text-phosphor-dim">
+        <summary class="cursor-pointer">sources</summary>
+        <ul class="mt-2 space-y-1">
+          {d.sources.map((src) => (
+            <li><a class="underline decoration-dashed" href={src.url} target="_blank" rel="noopener">{src.label}</a> · accessed {src.accessed}</li>
+          ))}
+        </ul>
+      </details>
+    )}
+  </footer>
+</Base>
+
+<style>
+  .card-beat { border: 1px solid color-mix(in srgb, var(--color-phosphor-dim) 30%, transparent); border-radius: 0.5rem; padding: 1.25rem; }
+</style>

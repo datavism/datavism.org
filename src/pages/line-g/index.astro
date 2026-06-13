@@ -1,0 +1,43 @@
+---
+// src/pages/line-g/index.astro — the Line G page. Lists this line's stations
+// from the collection. Open stations link out; announced/locked are honest.
+import { getCollection } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import { COPY } from '../../lib/copy/en'
+
+const L = COPY.lineG
+const stations = (await getCollection('stations'))
+  .filter((s) => s.data.line === 'g')
+  .sort((a, b) => a.data.index - b.data.index)
+
+const statusLabel = (s: string) =>
+  s === 'open' ? L.statusOpen : s === 'announced' ? L.statusAnnounced : L.statusLocked
+---
+<Base title={`${L.title} — DATAVISM`} description={L.intro}>
+  <a class="text-phosphor-dim text-xs hover:text-signal" href="/">&lt; back</a>
+  <h1 class="text-signal text-4xl font-bold mt-6">{L.title}</h1>
+  <p class="text-phosphor-dim text-sm mt-1">{L.tagline}</p>
+  <p class="text-phosphor-hi mt-6 leading-relaxed">{L.intro}</p>
+
+  <ol class="mt-10 space-y-3">
+    {stations.map((s) => (
+      <li class="border border-phosphor-dim/30 rounded p-4 flex items-baseline justify-between gap-4">
+        <div>
+          <span class="text-signal font-bold">G{s.data.index}</span>
+          <span class="text-phosphor-hi font-bold ml-2">{s.data.title}</span>
+          <p class="text-phosphor-dim text-sm mt-1">{s.data.skill}</p>
+        </div>
+        {s.data.status === 'open' ? (
+          <a class="text-signal border border-signal rounded px-3 py-1 text-sm font-bold hover:bg-signal hover:text-ink transition-colors"
+             href={`/line-g/${s.id}`}>enter ▸</a>
+        ) : (
+          <span class="text-phosphor-dim text-xs border border-phosphor-dim/40 rounded px-3 py-1">
+            {statusLabel(s.data.status)}{s.data.dropDate ? ` · ${s.data.dropDate}` : ''}
+          </span>
+        )}
+      </li>
+    ))}
+  </ol>
+
+  <p class="mt-10"><a class="text-signal text-sm" href="/ticket">{L.ticketCta}</a></p>
+</Base>

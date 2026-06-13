@@ -453,10 +453,12 @@
   <div class="fs-scroller">
     <section id="cold">
       <h1><span id="t1">There is a <span class="y">folder</span>.</span></h1>
-      <p class="sub reveal" id="sub1">Your name is on it. You have never opened it.</p>
+      <p class="sub reveal" id="sub1">Your name is on it. You've never opened it.</p>
       <p class="sub reveal" id="sub2" style="color:var(--fainter);margin-top:.7rem;">
-        <!-- Sourced: ICCL/Johnny Ryan 2022 — Europe 376/day, US 747/day. See VERIFY-G1.md -->
-        In Europe, it's opened 376 times a day — to decide what you're worth.
+        <!-- Sourced: ICCL/Johnny Ryan 2022 — a person's data is exposed via real-time
+             bidding ~376×/day in Europe (747 in the US). See VERIFY-G1.md -->
+        But companies you've never heard of look inside — to decide what you're worth
+        and what to sell you. In Europe, that happens about 376 times a day.
       </p>
       <div class="scrollcue reveal">open the folder<span class="arrow">↓</span></div>
     </section>

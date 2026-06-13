@@ -26,7 +26,11 @@ const rows: Array<{ key: string; color: string; name: string; topic: string; bos
           <circle cx="300" cy="6" r="6" fill={r.color} />
         </svg>
         <p class="text-xs mt-1">
-          <span style={`color:${r.color}`}>{r.name}</span>
+          {r.key === 'g' ? (
+            <a href="/line-g" style={`color:${r.color}`} class="font-bold hover:underline">{r.name} ▸</a>
+          ) : (
+            <span style={`color:${r.color}`}>{r.name}</span>
+          )}
           <span class="text-phosphor-dim"> · {r.topic} · {r.boss}</span>
         </p>
       </div>

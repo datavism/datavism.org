@@ -548,12 +548,15 @@
   .fs-root * { box-sizing:border-box; }
   .fs-root a { color:var(--line-g); }
 
-  /* sticky pinned stage; margin-bottom:-100vh => zero flow, scroller overlaps it.
-     No z-index here on purpose: keeps the stage from making a stacking context,
-     so .hud (z5) sits above .fs-scroller (z3) and the sound button stays clickable. */
-  .fs-stage { position:sticky; top:0; height:100vh; width:100%; margin-bottom:-100vh; }
+  /* Sticky pinned stage. The OVERLAP is done by pulling .fs-scroller up
+     (margin-top:-100vh) — NOT by a negative margin here: a negative margin on a
+     sticky element collapses its margin-box to 0, so it stays pinned until the
+     whole island scrolls off the top, and the canvas would then cover (and steal
+     clicks from) the beats below it. No z-index here keeps .hud (z5) above the
+     scroller (z3) so the sound button stays clickable. */
+  .fs-stage { position:sticky; top:0; height:100vh; width:100%; }
 
-  #bg { position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0; }
+  #bg { position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0; pointer-events:none; }
   #vignette { position:absolute; inset:0; z-index:1; pointer-events:none;
     background:radial-gradient(120% 90% at 50% 45%, transparent 60%, rgba(4,4,10,.7) 100%); }
   #flash { position:absolute; inset:0; z-index:2; pointer-events:none; opacity:0;
@@ -576,7 +579,7 @@
     font-variant-numeric:tabular-nums; letter-spacing:0; }
   .counter.hot .n { color:var(--danger); }
 
-  .fs-scroller { position:relative; z-index:3; }
+  .fs-scroller { position:relative; z-index:3; margin-top:-100vh; }
   section { min-height:100vh; display:flex; flex-direction:column; justify-content:center;
     max-width:760px; margin:0 auto; padding:0 24px; }
   section.tall { min-height:280vh; }

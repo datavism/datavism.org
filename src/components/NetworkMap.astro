@@ -1,0 +1,75 @@
+---
+// THE NETWORK — pure SSR SVG map (no JS, no hydration). The union of the 5 lines'
+// strokes spells DATAVISM; Line G is the live trunk. Neon glow via CSS filter,
+// data-pulses via CSS offset-path (reduced-motion off), station links are native
+// SVG <a> (keyboard/aria, no DOM overlay). Data-driven from geometry + statuses.
+import { LINES, NODES, VIEW, type LineId } from '../lib/network/geometry'
+import { COPY } from '../lib/copy/en'
+
+type S = { id: string; status: string; title: string; line: string; index: number }
+const { stations = [], variant = 'full' } = Astro.props as { stations?: S[]; variant?: 'hero' | 'full' }
+
+const statusOf = (id: string) => stations.find((s) => s.id === id)?.status ?? 'locked'
+const titleOf = (id: string) => stations.find((s) => s.id === id)?.title ?? id
+const liveLine = (id: LineId) => NODES.some((n) => n.line === id && statusOf(n.stationId) === 'open')
+const toPts = (s: { x: number; y: number }[]) => s.map((p) => `${p.x},${p.y}`).join(' ')
+
+const trunk = LINES.find((l) => l.id === 'g')!.strokes[0]
+const trunkPath = `path('M${trunk[0].x},${trunk[0].y} L${trunk[trunk.length - 1].x},${trunk[trunk.length - 1].y}')`
+---
+<div class={`netmap netmap-${variant}`}>
+  <svg viewBox={`0 0 ${VIEW.w} ${VIEW.h}`} role="group" aria-label={COPY.network.a11yMap}>
+    {LINES.map((l) => {
+      const live = liveLine(l.id)
+      return l.strokes.map((s) => (
+        <polyline points={toPts(s)} class={`line line-${l.id} ${live ? 'live' : 'planned'}`} />
+      ))
+    })}
+
+    {NODES.map((n, i) => {
+      const st = statusOf(n.stationId)
+      const dot = <circle cx={n.at.x} cy={n.at.y} r="12" class={`node node-${st}`} />
+      return st === 'open'
+        ? <a href={`/line-g/${n.stationId}`} aria-label={`G${i + 1} ${titleOf(n.stationId)} — open`}>{dot}</a>
+        : dot
+    })}
+
+    <circle r="7" class="pulse p1" />
+    <circle r="7" class="pulse p2" />
+  </svg>
+</div>
+
+<style define:vars={{ trunkPath }}>
+  .netmap { width: 100%; }
+  .netmap svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+  .line { fill: none; stroke: currentColor; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+  .line.live { filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 11px currentColor); }
+  .line.planned { stroke-width: 6; opacity: 0.5; stroke-dasharray: 20 13; }
+
+  .line-g { color: var(--color-signal); }
+  .line-k { color: var(--color-line-k); }
+  .line-r { color: var(--color-line-r); }
+  .line-b { color: var(--color-line-b); }
+  .line-v { color: var(--color-line-v); }
+
+  .node { fill: var(--color-ink); stroke-width: 4; }
+  .node-open { stroke: var(--color-signal); filter: drop-shadow(0 0 6px var(--color-signal)); }
+  .node-announced { stroke: color-mix(in srgb, var(--color-signal) 60%, transparent); }
+  .node-locked { stroke: #2b3a2f; }
+  a { cursor: pointer; }
+  a:focus-visible { outline: none; }
+  a:focus-visible .node { stroke: var(--color-signal); filter: drop-shadow(0 0 8px var(--color-signal)); }
+  a:hover .node { filter: drop-shadow(0 0 9px var(--color-signal)); }
+
+  .pulse {
+    fill: var(--color-signal);
+    offset-path: var(--trunkPath);
+    offset-distance: 0%;
+    filter: drop-shadow(0 0 6px var(--color-signal));
+    animation: net-flow 5s linear infinite;
+  }
+  .pulse.p2 { animation-delay: -2.5s; }
+  @keyframes net-flow { to { offset-distance: 100%; } }
+  @media (prefers-reduced-motion: reduce) { .pulse { display: none; } }
+</style>

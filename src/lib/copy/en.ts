@@ -80,7 +80,7 @@ export const COPY = {
     sub: 'The map of the Data Underground. Five lines. Only open stations run.',
     a11yMap:
       'Bootcamp network map. Five lines spell DATAVISM; only open stations are interactive.',
-    hint: 'drag to pan · scroll to zoom · open stations are clickable',
+    hint: 'open stations are clickable · the map fills in as lines open',
   },
   footer: {
     org: 'datavism.org · a non-profit digital art project',

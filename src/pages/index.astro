@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content'
 import Base from '../layouts/Base.astro'
 import GhostLogo from '../components/GhostLogo.astro'
 import TrackCounter from '../components/TrackCounter.svelte'
-import NetworkMap from '../components/NetworkMap.svelte'
+import NetworkMap from '../components/NetworkMap.astro'
 import SubscribeForm from '../components/SubscribeForm.svelte'
 import { COPY } from '../lib/copy/en'
 
@@ -38,7 +38,7 @@ const stations = (await getCollection('stations')).map((s) => ({
     <h2 class="text-phosphor-hi text-xl font-bold">{COPY.network.heading}</h2>
     <p class="text-phosphor-dim text-sm mt-1">{COPY.network.sub}</p>
     <div class="netbleed mt-6">
-      <NetworkMap variant="hero" stations={stations} client:visible />
+      <NetworkMap variant="hero" stations={stations} />
     </div>
     <p class="mt-4"><a class="text-signal text-sm" href="/network">explore the network ▸</a></p>
   </section>

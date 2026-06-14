@@ -13,16 +13,17 @@ const stations = defineCollection({
     skill: z.string(),
     status: z.enum(['open', 'announced', 'locked']),
     dropDate: z.string().optional(),
-    missionMinutes: z.string(), // e.g. "45–90 min"
+    teaser: z.string().optional(), // one-liner shown on the line page for any station
     sources: z
       .array(z.object({ label: z.string(), url: z.string().url(), accessed: z.string() }))
       .default([]),
     ogImage: z.string().optional(),
-    // authored beats (design §4)
-    ghostFragment: z.array(z.string()).default([]), // paragraphs, DRAFT until authored
-    mission: z.object({ goal: z.string(), steps: z.array(z.string()) }),
-    selfChecks: z.array(z.string()).min(1).max(5),
-    artifactName: z.string(), // e.g. "Case File #1"
+    // playable beats — only `open` stations carry them (design §4)
+    missionMinutes: z.string().optional(), // e.g. "45–90 min"
+    ghostFragment: z.array(z.string()).default([]),
+    mission: z.object({ goal: z.string(), steps: z.array(z.string()) }).optional(),
+    selfChecks: z.array(z.string()).min(1).max(5).optional(),
+    artifactName: z.string().optional(), // e.g. "Case File #1"
     nextTeaser: z.string().optional(),
   }),
 })

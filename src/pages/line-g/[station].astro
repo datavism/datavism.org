@@ -17,6 +17,11 @@ const d = station.data
 const L = COPY.lineG
 const stationId = `g${d.index}-${station.id}`
 const lineColor = 'var(--color-signal)' // LINE G
+// Only `open` stations are built (getStaticPaths), so the playable beats exist.
+const mission = d.mission!
+const selfChecks = d.selfChecks!
+const artifactName = d.artifactName!
+const missionMinutes = d.missionMinutes ?? ''
 ---
 <Base title={`${d.title} — LINE G — DATAVISM`} description={d.skill}>
   <!-- BEAT 1 · Einfahrt -->
@@ -35,10 +40,10 @@ const lineColor = 'var(--color-signal)' // LINE G
   <!-- BEAT 4 · Briefing (mission with your own tools) -->
   <section class="mt-12 card-beat">
     <h2 class="text-phosphor-hi text-xl font-bold">The mission</h2>
-    <p class="text-phosphor-dim text-sm mt-1">~{d.missionMinutes} · your own tools · free tiers are fine</p>
-    <p class="text-phosphor-hi mt-3">{d.mission.goal}</p>
+    <p class="text-phosphor-dim text-sm mt-1">~{missionMinutes} · your own tools · free tiers are fine</p>
+    <p class="text-phosphor-hi mt-3">{mission.goal}</p>
     <ol class="mt-3 space-y-2 list-decimal list-inside text-phosphor">
-      {d.mission.steps.map((s) => <li>{s}</li>)}
+      {mission.steps.map((s) => <li>{s}</li>)}
     </ol>
   </section>
 
@@ -48,8 +53,8 @@ const lineColor = 'var(--color-signal)' // LINE G
     <StationSelfCheck
       client:visible
       stationId={stationId}
-      checks={d.selfChecks}
-      artifactName={d.artifactName}
+      checks={selfChecks}
+      artifactName={artifactName}
       stampWord={L.stamp}
     />
   </section>

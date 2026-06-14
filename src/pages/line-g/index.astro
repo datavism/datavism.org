@@ -1,6 +1,7 @@
 ---
-// src/pages/line-g/index.astro — the Line G page. Lists this line's stations
-// from the collection. Open stations link out; announced/locked are honest.
+// src/pages/line-g/index.astro — the Line G page, drawn as a vertical transit
+// line: one signal-yellow track, a stop per station. Open stops link out;
+// announced/locked are honest. Data comes from the stations collection.
 import { getCollection } from 'astro:content'
 import Base from '../../layouts/Base.astro'
 import { COPY } from '../../lib/copy/en'
@@ -17,27 +18,62 @@ const statusLabel = (s: string) =>
   <a class="text-phosphor-dim text-xs hover:text-signal" href="/">&lt; back</a>
   <h1 class="text-signal text-4xl font-bold mt-6">{L.title}</h1>
   <p class="text-phosphor-dim text-sm mt-1">{L.tagline}</p>
-  <p class="text-phosphor-hi mt-6 leading-relaxed">{L.intro}</p>
+  <p class="text-phosphor-hi mt-6 leading-relaxed max-w-prose">{L.intro}</p>
 
-  <ol class="mt-10 space-y-3">
-    {stations.map((s) => (
-      <li class="border border-phosphor-dim/30 rounded p-4 flex items-baseline justify-between gap-4">
-        <div>
-          <span class="text-signal font-bold">G{s.data.index}</span>
-          <span class="text-phosphor-hi font-bold ml-2">{s.data.title}</span>
-          <p class="text-phosphor-dim text-sm mt-1">{s.data.skill}</p>
-        </div>
-        {s.data.status === 'open' ? (
-          <a class="text-signal border border-signal rounded px-3 py-1 text-sm font-bold hover:bg-signal hover:text-ink transition-colors"
-             href={`/line-g/${s.id}`}>enter ▸</a>
-        ) : (
-          <span class="text-phosphor-dim text-xs border border-phosphor-dim/40 rounded px-3 py-1">
-            {statusLabel(s.data.status)}{s.data.dropDate ? ` · ${s.data.dropDate}` : ''}
-          </span>
-        )}
-      </li>
-    ))}
+  <ol class="line-list mt-12">
+    {stations.map((s, i) => {
+      const st = s.data.status
+      const isTerminus = i === stations.length - 1
+      return (
+        <li class="stop">
+          <div class="rail">
+            <span class={`dot dot-${st}${isTerminus ? ' dot-terminus' : ''}`} aria-hidden="true"></span>
+          </div>
+          <div class="body">
+            <div class="flex items-baseline justify-between gap-4 flex-wrap">
+              <h2>
+                <span class="text-signal font-bold">G{s.data.index}</span>
+                <span class={`font-bold ml-2 ${st === 'locked' ? 'text-phosphor-dim' : 'text-phosphor-hi'}`}>{s.data.title}</span>
+                {isTerminus && <span class="text-phosphor-dim text-xs ml-2">· terminus</span>}
+              </h2>
+              {st === 'open' ? (
+                <a class="text-signal border border-signal rounded px-3 py-1 text-sm font-bold hover:bg-signal hover:text-ink transition-colors"
+                   href={`/line-g/${s.id}`}>enter ▸</a>
+              ) : (
+                <span class={`text-xs rounded px-2 py-0.5 border ${st === 'announced' ? 'text-signal border-signal/50' : 'text-phosphor-dim border-phosphor-dim/40'}`}>
+                  {statusLabel(st)}
+                </span>
+              )}
+            </div>
+            <p class="text-phosphor-dim text-sm mt-1">{s.data.skill}</p>
+            {s.data.teaser && <p class="text-phosphor/80 text-sm italic mt-2">{s.data.teaser}</p>}
+          </div>
+        </li>
+      )
+    })}
   </ol>
 
-  <p class="mt-10"><a class="text-signal text-sm" href="/ticket">{L.ticketCta}</a></p>
+  <p class="mt-12"><a class="text-signal text-sm" href="/ticket">{L.ticketCta}</a></p>
 </Base>
+
+<style>
+  .line-list { position: relative; list-style: none; margin: 0; padding: 0; }
+  /* the continuous track, centred on the 1.5rem rail column */
+  .line-list::before {
+    content: ''; position: absolute; left: 0.75rem; top: 0.9rem; bottom: 1.4rem;
+    width: 2px; background: var(--color-signal); opacity: 0.45;
+  }
+  .stop { display: grid; grid-template-columns: 1.5rem 1fr; gap: 1.1rem; padding: 0.85rem 0; }
+  .rail { position: relative; display: flex; justify-content: center; }
+  .dot {
+    position: relative; z-index: 1; width: 14px; height: 14px; border-radius: 9999px;
+    margin-top: 4px; background: var(--color-ink);
+  }
+  .dot-open {
+    background: var(--color-signal);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-signal) 22%, transparent);
+  }
+  .dot-announced { border: 2px solid var(--color-signal); }
+  .dot-locked { border: 2px solid color-mix(in srgb, var(--color-phosphor-dim) 70%, transparent); }
+  .dot-terminus { width: 18px; height: 18px; margin-top: 2px; box-shadow: 0 0 0 3px var(--color-ink), 0 0 0 5px color-mix(in srgb, var(--color-signal) 55%, transparent); }
+</style>

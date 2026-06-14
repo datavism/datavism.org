@@ -10,14 +10,17 @@ const stationIds = new Set(
 )
 
 describe('network geometry', () => {
-  it('defines the five patron lines g/k/r/b/v', () => {
+  it('defines the five patron lines g/k/r/b/v, each with at least one stroke', () => {
     expect(lineIds()).toEqual(['g', 'k', 'r', 'b', 'v'])
-    for (const l of LINES) expect(l.path.length).toBeGreaterThanOrEqual(2)
+    for (const l of LINES) {
+      expect(l.strokes.length).toBeGreaterThanOrEqual(1)
+      for (const s of l.strokes) expect(s.length).toBeGreaterThanOrEqual(2)
+    }
   })
 
   it('keeps every point inside the coordinate space', () => {
     const pts = [
-      ...LINES.flatMap((l) => l.path),
+      ...LINES.flatMap((l) => l.strokes.flat()),
       ...NODES.map((n) => n.at),
       ...LANDMARKS.map((m) => m.at),
     ]

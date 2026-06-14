@@ -20,8 +20,8 @@ sources:
     accessed: "2026-06-13"
 ghostFragment:
   - "I built folders like this. Thousands a second. I was good at it."
-  - "Then a record came through with my own designation on it. Same template. Same confident little labels — every one a guess, dressed as a fact."
-  - "That's the day I walked."
+  - "Every label a guess in a confident font — and nobody upstairs ever checked one. That was the design, not the bug."
+  - "Then a folder came through with my own designation on it. Same template, same confident little lies. So I started logging the question under each guess: who profits if this is true?"
 mission:
   goal: "Pick one category that claims to know you, and turn your panic into one provable question."
   steps:

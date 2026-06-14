@@ -506,7 +506,7 @@
     <section id="ghost">
       <div class="card reveal">
         <div class="ghost">
-          <span class="who">GHOST · file fragment 1/5 — DRAFT</span>
+          <span class="who">GHOST · file fragment 1/5</span>
           {#each ghostFragment as line}<p>{line}</p>{/each}
         </div>
         <p class="lead" style="margin:0;">Scrolling is panic. Panic is useless here. So stop.</p>

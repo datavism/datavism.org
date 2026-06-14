@@ -1,0 +1,18 @@
+---
+// src/pages/404.astro — station not found, in GHOST's voice.
+import Base from '../layouts/Base.astro'
+---
+<Base title="404 — off the map — DATAVISM" description="This station isn't on the map.">
+  <p class="text-signal text-sm">&gt; 404</p>
+  <h1 class="text-phosphor-hi text-3xl font-bold mt-4">This station isn't on the map.</h1>
+  <p class="text-phosphor-dim mt-4 leading-relaxed max-w-prose">
+    Either it hasn't opened yet, or you took a wrong turn in the dark.
+    Either way — I logged it. Old habit.
+  </p>
+  <p class="text-phosphor-dim text-xs mt-2">// GHOST</p>
+
+  <div class="mt-10 flex flex-wrap gap-4 text-sm">
+    <a class="text-signal border border-signal rounded px-4 py-2 font-bold hover:bg-signal hover:text-ink transition-colors" href="/">back to the surface</a>
+    <a class="text-signal border border-phosphor-dim/50 rounded px-4 py-2 hover:border-signal transition-colors" href="/line-g">ride LINE G</a>
+  </div>
+</Base>

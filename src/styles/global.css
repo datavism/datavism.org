@@ -6,11 +6,13 @@
   --color-phosphor: #9ef0a8;   /* primary terminal green */
   --color-phosphor-dim: #5c8c63; /* ≥4.5:1 on ink (WCAG AA, review fix) */
   --color-phosphor-hi: #d9ffe0;
-  --color-signal: #ffd23f;     /* warm accent (links, line G) */
-  --color-line-k: #46c8ff;     /* Key cyan */
-  --color-line-r: #c0c8d8;     /* Rook steel */
-  --color-line-b: #ff4fd2;     /* Bite magenta */
-  --color-line-v: #b48cff;     /* Vesper violet */
+  --color-signal: #ffd23f;     /* warm UI accent (links, buttons) — decoupled from line G */
+  /* Network line palette (canon: docs/brand/network-map-canon.md) */
+  --color-line-g: #3df07a;     /* Foundation/GHOST — green (echoes neon ghost) */
+  --color-line-k: #f5b700;     /* Tracking/OSINT — gold */
+  --color-line-r: #ff4d4d;     /* Economy/Money — red */
+  --color-line-b: #4d8dff;     /* Feeds/Streams — blue */
+  --color-line-v: #b48cff;     /* Climate/Future — violet */
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 

@@ -1,75 +1,204 @@
 ---
-// THE NETWORK — pure SSR SVG map (no JS, no hydration). The union of the 5 lines'
-// strokes spells DATAVISM; Line G is the live trunk. Neon glow via CSS filter,
-// data-pulses via CSS offset-path (reduced-motion off), station links are native
-// SVG <a> (keyboard/aria, no DOM overlay). Data-driven from geometry + statuses.
-import { LINES, NODES, VIEW, type LineId } from '../lib/network/geometry'
+// THE NETWORK — interactive curriculum map (SSR SVG, after Entwurf 1).
+// Canon: docs/brand/network-map-canon.md. Data-driven from the stations
+// collection. Wordmark header = geometry strokes; below, five line-blocks with
+// clickable stations converging on the GHOST interchange. Neon via CSS filter,
+// data-pulses + ghost-glow via CSS (reduced-motion off). No WebGL, near-zero CPU.
+import { getCollection } from 'astro:content'
+import { LINES as GEO } from '../lib/network/geometry'
 import { COPY } from '../lib/copy/en'
 
-type S = { id: string; status: string; title: string; line: string; index: number }
-const { stations = [], variant = 'full' } = Astro.props as { stations?: S[]; variant?: 'hero' | 'full' }
+type LineId = 'g' | 'k' | 'r' | 'b' | 'v'
+const all = await getCollection('stations')
+const byLine = (id: LineId) =>
+  all.filter((s) => s.data.line === id).sort((a, b) => a.data.index - b.data.index)
 
-const statusOf = (id: string) => stations.find((s) => s.id === id)?.status ?? 'locked'
-const titleOf = (id: string) => stations.find((s) => s.id === id)?.title ?? id
-const liveLine = (id: LineId) => NODES.some((n) => n.line === id && statusOf(n.stationId) === 'open')
-const toPts = (s: { x: number; y: number }[]) => s.map((p) => `${p.x},${p.y}`).join(' ')
+const W = 1480, H = 1160
+const GX = 740, GY = 650, GR = 62 // ghost interchange
 
-const trunk = LINES.find((l) => l.id === 'g')!.strokes[0]
-const trunkPath = `path('M${trunk[0].x},${trunk[0].y} L${trunk[trunk.length - 1].x},${trunk[trunk.length - 1].y}')`
+const META: Record<LineId, { name: string; tag: string }> = {
+  g: { name: 'FOUNDATION / GHOST', tag: 'Build the base. Operate in the shadows.' },
+  k: { name: 'TRACKING / OSINT', tag: 'Find what others miss.' },
+  r: { name: 'ECONOMY / MONEY', tag: 'Follow value. Understand power.' },
+  b: { name: 'FEEDS / STREAMS', tag: 'Ingest the firehose. Extract signal.' },
+  v: { name: 'CLIMATE / FUTURE', tag: 'Model tomorrow. Act today.' },
+}
+// per line: badge xy · track [x1,x2,y] · inner end → ghost connector
+const LAY: Record<LineId, { badge: [number, number]; track: [number, number, number]; inner: [number, number] }> = {
+  g: { badge: [70, 430], track: [110, 600, 510], inner: [600, 510] },
+  k: { badge: [880, 430], track: [880, 1370, 510], inner: [880, 510] },
+  r: { badge: [70, 710], track: [110, 600, 790], inner: [600, 790] },
+  b: { badge: [880, 710], track: [880, 1370, 790], inner: [880, 790] },
+  v: { badge: [430, 900], track: [470, 1010, 1000], inner: [740, 1000] },
+}
+const ORDER: LineId[] = ['g', 'k', 'r', 'b', 'v']
+
+const statusOf = (s: any) => s.data.status as 'open' | 'announced' | 'locked'
+const liveLine = (id: LineId) => byLine(id).some((s) => statusOf(s) === 'open')
+
+// split a station title into ≤2 lines for the SVG label
+const wrap = (t: string): string[] => {
+  if (t.length <= 11 || !t.includes(' ')) return [t]
+  const w = t.split(' ')
+  let best = 1, bestDiff = Infinity
+  for (let i = 1; i < w.length; i++) {
+    const d = Math.abs(w.slice(0, i).join(' ').length - w.slice(i).join(' ').length)
+    if (d < bestDiff) { bestDiff = d; best = i } // keep word order, balance lengths
+  }
+  return [w.slice(0, best).join(' '), w.slice(best).join(' ')]
+}
+const dotX = (tr: [number, number, number], i: number) => tr[0] + (i * (tr[1] - tr[0])) / 4
+
+// wordmark header: place geometry strokes (1600×600 space) into the header band
+const wm = `translate(64,-22) scale(0.85)` // fits letters into y≈88..376
+const pts = (s: { x: number; y: number }[]) => s.map((p) => `${p.x},${p.y}`).join(' ')
+
+const SLOGAN = 'DATAVISM IS A SYSTEM. NOT A COURSE.'
 ---
-<div class={`netmap netmap-${variant}`}>
-  <svg viewBox={`0 0 ${VIEW.w} ${VIEW.h}`} role="group" aria-label={COPY.network.a11yMap}>
-    {LINES.map((l) => {
-      const live = liveLine(l.id)
-      return l.strokes.map((s) => (
-        <polyline points={toPts(s)} class={`line line-${l.id} ${live ? 'live' : 'planned'}`} />
-      ))
+<div class="netmap">
+  <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={COPY.network.a11yMap}>
+    <!-- header -->
+    <text class="t-title" x={W / 2} y="44" text-anchor="middle">THE DATAVISM CURRICULUM MAP</text>
+    <text class="t-sub" x={W / 2} y="70" text-anchor="middle">FIVE MODULES · ONE NETWORK</text>
+
+    <!-- wordmark: lines spell DATAVISM -->
+    <g transform={wm} class="wordmark">
+      {GEO.map((l) => l.strokes.map((s) => (
+        <polyline points={pts(s)} class={`wm-line wm-${l.id}`} />
+      )))}
+    </g>
+
+    <!-- five line-blocks -->
+    {ORDER.map((id) => {
+      const live = liveLine(id)
+      const tr = LAY[id].track
+      const [bx, by] = LAY[id].badge
+      const sts = byLine(id)
+      const labelY = tr[2] + 38
+      return (
+        <g class={`block block-${id} ${live ? 'live' : 'planned'}`}>
+          {/* connector to ghost */}
+          <path class="connector" d={`M${LAY[id].inner[0]},${LAY[id].inner[1]} Q${GX},${LAY[id].inner[1]} ${GX},${GY}`} />
+          {/* badge + name + tag */}
+          <rect class="badge" x={bx} y={by} width="36" height="36" rx="5" />
+          <text class="badge-l" x={bx + 18} y={by + 25} text-anchor="middle">{id.toUpperCase()}</text>
+          <text class="b-name" x={bx + 48} y={by + 15}>{META[id].name}</text>
+          <text class="b-tag" x={bx + 48} y={by + 33}>{META[id].tag}</text>
+          {/* track */}
+          <line class="track" x1={tr[0]} y1={tr[2]} x2={tr[1]} y2={tr[2]} />
+          {/* stations */}
+          {sts.map((s, i) => {
+            const x = dotX(tr, i); const st = statusOf(s)
+            const lines = wrap(s.data.title)
+            const dot = <circle class={`node node-${st}`} cx={x} cy={tr[2]} r={st === 'open' ? 9 : 7} />
+            const label = (
+              <g class="lab">
+                <text class="l-id" x={x} y={labelY} text-anchor="middle">{id.toUpperCase()}{s.data.index}</text>
+                {lines.map((ln, k) => (
+                  <text class="l-name" x={x} y={labelY + 18 + k * 13} text-anchor="middle">{ln}</text>
+                ))}
+              </g>
+            )
+            return st === 'open'
+              ? <a href={`/line-g/${s.id}`} aria-label={`${id.toUpperCase()}${s.data.index} ${s.data.title} — open`}>{dot}{label}</a>
+              : <g aria-label={`${id.toUpperCase()}${s.data.index} ${s.data.title} — ${st}`}>{dot}{label}</g>
+          })}
+        </g>
+      )
     })}
 
-    {NODES.map((n, i) => {
-      const st = statusOf(n.stationId)
-      const dot = <circle cx={n.at.x} cy={n.at.y} r="12" class={`node node-${st}`} />
-      return st === 'open'
-        ? <a href={`/line-g/${n.stationId}`} aria-label={`G${i + 1} ${titleOf(n.stationId)} — open`}>{dot}</a>
-        : dot
-    })}
+    <!-- GHOST interchange -->
+    <circle class="ghost-ring" cx={GX} cy={GY} r={GR} />
+    <image href="/favicon.svg" x={GX - 38} y={GY - 38} width="76" height="76" class="ghost-img" />
+    <text class="ghost-cap" x={GX} y={GY + GR + 22} text-anchor="middle">THE GHOST INTERCHANGE</text>
 
-    <circle r="7" class="pulse p1" />
-    <circle r="7" class="pulse p2" />
+    <!-- line key -->
+    <g class="key" transform="translate(70,915)">
+      <text class="key-h" x="0" y="0">LINE KEY</text>
+      {ORDER.map((id, i) => (
+        <g transform={`translate(0,${22 + i * 22})`}>
+          <line class={`k-swatch k-${id}`} x1="0" y1="0" x2="26" y2="0" />
+          <text class="k-lbl" x="38" y="4">{id.toUpperCase()} · {META[id].name}</text>
+        </g>
+      ))}
+    </g>
+
+    <!-- legend -->
+    <g class="legend" transform="translate(1180,915)">
+      <text class="key-h" x="0" y="0">LEGEND</text>
+      <circle cx="9" cy="22" r="8" class="lg-station" />
+      <text class="k-lbl" x="32" y="26">STATION — capability</text>
+      <circle cx="9" cy="50" r="9" class="lg-inter" />
+      <text class="k-lbl" x="32" y="54">INTERCHANGE — GHOST</text>
+      <line x1="0" y1="78" x2="20" y2="78" class="lg-planned" />
+      <text class="k-lbl" x="32" y="82">PLANNED — opens later</text>
+    </g>
+
+    <!-- footer -->
+    <text class="foot" x={W / 2} y={H - 26} text-anchor="middle">{SLOGAN}</text>
   </svg>
 </div>
 
-<style define:vars={{ trunkPath }}>
+<style>
   .netmap { width: 100%; }
-  .netmap svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .netmap svg { width: 100%; height: auto; display: block; overflow: visible; background: var(--color-ink); }
 
-  .line { fill: none; stroke: currentColor; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
-  .line.live { filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 11px currentColor); }
-  .line.planned { stroke-width: 6; opacity: 0.5; stroke-dasharray: 20 13; }
+  text { font-family: var(--font-mono); fill: var(--color-phosphor-dim); }
+  .t-title { fill: var(--color-phosphor-hi); font-size: 26px; font-weight: 700; letter-spacing: 6px; }
+  .t-sub { font-size: 14px; letter-spacing: 5px; }
+  .foot { fill: var(--color-phosphor-dim); font-size: 16px; letter-spacing: 6px; }
 
-  .line-g { color: var(--color-signal); }
-  .line-k { color: var(--color-line-k); }
-  .line-r { color: var(--color-line-r); }
-  .line-b { color: var(--color-line-b); }
-  .line-v { color: var(--color-line-v); }
+  /* wordmark */
+  .wm-line { fill: none; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+  .wm-g { stroke: var(--color-line-g); } .wm-k { stroke: var(--color-line-k); }
+  .wm-r { stroke: var(--color-line-r); } .wm-b { stroke: var(--color-line-b); }
+  .wm-v { stroke: var(--color-line-v); }
+  .wordmark { filter: drop-shadow(0 0 4px rgba(255,255,255,.15)); }
 
-  .node { fill: var(--color-ink); stroke-width: 4; }
-  .node-open { stroke: var(--color-signal); filter: drop-shadow(0 0 6px var(--color-signal)); }
-  .node-announced { stroke: color-mix(in srgb, var(--color-signal) 60%, transparent); }
-  .node-locked { stroke: #2b3a2f; }
+  /* line colours per block */
+  .block-g { --c: var(--color-line-g); } .block-k { --c: var(--color-line-k); }
+  .block-r { --c: var(--color-line-r); } .block-b { --c: var(--color-line-b); }
+  .block-v { --c: var(--color-line-v); }
+
+  .badge { fill: none; stroke: var(--c); stroke-width: 2.5; }
+  .badge-l { fill: var(--c); font-size: 22px; font-weight: 800; }
+  .b-name { fill: var(--c); font-size: 17px; font-weight: 700; letter-spacing: 1px; }
+  .b-tag { fill: var(--color-phosphor-dim); font-size: 13px; }
+
+  .track { stroke: var(--c); stroke-width: 8; stroke-linecap: round; }
+  .block.planned .track { opacity: .42; stroke-dasharray: 18 12; }
+  .block.live .track { filter: drop-shadow(0 0 4px var(--c)) drop-shadow(0 0 10px var(--c)); }
+  .connector { fill: none; stroke: var(--c); stroke-width: 5; opacity: .35; }
+  .block.planned .connector { stroke-dasharray: 10 9; opacity: .25; }
+
+  .node { fill: var(--color-ink); stroke: var(--c); stroke-width: 3.5; }
+  .node-open { filter: drop-shadow(0 0 6px var(--c)); }
+  .node-locked, .node-announced { opacity: .5; }
   a { cursor: pointer; }
+  a:hover .node, a:focus-visible .node { fill: var(--c); }
   a:focus-visible { outline: none; }
-  a:focus-visible .node { stroke: var(--color-signal); filter: drop-shadow(0 0 8px var(--color-signal)); }
-  a:hover .node { filter: drop-shadow(0 0 9px var(--color-signal)); }
+  a:focus-visible .l-name { fill: var(--color-phosphor-hi); }
 
-  .pulse {
-    fill: var(--color-signal);
-    offset-path: var(--trunkPath);
-    offset-distance: 0%;
-    filter: drop-shadow(0 0 6px var(--color-signal));
-    animation: net-flow 5s linear infinite;
-  }
-  .pulse.p2 { animation-delay: -2.5s; }
-  @keyframes net-flow { to { offset-distance: 100%; } }
-  @media (prefers-reduced-motion: reduce) { .pulse { display: none; } }
+  .l-id { font-size: 12px; font-weight: 700; fill: var(--c); }
+  .l-name { font-size: 11px; fill: var(--color-phosphor-dim); }
+  .block.live .l-id { fill: var(--c); }
+
+  .ghost-ring { fill: var(--color-ink); stroke: var(--color-phosphor-dim); stroke-width: 2; }
+  .ghost-cap { font-size: 12px; letter-spacing: 2px; fill: var(--color-phosphor-dim); }
+
+  .key-h { fill: var(--color-phosphor-hi); font-size: 13px; font-weight: 700; letter-spacing: 2px; }
+  .k-lbl { font-size: 12px; fill: var(--color-phosphor-dim); }
+  .k-swatch { stroke-width: 5; stroke-linecap: round; }
+  .k-g { stroke: var(--color-line-g); } .k-k { stroke: var(--color-line-k); }
+  .k-r { stroke: var(--color-line-r); } .k-b { stroke: var(--color-line-b); } .k-v { stroke: var(--color-line-v); }
+  .lg-station { fill: var(--color-ink); stroke: var(--color-phosphor-dim); stroke-width: 3; }
+  .lg-inter { fill: var(--color-ink); stroke: var(--color-phosphor-hi); stroke-width: 2; }
+  .lg-planned { stroke: var(--color-phosphor-dim); stroke-width: 5; stroke-dasharray: 8 6; }
+
+  /* animation — light, GPU, off when reduced-motion */
+  .ghost-img { animation: ghost-breathe 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .ghost-ring { animation: ghost-pulse 4s ease-in-out infinite; }
+  @keyframes ghost-breathe { 0%,100% { opacity: .9; } 50% { opacity: 1; } }
+  @keyframes ghost-pulse { 0%,100% { stroke: var(--color-phosphor-dim); } 50% { stroke: var(--color-line-g); } }
+  @media (prefers-reduced-motion: reduce) { .ghost-img, .ghost-ring { animation: none; } }
 </style>

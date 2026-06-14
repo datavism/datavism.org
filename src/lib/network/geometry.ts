@@ -43,7 +43,7 @@ WORD.forEach((ch, i) => { byLine[OWNER[i]].push(...placeLetter(i, ch)) })
 byLine.g = [[{ x: gX0, y: trunkY }, { x: gX1, y: trunkY }]] // G = the trunk baseline
 
 export const LINES: NetLine[] = [
-  { id: 'g', colorVar: 'var(--color-signal)', patron: 'GHOST', strokes: byLine.g },
+  { id: 'g', colorVar: 'var(--color-line-g)', patron: 'GHOST', strokes: byLine.g },
   { id: 'k', colorVar: 'var(--color-line-k)', patron: 'Key', terminus: 'PANOPTICON', strokes: byLine.k },
   { id: 'r', colorVar: 'var(--color-line-r)', patron: 'Rook', terminus: 'MAMMON', strokes: byLine.r },
   { id: 'b', colorVar: 'var(--color-line-b)', patron: 'Bite', terminus: 'THE FEED', strokes: byLine.b },

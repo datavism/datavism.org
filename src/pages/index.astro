@@ -1,11 +1,16 @@
 ---
 // src/pages/index.astro
+import { getCollection } from 'astro:content'
 import Base from '../layouts/Base.astro'
 import GhostLogo from '../components/GhostLogo.astro'
 import TrackCounter from '../components/TrackCounter.svelte'
-import NetworkMapTeaser from '../components/NetworkMapTeaser.astro'
+import NetworkMap from '../components/NetworkMap.svelte'
 import SubscribeForm from '../components/SubscribeForm.svelte'
 import { COPY } from '../lib/copy/en'
+
+const stations = (await getCollection('stations')).map((s) => ({
+  id: s.id, status: s.data.status, title: s.data.title, line: s.data.line, index: s.data.index,
+}))
 ---
 <Base>
   <div class="flex items-center gap-5">
@@ -29,7 +34,14 @@ import { COPY } from '../lib/copy/en'
     <TrackCounter client:load />
   </div>
 
-  <NetworkMapTeaser />
+  <section class="mt-12" aria-label="The Network">
+    <h2 class="text-phosphor-hi text-xl font-bold">{COPY.network.heading}</h2>
+    <p class="text-phosphor-dim text-sm mt-1">{COPY.network.sub}</p>
+    <div class="netbleed mt-6">
+      <NetworkMap variant="hero" stations={stations} client:visible />
+    </div>
+    <p class="mt-4"><a class="text-signal text-sm" href="/network">explore the network ▸</a></p>
+  </section>
 
   <section class="mt-12 border border-signal/40 rounded p-4" aria-label="Launch waitlist">
     <h2 class="text-phosphor-hi text-xl font-bold">{COPY.waitlist.heading}</h2>
@@ -52,4 +64,5 @@ import { COPY } from '../lib/copy/en'
     vertical-align:text-bottom; animation: cursor-blink 1.1s steps(1) infinite; }
   @keyframes cursor-blink { 50% { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
+  .netbleed { width: 100vw; margin-left: calc(50% - 50vw); }
 </style>

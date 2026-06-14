@@ -2,7 +2,14 @@
 // src/layouts/Base.astro
 import '../styles/global.css'
 import { COPY } from '../lib/copy/en'
-const { title = COPY.meta.title, description = COPY.meta.description } = Astro.props
+const {
+  title = COPY.meta.title,
+  description = COPY.meta.description,
+  image = '/og/datavism.png',
+} = Astro.props
+// Absolute URLs for social cards (Astro.site = https://datavism.org)
+const canonical = new URL(Astro.url.pathname, Astro.site).href
+const ogImage = new URL(image, Astro.site).href
 ---
 <!doctype html>
 <html lang="en">
@@ -10,11 +17,19 @@ const { title = COPY.meta.title, description = COPY.meta.description } = Astro.p
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:site_name" content="DATAVISM" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
   </head>
   <body class="min-h-screen flex flex-col">
     <main class="flex-1 w-full max-w-2xl mx-auto px-5 py-12">

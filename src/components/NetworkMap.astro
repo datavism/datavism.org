@@ -1,11 +1,10 @@
 ---
 // THE NETWORK — interactive curriculum map (SSR SVG, after Entwurf 1).
 // Canon: docs/brand/network-map-canon.md. Data-driven from the stations
-// collection. Wordmark header = geometry strokes; below, five line-blocks with
-// clickable stations converging on the GHOST interchange. Neon via CSS filter,
-// data-pulses + ghost-glow via CSS (reduced-motion off). No WebGL, near-zero CPU.
+// collection. Five line-blocks with clickable stations converging on the GHOST
+// interchange. Neon via CSS filter, ghost-glow via CSS (reduced-motion off).
+// No WebGL, near-zero CPU.
 import { getCollection } from 'astro:content'
-import { LINES as GEO } from '../lib/network/geometry'
 import { COPY } from '../lib/copy/en'
 
 type LineId = 'g' | 'k' | 'r' | 'b' | 'v'
@@ -13,8 +12,8 @@ const all = await getCollection('stations')
 const byLine = (id: LineId) =>
   all.filter((s) => s.data.line === id).sort((a, b) => a.data.index - b.data.index)
 
-const W = 1480, H = 1160
-const GX = 740, GY = 650, GR = 62 // ghost interchange
+const W = 1480, H = 820
+const GX = 740, GY = 310, GR = 62 // ghost interchange
 
 const META: Record<LineId, { name: string; tag: string }> = {
   g: { name: 'FOUNDATION / GHOST', tag: 'Build the base. Operate in the shadows.' },
@@ -25,11 +24,11 @@ const META: Record<LineId, { name: string; tag: string }> = {
 }
 // per line: badge xy · track [x1,x2,y] · inner end → ghost connector
 const LAY: Record<LineId, { badge: [number, number]; track: [number, number, number]; inner: [number, number] }> = {
-  g: { badge: [70, 430], track: [110, 600, 510], inner: [600, 510] },
-  k: { badge: [880, 430], track: [880, 1370, 510], inner: [880, 510] },
-  r: { badge: [70, 710], track: [110, 600, 790], inner: [600, 790] },
-  b: { badge: [880, 710], track: [880, 1370, 790], inner: [880, 790] },
-  v: { badge: [430, 900], track: [470, 1010, 1000], inner: [740, 1000] },
+  g: { badge: [70, 90], track: [110, 600, 170], inner: [600, 170] },
+  k: { badge: [880, 90], track: [880, 1370, 170], inner: [880, 170] },
+  r: { badge: [70, 370], track: [110, 600, 450], inner: [600, 450] },
+  b: { badge: [880, 370], track: [880, 1370, 450], inner: [880, 450] },
+  v: { badge: [430, 560], track: [470, 1010, 660], inner: [740, 660] },
 }
 const ORDER: LineId[] = ['g', 'k', 'r', 'b', 'v']
 
@@ -49,21 +48,10 @@ const wrap = (t: string): string[] => {
 }
 const dotX = (tr: [number, number, number], i: number) => tr[0] + (i * (tr[1] - tr[0])) / 4
 
-// wordmark header: place geometry strokes (1600×600 space) into the header band
-const wm = `translate(64,-70) scale(0.85)` // wordmark near the top (title removed)
-const pts = (s: { x: number; y: number }[]) => s.map((p) => `${p.x},${p.y}`).join(' ')
-
 const SLOGAN = 'DATAVISM IS A SYSTEM. NOT A COURSE.'
 ---
 <div class="netmap">
   <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={COPY.network.a11yMap}>
-    <!-- wordmark: lines spell DATAVISM -->
-    <g transform={wm} class="wordmark">
-      {GEO.map((l) => l.strokes.map((s) => (
-        <polyline points={pts(s)} class={`wm-line wm-${l.id}`} />
-      )))}
-    </g>
-
     <!-- five line-blocks -->
     {ORDER.map((id) => {
       const live = liveLine(id)
@@ -109,7 +97,7 @@ const SLOGAN = 'DATAVISM IS A SYSTEM. NOT A COURSE.'
     <text class="ghost-cap" x={GX} y={GY + GR + 22} text-anchor="middle">THE GHOST INTERCHANGE</text>
 
     <!-- line key -->
-    <g class="key" transform="translate(70,915)">
+    <g class="key" transform="translate(70,575)">
       <text class="key-h" x="0" y="0">LINE KEY</text>
       {ORDER.map((id, i) => (
         <g transform={`translate(0,${22 + i * 22})`}>
@@ -120,7 +108,7 @@ const SLOGAN = 'DATAVISM IS A SYSTEM. NOT A COURSE.'
     </g>
 
     <!-- legend -->
-    <g class="legend" transform="translate(1180,915)">
+    <g class="legend" transform="translate(1180,575)">
       <text class="key-h" x="0" y="0">LEGEND</text>
       <circle cx="9" cy="22" r="8" class="lg-station" />
       <text class="k-lbl" x="32" y="26">STATION — capability</text>
@@ -141,13 +129,6 @@ const SLOGAN = 'DATAVISM IS A SYSTEM. NOT A COURSE.'
 
   text { font-family: var(--font-mono); fill: var(--color-phosphor-dim); }
   .foot { fill: var(--color-phosphor-dim); font-size: 16px; letter-spacing: 6px; }
-
-  /* wordmark */
-  .wm-line { fill: none; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
-  .wm-g { stroke: var(--color-line-g); } .wm-k { stroke: var(--color-line-k); }
-  .wm-r { stroke: var(--color-line-r); } .wm-b { stroke: var(--color-line-b); }
-  .wm-v { stroke: var(--color-line-v); }
-  .wordmark { filter: drop-shadow(0 0 4px rgba(255,255,255,.15)); }
 
   /* line colours per block */
   .block-g { --c: var(--color-line-g); } .block-k { --c: var(--color-line-k); }

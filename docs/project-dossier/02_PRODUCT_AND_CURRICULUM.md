@@ -13,6 +13,12 @@
 > wants to investigate with us"*) — nicht „Foundation-Kurs". Cohort/Preis/Zertifikat
 > sind spätere Optionen nach dem 90-Tage-Trigger, nicht der nächste Schritt.
 
+> **Curriculum-Kanon (Single Source of Truth, seit v0.1 „The Evidence Engine"):**
+> `docs/curriculum/evidence-engine-v0.1.md` + `docs/curriculum/station-index-v0.1.md`
+> + `src/lib/curriculum/lines.ts` + `src/content/stations/*.md`. Alle 25 Stationen
+> sind benannt/definiert (Inhalt der K/R/B/V-Stationen bleibt Stub bis Linien-Bau).
+> Bei Abweichungen gegen ältere Tabellen unten gilt der Curriculum-Kanon.
+
 ## 1. Produktvision
 
 `[FAKT, VISION §0–§1]` DATAVISM ist das Bootcamp des „Data Underground": ein
@@ -108,15 +114,17 @@ Stationen-Spine (Skill-Folge): **Frage → Befehl → Fütterung → Prüfung �
 
 ### Linien K / R / B / V `[FAKT (Existenz/Domäne) + ANNAHME (Inhalt offen)]`
 
-| Linie | Domäne | Capstone-Gegner | Beispiel-Snack-Bridge (data-snack) |
+| Linie | Stationen (v0.1) | Capstone-Gegner | Beispiel-Snack-Bridge (data-snack) |
 |---|---|---|---|
-| K (Key) | Tracking-Forensik, OSINT, Crawling + Entity Resolution mit LLM | PANOPTICON | Pegasus Tracker · Data-Broker Anatomy |
-| R (Rook) | Ökonomie: Source-Stacking, Joins, Financial Time Series | MAMMON | Wealth Transfer · De-Dollarization |
-| B (Bite) | Feeds & Streams: Crawler, Real-Time, Retention-Autopsie | THE FEED | TikTok Autopsy · Sports Betting Boom |
-| V (Vesper) | Klima/Demografie: AI-Wrangling, Langzeit, Archiv | CUMULUS REX | AMOC Collapse · Quiet Collapse Korea |
+| K — KEY / Tracking & OSINT | FOOTPRINTS · SIGNALS · IDENTITY GRAPH · WATCHTOWER · PANOPTICON FILE | PANOPTICON | Pegasus Tracker · Data-Broker Anatomy |
+| R — ROOK / Economy & Power | LEDGER · ACTORS · FLOWS · LEVERAGE · MAMMON FILE | MAMMON | Wealth Transfer · De-Dollarization |
+| B — BITE / Feeds & Behavior | SOURCE · CAPTURE · NORMALIZE · DETECT · FEED AUTOPSY | THE FEED | TikTok Autopsy · Sports Betting Boom |
+| V — VESPER / Climate & Future | ARCHIVE · PATTERNS · SCENARIOS · IMPACT · CUMULUS FILE | CUMULUS REX | AMOC Collapse · Quiet Collapse Korea |
 
-→ Diese Linien sind die **nächste große Curriculum-Arbeit** (Stationen, Daten,
-Missionen, Artefakte je Linie). Aktuell nur als Struktur/Pate/Gegner definiert.
+→ Stationen + Skills + Artefakte je Linie sind in v0.1 benannt
+(`docs/curriculum/station-index-v0.1.md`). Die **nächste große Curriculum-Arbeit**
+ist, die K/R/B/V-Stubs mit realen Daten, Missionen und Story-Beats zu füllen
+(Inhalt aktuell Stub, Status `locked`).
 
 ## 6. Capstone-Projekte `[FAKT-Anker STORY §3.4/§6, EMPFEHLUNG-Beispiele]`
 

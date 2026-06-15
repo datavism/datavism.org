@@ -1,9 +1,16 @@
-# THE NETWORK — Map & Curriculum Canon
+# THE NETWORK — Map & Visual Canon
 
-**Status:** v1 · 2026-06-15 · Founder-approved (Map-Entwürfe + Stations-Satz).
+**Status:** v2 · 2026-06-16 · Map/Visual-Canon. **Curriculum/Stationen sind
+ausgelagert.**
 **Gehört zu:** `docs/adr/002-positioning-case-first-lab.md` (Case-first Lab) ·
 `docs/VISION.md §3.2` (Curriculum=Netzplan) · `docs/STORY.md §6` (Netzplan) ·
-`src/content/stations/*` + `src/lib/network/geometry.ts` (Implementierung).
+`src/content/stations/*` (Implementierung).
+
+> ⚠️ **Curriculum-Kanon (Single Source of Truth):**
+> `docs/curriculum/evidence-engine-v0.1.md` + `docs/curriculum/station-index-v0.1.md`
+> + `src/lib/curriculum/lines.ts`. Diese Datei beschreibt nur noch **Map & Visual**
+> (Palette, GHOST-Interchange, Karten-Varianten, Build-Vorgaben). Bei Konflikt über
+> Linien-/Stationsnamen/Skills/Artefakte gilt **immer** der Curriculum-Kanon.
 
 > **Zweck:** der **eine** verbindliche Bezugspunkt für das Streckennetz — Linien,
 > Farben, GHOST-Interchange, die 25 Stationen, Karten-Varianten und ihre
@@ -27,11 +34,11 @@ Konsistent mit ADR 002: Die Map **zeigt** das ganze Netz (meist „geplant"), ab
 
 | ID | Name | Bedeutung (Domäne) | Pate | Pantheon-Endgegner | Linienfarbe (Vorschlag) |
 |---|---|---|---|---|---|
-| **G** | FOUNDATION / GHOST | Vibe Coding & AI-Orchestrierung, „die richtige Frage" | GHOST | — (speist alle) | Grün `#3df07a` |
-| **K** | TRACKING / OSINT | Tracking-Forensik, OSINT, Crawling + Entity Resolution | Key | PANOPTICON | Gold/Gelb `#f5b700` |
-| **R** | ECONOMY / MONEY | Ökonomie, Source-Stacking, Geldflüsse, Macht | Rook | MAMMON | Rot `#ff4d4d` |
-| **B** | FEEDS / STREAMS | Feeds, Crawler, Real-Time, Retention-Autopsie | Bite | THE FEED | Blau `#4d8dff` |
-| **V** | CLIMATE / FUTURE | Klima/Demografie, Langzeit, Modellierung, Archiv | Vesper | CUMULUS REX | Violett `#b48cff` |
+| **G** | GHOST / Foundation | Methode/Initiation: Frage, AI-Orchestrierung, Verifikation | GHOST | — (speist alle) | Grün `#3df07a` |
+| **K** | KEY / Tracking & OSINT | Tracking-Forensik, OSINT, Identity Graphs, Monitoring | KEY | PANOPTICON | Gold/Gelb `#f5b700` |
+| **R** | ROOK / Economy & Power | Geldflüsse, Eigentümer, Akteure, Leverage | ROOK | MAMMON | Rot `#ff4d4d` |
+| **B** | BITE / Feeds & Behavior | Feeds, Streams, Capture, Detection, Retention | BITE | THE FEED | Blau `#4d8dff` |
+| **V** | VESPER / Climate & Future | Archiv, Langzeit-Muster, Szenarien, Impact | VESPER | CUMULUS REX | Violett `#b48cff` |
 
 > **NICHT übernehmen:** die in Entwurf 4 erfundene Umbenennung
 > (GROUND/KNOWLEDGE/REASON/BUILD/VISION). Sie bricht Paten + Pantheon-Canon.
@@ -41,6 +48,12 @@ Konsistent mit ADR 002: Die Map **zeigt** das ganze Netz (meist „geplant"), ab
 Hervorhebungen) — entkoppelt von der G-Linie (= grün). Hex-Werte oben sind der
 Startpunkt, im Build feinjustierbar. (Grün knüpft an den Neon-Ghost `#39FF14` an.)
 
+> **Offen / abzustimmen:** `src/lib/curriculum/lines.ts` führt abweichende Hex-Werte
+> (g `#9cff6e`, k `#ffd23f`, r `#ff4d5a`, b `#3aa7ff`, v `#9b5cff`) — insbesondere
+> **K = `#ffd23f` kollidiert mit dem Signal-Akzent**. **Rendering-SoT bleibt
+> `src/styles/global.css`** (Palette oben). lines.ts-Farben sind bis zur Abstimmung
+> informativ; vor dem Map-Bau angleichen (eine Richtung wählen).
+
 ## 3. GHOST-Interchange
 
 Alle Entwürfe zentrieren **GHOST als Umsteige-/Konvergenzpunkt**, an dem die Linien
@@ -49,54 +62,23 @@ zusammenlaufen („The Ghost Interchange" / „The Convergence"). **Kanonisch
 GHOST-Interchange — der Ort, wo GHOST lebt (`STORY §3.3`) und alle Linien
 zusammentreffen. Visuell: zentraler Ghost-Knoten mit Glow/Puls.
 
-## 4. Die 25 Stationen (kanonisch)
+## 4. Die 25 Stationen
 
-Skill-Spine Line G: **Frage → Befehl → Fütterung → Prüfung → Eval.**
+**Kanon ausgelagert:** Linien, Stationen, Skills, Artefakte, Core Questions →
+`docs/curriculum/station-index-v0.1.md` (Übersicht) ·
+`docs/curriculum/evidence-engine-v0.1.md` §6–10 (Substanz) ·
+`src/lib/curriculum/lines.ts` (Daten) · `src/content/stations/*.md` (Inhalt).
 
-### G — FOUNDATION / GHOST  *(live: G1; Rest gebaut-baubar — Repo-Canon, unverändert)*
-| # | Station | Skill |
-|---|---|---|
-| G1 | THE FOLDER | Die richtige, prüfbare Frage stellen (Spec-Denken) |
-| G2 | COMMAND | AI orchestrieren statt chatten (Prompts als Specs) |
-| G3 | INTAKE | Daten beschaffen & strukturieren mit Co-Pilot |
-| G4 | THE CONFIDENT LIE | AI-Output prüfen (Halluzination, Quellen, adversarial) |
-| G5 | MASCHINENRAUM | Eval — alles zusammen (= GHOST-Interchange) |
+Gemeinsame Stations-Grammatik je Linie: **Orientation → Access → Structure →
+Analysis/Verification → Case File.** Line G ist die Methode in Reinform; jede
+Spezial-Line endet im „[Gegner] FILE". Aktuelle Stationsnamen (Slugs unprefixed,
+z. B. `footprints`, `mammon-file`):
 
-### K — TRACKING / OSINT  *(geplant)*
-| # | Station | Skill |
-|---|---|---|
-| K1 | FOOTPRINTS | Die Spuren finden, die ein Ziel im offenen Netz hinterlässt |
-| K2 | IDENTITY GRAPHS | Accounts, Aliase, Entitäten zu einem Bild verknüpfen |
-| K3 | SOCIAL LATTICE | Beziehungen & Netzwerke um ein Ziel kartieren |
-| K4 | GEOLOCATE | Ereignisse/Personen aus offenen Daten räumlich verorten |
-| K5 | HUMAN SIGNALS | Verhalten & Muster lesen — ethisch, im legalen Rahmen |
-
-### R — ECONOMY / MONEY  *(geplant)*
-| # | Station | Skill |
-|---|---|---|
-| R1 | VALUE FLOWS | Nachverfolgen, wohin Geld & Wert wirklich fließen |
-| R2 | ENTITIES & SHELLS | Eigentümer entwirren (Firmen, Shells, Begünstigte) |
-| R3 | PAYMENT RAILS | Transaktionen über die Systeme verfolgen, die sie tragen |
-| R4 | OFFSHORE SHADOWS | Finden, was in Verschleierungs-Jurisdiktionen versteckt ist |
-| R5 | CAPITAL MACHINES | Sehen, wie Kapital Macht im großen Maßstab verdichtet |
-
-### B — FEEDS / STREAMS  *(geplant)*
-| # | Station | Skill |
-|---|---|---|
-| B1 | SOURCES | Die richtigen Live-Feeds wählen & anbinden |
-| B2 | SCRAPERS & PIPES | Pipelines bauen, die mit Co-Pilot im Maßstab sammeln |
-| B3 | NORMALIZE | Chaotische Streams in saubere, vergleichbare Daten überführen |
-| B4 | ENRICH | Rohstreams joinen, labeln, kontextualisieren |
-| B5 | STREAM CONTROL | Echtzeit-Daten überwachen, alerten, beherrschen |
-
-### V — CLIMATE / FUTURE  *(geplant)*
-| # | Station | Skill |
-|---|---|---|
-| V1 | SIGNALS | Schwache Signale früh in Langzeitdaten erkennen |
-| V2 | PATTERNS | Struktur & Trends über die Zeit finden |
-| V3 | SCENARIOS | Plausible Zukünfte mit KI-Hilfe modellieren |
-| V4 | STRESS POINTS | Finden, wo Systeme unter Druck brechen |
-| V5 | FUTURE LEVERAGE | Vorausschau in Handlung mit Wirkung übersetzen |
+- **G** GHOST/Foundation *(live: G1; G2 announced)* — THE FOLDER · COMMAND · INTAKE · THE CONFIDENT LIE · MASCHINENRAUM
+- **K** KEY/Tracking & OSINT *(geplant)* — FOOTPRINTS · SIGNALS · IDENTITY GRAPH · WATCHTOWER · PANOPTICON FILE
+- **R** ROOK/Economy & Power *(geplant)* — LEDGER · ACTORS · FLOWS · LEVERAGE · MAMMON FILE
+- **B** BITE/Feeds & Behavior *(geplant)* — SOURCE · CAPTURE · NORMALIZE · DETECT · FEED AUTOPSY
+- **V** VESPER/Climate & Future *(geplant)* — ARCHIVE · PATTERNS · SCENARIOS · IMPACT · CUMULUS FILE
 
 ## 5. Karten-Varianten (ein System, vier Ausprägungen)
 

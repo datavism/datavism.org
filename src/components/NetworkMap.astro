@@ -15,12 +15,14 @@ const byLine = (id: LineId) =>
 const W = 1480, H = 866
 const GX = 740, GY = 310, GR = 62 // ghost interchange
 
+// Canon: docs/curriculum/evidence-engine-v0.1.md + src/lib/curriculum/lines.ts.
+// The full map rebuild will consume lines.ts directly; these mirror it for now.
 const META: Record<LineId, { name: string; tag: string }> = {
-  g: { name: 'FOUNDATION / GHOST', tag: 'Build the base. Operate in the shadows.' },
-  k: { name: 'TRACKING / OSINT', tag: 'Find what others miss.' },
-  r: { name: 'ECONOMY / MONEY', tag: 'Follow value. Understand power.' },
-  b: { name: 'FEEDS / STREAMS', tag: 'Ingest the firehose. Extract signal.' },
-  v: { name: 'CLIMATE / FUTURE', tag: 'Model tomorrow. Act today.' },
+  g: { name: 'GHOST / FOUNDATION', tag: 'Ask better. Command cleaner. Verify harder.' },
+  k: { name: 'KEY / TRACKING & OSINT', tag: 'Trace the watchers.' },
+  r: { name: 'ROOK / ECONOMY & POWER', tag: 'Follow the value.' },
+  b: { name: 'BITE / FEEDS & BEHAVIOR', tag: 'Decode the feed.' },
+  v: { name: 'VESPER / CLIMATE & FUTURE', tag: 'Read the long signal.' },
 }
 // per line: badge xy · track [x1,x2,y] · inner end → ghost connector
 const LAY: Record<LineId, { badge: [number, number]; track: [number, number, number]; inner: [number, number] }> = {

@@ -50,17 +50,13 @@ const wrap = (t: string): string[] => {
 const dotX = (tr: [number, number, number], i: number) => tr[0] + (i * (tr[1] - tr[0])) / 4
 
 // wordmark header: place geometry strokes (1600×600 space) into the header band
-const wm = `translate(64,-22) scale(0.85)` // fits letters into y≈88..376
+const wm = `translate(64,-70) scale(0.85)` // wordmark near the top (title removed)
 const pts = (s: { x: number; y: number }[]) => s.map((p) => `${p.x},${p.y}`).join(' ')
 
 const SLOGAN = 'DATAVISM IS A SYSTEM. NOT A COURSE.'
 ---
 <div class="netmap">
   <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label={COPY.network.a11yMap}>
-    <!-- header -->
-    <text class="t-title" x={W / 2} y="44" text-anchor="middle">THE DATAVISM CURRICULUM MAP</text>
-    <text class="t-sub" x={W / 2} y="70" text-anchor="middle">FIVE MODULES · ONE NETWORK</text>
-
     <!-- wordmark: lines spell DATAVISM -->
     <g transform={wm} class="wordmark">
       {GEO.map((l) => l.strokes.map((s) => (
@@ -144,8 +140,6 @@ const SLOGAN = 'DATAVISM IS A SYSTEM. NOT A COURSE.'
   .netmap svg { width: 100%; height: auto; display: block; overflow: visible; background: var(--color-ink); }
 
   text { font-family: var(--font-mono); fill: var(--color-phosphor-dim); }
-  .t-title { fill: var(--color-phosphor-hi); font-size: 26px; font-weight: 700; letter-spacing: 6px; }
-  .t-sub { font-size: 14px; letter-spacing: 5px; }
   .foot { fill: var(--color-phosphor-dim); font-size: 16px; letter-spacing: 6px; }
 
   /* wordmark */

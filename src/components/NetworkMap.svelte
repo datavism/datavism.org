@@ -1,0 +1,209 @@
+<script>
+  // THE NETWORK — the reusable octolinear transit diagram (signature asset).
+  // Ported 1:1 from docs/design_handoff_datavism/NetworkMap.dc.html: five lines
+  // route from a terminus, bend once, and converge at the GHOST interchange
+  // (720,470). Fixed node geometry (GEO) + route polylines (ROUTEPTS). Reused on
+  // the landing, onboarding, line, network and progress surfaces.
+  //
+  // Props (design §"The Signature Asset"):
+  //   statuses     {stationId: status}  per-node marker style (falls back to def)
+  //   selected     stationId|null        highlight node with an accent ring
+  //   onSelect     fn(id)                click handler per node
+  //   liveLine     'g'|'k'|…             which line shows flowing packets
+  //   dimInactive  bool                  non-live/non-selected lines drop to 0.32
+  //   labels       bool                  show station code + title labels
+  //   accent       color                 selected-ring colour
+
+  let {
+    statuses = {},
+    selected = null,
+    onSelect = null,
+    liveLine = 'g',
+    dimInactive = true,
+    labels = true,
+    accent = '#ffd23f',
+  } = $props()
+
+  let hovered = $state(null)
+  let internalSel = $state(null)
+
+  const GEO = {
+    g1: { x: 150, y: 290, anchor: 'above', terminus: true }, g2: { x: 320, y: 290, anchor: 'above' }, g3: { x: 490, y: 290, anchor: 'above' }, g4: { x: 600, y: 350, anchor: 'left' }, g5: { x: 660, y: 410, anchor: 'left' },
+    k1: { x: 900, y: 120, anchor: 'above', terminus: true }, k2: { x: 810, y: 120, anchor: 'above' }, k3: { x: 720, y: 210, anchor: 'right' }, k4: { x: 720, y: 300, anchor: 'right' }, k5: { x: 720, y: 400, anchor: 'right' },
+    r1: { x: 1290, y: 300, anchor: 'left', terminus: true }, r2: { x: 1290, y: 400, anchor: 'left' }, r3: { x: 1130, y: 470, anchor: 'above' }, r4: { x: 990, y: 470, anchor: 'above' }, r5: { x: 850, y: 470, anchor: 'above' },
+    b1: { x: 1110, y: 650, anchor: 'below', terminus: true }, b2: { x: 985, y: 650, anchor: 'below' }, b3: { x: 850, y: 600, anchor: 'right' }, b4: { x: 800, y: 550, anchor: 'right' }, b5: { x: 760, y: 510, anchor: 'right' },
+    v1: { x: 150, y: 650, anchor: 'below', terminus: true }, v2: { x: 320, y: 650, anchor: 'below' }, v3: { x: 490, y: 650, anchor: 'below' }, v4: { x: 600, y: 590, anchor: 'left' }, v5: { x: 660, y: 530, anchor: 'left' },
+  }
+
+  const ROUTEPTS = {
+    g: [[150, 290], [540, 290], [720, 470]], k: [[900, 120], [720, 120], [720, 470]], r: [[1290, 300], [1290, 470], [720, 470]], b: [[1110, 650], [900, 650], [720, 470]], v: [[150, 650], [540, 650], [720, 470]],
+  }
+
+  const LC = { g: '#3df07a', k: '#f5b700', r: '#ff4d4d', b: '#4d8dff', v: '#b48cff' }
+  const ORDER = { g: 0, k: 1, r: 2, b: 3, v: 4 }
+
+  const LINES = [
+    { id: 'g', st: [['g1', 'G1', 'THE FOLDER', 'open'], ['g2', 'G2', 'COMMAND', 'announced'], ['g3', 'G3', 'INTAKE', 'locked'], ['g4', 'G4', 'THE CONFIDENT LIE', 'locked'], ['g5', 'G5', 'MASCHINENRAUM', 'locked']] },
+    { id: 'k', st: [['k1', 'K1', 'FOOTPRINTS', 'locked'], ['k2', 'K2', 'SIGNALS', 'locked'], ['k3', 'K3', 'IDENTITY GRAPH', 'locked'], ['k4', 'K4', 'WATCHTOWER', 'locked'], ['k5', 'K5', 'PANOPTICON FILE', 'locked']] },
+    { id: 'r', st: [['r1', 'R1', 'LEDGER', 'locked'], ['r2', 'R2', 'ACTORS', 'locked'], ['r3', 'R3', 'FLOWS', 'locked'], ['r4', 'R4', 'LEVERAGE', 'locked'], ['r5', 'R5', 'MAMMON FILE', 'locked']] },
+    { id: 'b', st: [['b1', 'B1', 'SOURCE', 'locked'], ['b2', 'B2', 'CAPTURE', 'locked'], ['b3', 'B3', 'NORMALIZE', 'locked'], ['b4', 'B4', 'DETECT', 'locked'], ['b5', 'B5', 'FEED AUTOPSY', 'locked']] },
+    { id: 'v', st: [['v1', 'V1', 'ARCHIVE', 'locked'], ['v2', 'V2', 'PATTERNS', 'locked'], ['v3', 'V3', 'SCENARIOS', 'locked'], ['v4', 'V4', 'IMPACT', 'locked'], ['v5', 'V5', 'CUMULUS FILE', 'locked']] },
+  ]
+
+  const allStations = LINES.flatMap((L) =>
+    L.st.map((s) => ({ id: s[0], code: s[1], title: s[2], def: s[3], lineId: L.id, color: LC[L.id] })),
+  )
+
+  function pathLen(pts) {
+    let L = 0
+    for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y)
+    return Math.round(L)
+  }
+
+  function roundedPath(pts, r) {
+    if (!pts.length) return ''
+    let d = 'M ' + pts[0].x + ' ' + pts[0].y
+    for (let i = 1; i < pts.length - 1; i++) {
+      const prev = pts[i - 1], p = pts[i], next = pts[i + 1]
+      const v1x = p.x - prev.x, v1y = p.y - prev.y, l1 = Math.hypot(v1x, v1y)
+      const v2x = next.x - p.x, v2y = next.y - p.y, l2 = Math.hypot(v2x, v2y)
+      const rr = Math.min(r, l1 / 2, l2 / 2)
+      d += ' L ' + (p.x - v1x / l1 * rr) + ' ' + (p.y - v1y / l1 * rr) + ' Q ' + p.x + ' ' + p.y + ' ' + (p.x + v2x / l2 * rr) + ' ' + (p.y + v2y / l2 * rr)
+    }
+    const last = pts[pts.length - 1]
+    return d + ' L ' + last.x + ' ' + last.y
+  }
+
+  function labelPos(x, y, a) {
+    if (a === 'above') return { cx: x, cy: y - 17, tx: x, ty: y - 28, ta: 'middle' }
+    if (a === 'below') return { cx: x, cy: y + 19, tx: x, ty: y + 30, ta: 'middle' }
+    if (a === 'left') return { cx: x - 13, cy: y - 2, tx: x - 13, ty: y + 9, ta: 'end' }
+    return { cx: x + 13, cy: y - 2, tx: x + 13, ty: y + 9, ta: 'start' }
+  }
+
+  const selId = $derived(selected != null ? selected : internalSel)
+  const selLineId = $derived((selId || '').charAt(0))
+
+  function select(id) {
+    if (typeof onSelect === 'function') onSelect(id)
+    else internalSel = id
+  }
+
+  // precompute route render data
+  const routes = $derived(
+    Object.keys(ROUTEPTS).map((id) => {
+      const pts = ROUTEPTS[id].map((p) => ({ x: p[0], y: p[1] }))
+      const d = roundedPath(pts, 26)
+      const len = pathLen(pts)
+      const isLive = id === liveLine
+      const isSel = id === selLineId
+      const on = isLive || isSel
+      const op = dimInactive ? (on ? 1 : 0.32) : (on ? 1 : 0.85)
+      return {
+        id, d, len, color: LC[id], isLive, isSel, on, op,
+        width: isSel ? 9 : isLive ? 8 : 7,
+        delay: ORDER[id] * 0.13,
+        packet: isLive || isSel,
+        packetOp: isLive ? 1 : 0.7,
+      }
+    }),
+  )
+
+  const nodes = $derived(
+    allStations.map((s) => {
+      const g = GEO[s.id]
+      const status = statuses[s.id] || s.def
+      const isSel = s.id === selId
+      const isHov = s.id === hovered
+      return { ...s, x: g.x, y: g.y, anchor: g.anchor, baseR: g.terminus ? 8 : 7, status, isSel, isHov, lp: labelPos(g.x, g.y, g.anchor) }
+    }),
+  )
+
+  const GH = 'M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z'
+</script>
+
+<svg viewBox="0 0 1440 760" role="img" aria-label="DATAVISM underground network map: five lines and 25 stations meeting at the Ghost interchange" style="display:block;width:100%;height:auto;">
+  <defs>
+    <filter id="dvg" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3.4" result="b" />
+      <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+    </filter>
+    <pattern id="dvgrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 H0 V40" fill="none" stroke="#111922" stroke-width="1" />
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="1440" height="760" fill="url(#dvgrid)" />
+
+  <!-- casings -->
+  {#each routes as r (r.id + 'cas')}
+    <path d={r.d} fill="none" stroke="#0b0c10" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+  {/each}
+
+  <!-- coloured lines + packets -->
+  {#each routes as r (r.id + 'ln')}
+    <path
+      d={r.d}
+      class="dv-line"
+      fill="none"
+      stroke={r.color}
+      stroke-width={r.width}
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      opacity={r.op}
+      stroke-dasharray={r.len}
+      style="--len:{r.len};animation-delay:{r.delay}s;transition:opacity .4s ease,stroke-width .4s ease;"
+    />
+    {#if r.packet}
+      <path d={r.d} class="dv-packets" fill="none" stroke="#f2fffb" stroke-width="3.6" stroke-linecap="round" stroke-dasharray="2 22" opacity={r.packetOp} style="animation-delay:{1.5 + r.delay}s;pointer-events:none;" />
+    {/if}
+  {/each}
+
+  <!-- stations -->
+  {#each nodes as n (n.id)}
+    <circle cx={n.x} cy={n.y} r="19" fill="transparent" style="cursor:pointer;" role="button" tabindex="-1" aria-label={n.code + ' ' + n.title}
+      onclick={() => select(n.id)}
+      onmouseenter={() => (hovered = n.id)}
+      onmouseleave={() => (hovered = null)} />
+    {#if n.isSel}
+      <circle cx={n.x} cy={n.y} r="13" fill="none" stroke={accent} stroke-width="1.6" filter="url(#dvg)" style="pointer-events:none;" />
+    {/if}
+    <g style="pointer-events:none;">
+      {#if n.status === 'completed'}
+        <circle cx={n.x} cy={n.y} r={n.baseR} fill="#0b0c10" stroke="#3df07a" stroke-width="2.6" />
+        <path d={'M ' + (n.x - 3.4) + ' ' + (n.y + 0.3) + ' L ' + (n.x - 1) + ' ' + (n.y + 2.7) + ' L ' + (n.x + 3.9) + ' ' + (n.y - 2.9)} fill="none" stroke="#3df07a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+      {:else if n.status === 'current'}
+        <circle cx={n.x} cy={n.y} r="13" fill="none" stroke={n.color} stroke-width="1.3" opacity="0.5" class="dv-pulse" />
+        <circle cx={n.x} cy={n.y} r="8" fill="#0b0c10" stroke={n.color} stroke-width="3" filter="url(#dvg)" />
+        <circle cx={n.x} cy={n.y} r="3.4" fill={n.color} />
+      {:else if n.status === 'unlocked'}
+        <circle cx={n.x} cy={n.y} r={n.baseR} fill="#0b0c10" stroke="#4d8dff" stroke-width="2.6" />
+        <circle cx={n.x} cy={n.y} r="2.6" fill="#4d8dff" />
+      {:else if n.status === 'open'}
+        <circle cx={n.x} cy={n.y} r={n.baseR} fill="#0b0c10" stroke={n.color} stroke-width="3" />
+        <circle cx={n.x} cy={n.y} r="2.6" fill={n.color} />
+      {:else if n.status === 'locked'}
+        <circle cx={n.x} cy={n.y} r="6.5" fill="#0b0c10" stroke={n.color} stroke-width="3" stroke-dasharray="3 3" opacity="0.55" />
+      {:else}
+        <circle cx={n.x} cy={n.y} r={n.baseR} fill="#0b0c10" stroke={n.color} stroke-width="2.6" />
+      {/if}
+    </g>
+    {#if labels}
+      {@const dim = n.status === 'locked' && !n.isSel && !n.isHov}
+      <text x={n.lp.cx} y={n.lp.cy} text-anchor={n.lp.ta} font-family="'Spline Sans Mono', monospace" font-size="11.5" font-weight="700" fill={n.color} opacity={dim ? 0.72 : 1} style="pointer-events:none;letter-spacing:0.03em;">{n.code}</text>
+      <text x={n.lp.tx} y={n.lp.ty} text-anchor={n.lp.ta} font-family="'Spline Sans Mono', monospace" font-size="8.8" font-weight="500" fill={n.isSel ? '#f2f1ea' : '#7c8276'} opacity={dim ? 0.72 : 1} style="pointer-events:none;letter-spacing:0.02em;">{n.title}</text>
+    {/if}
+  {/each}
+
+  <!-- GHOST interchange -->
+  <circle cx="720" cy="470" r="62" fill="none" stroke="#39ff14" stroke-width="1.4" opacity="0.45" class="dv-pulse" />
+  <circle cx="720" cy="470" r="58" fill="none" stroke="#39ff14" stroke-width="1" stroke-dasharray="2 9" opacity="0.45" class="dv-spin" />
+  <circle cx="720" cy="470" r="54" fill="#0b0c10" stroke="#343843" stroke-width="1.5" />
+  <g transform="translate(680,420) scale(0.62)">
+    <path d={GH} fill="none" stroke="#ff2a6d" stroke-width="12" opacity="0.9" transform="translate(3,3)" />
+    <path d={GH} fill="none" stroke="#39ff14" stroke-width="10" stroke-linejoin="round" filter="url(#dvg)" />
+    <circle cx="78" cy="64" r="7" fill="#39ff14" />
+    <circle cx="110" cy="64" r="7" fill="#39ff14" />
+  </g>
+  <text x="720" y="556" text-anchor="middle" font-family="'Martian Mono', monospace" font-size="14" font-weight="800" fill="#f2f1ea" style="letter-spacing:-0.02em;">THE GHOST</text>
+  <text x="720" y="572" text-anchor="middle" font-family="'Spline Sans Mono', monospace" font-size="9.5" font-weight="600" fill="#39ff14" style="letter-spacing:0.12em;">CONVERGENCE · ALL LINES</text>
+</svg>

@@ -1,0 +1,40 @@
+---
+// The DATAVISM neon ghost — canonical inline mark (magenta drop-shadow + neon
+// green outline + two eyes). Used in the header, footer and interchange.
+// Canonical source SVGs: public/brand/svg/g3-neon-ghost-*.
+interface Props {
+  size?: number
+  blink?: boolean
+  title?: string
+}
+const { size = 26, blink = false, title } = Astro.props
+const ghost = 'M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z'
+---
+<svg
+  width={size}
+  height={size}
+  viewBox="-8 -8 146 146"
+  class:list={["ghost-mark", { blink }]}
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  style="flex: none;"
+>
+  <path d={ghost} fill="none" stroke="#ff2a6d" stroke-width="12" opacity="0.9" transform="translate(3,3)" />
+  <path d={ghost} fill="none" stroke="#39ff14" stroke-width="10" stroke-linejoin="round" />
+  <g class="eyes">
+    <circle cx="78" cy="64" r="7" fill="#39ff14" />
+    <circle cx="110" cy="64" r="7" fill="#39ff14" />
+  </g>
+</svg>
+
+<style>
+  .ghost-mark.blink .eyes {
+    transform-box: fill-box;
+    transform-origin: 94px 64px;
+    animation: dv-eyeblink 6s infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ghost-mark.blink .eyes { animation: none; }
+  }
+</style>

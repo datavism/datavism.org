@@ -6,8 +6,9 @@ import GhostMark from './GhostMark.astro'
 
 interface Props {
   active?: 'network' | 'lines' | 'method' | 'manifesto'
+  width?: number // align the header/nav to the page's content width
 }
-const { active } = Astro.props
+const { active, width = 1560 } = Astro.props
 const nav = [
   { label: 'Network', href: '/#network', key: 'network' },
   { label: 'Lines', href: '/#lines', key: 'lines' },
@@ -15,9 +16,9 @@ const nav = [
   { label: 'Manifesto', href: '/manifesto', key: 'manifesto' },
 ]
 ---
-<header class="site-header">
+<header class="site-header" style={`max-width:${width}px;`}>
   <a class="brand" href="/">
-    <GhostMark size={26} blink />
+    <GhostMark size={31} blink />
     <span class="wordmark">
       <span class="name font-display">DATAVISM</span>
       <span class="sub">THE DATA UNDERGROUND</span>
@@ -35,12 +36,12 @@ const nav = [
   .site-header {
     display: flex; align-items: center; justify-content: space-between; gap: 24px;
     padding: 16px 30px; border-bottom: 1px solid var(--color-edge);
-    max-width: 1560px; margin: 0 auto;
+    margin: 0 auto;
   }
-  .brand { display: flex; align-items: center; gap: 13px; text-decoration: none; }
+  .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
   .wordmark { display: flex; flex-direction: column; line-height: 1; }
-  .name { font-weight: 800; font-size: 18px; letter-spacing: -0.04em; color: var(--color-ink); }
-  .sub { font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.32em; color: var(--color-eyebrow); margin-top: 4px; }
+  .name { font-weight: 800; font-size: 21px; letter-spacing: -0.04em; color: var(--color-ink); }
+  .sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.3em; color: var(--color-eyebrow); margin-top: 4px; }
   .nav {
     display: flex; align-items: center; gap: 28px;
     font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase;

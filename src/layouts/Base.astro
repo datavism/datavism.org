@@ -28,6 +28,7 @@ interface Props {
   active?: 'network' | 'lines' | 'method' | 'manifesto'
   footer?: boolean
   chrome?: boolean // ticker + header; off for focused funnels (onboarding)
+  width?: number // content width the header/footer align to (per page)
 }
 const {
   title = COPY.meta.title,
@@ -36,6 +37,7 @@ const {
   active,
   footer = true,
   chrome = true,
+  width = 1560,
 } = Astro.props
 const canonical = new URL(Astro.url.pathname, Astro.site).href
 const ogImage = new URL(image, Astro.site).href
@@ -70,9 +72,9 @@ const ogImage = new URL(image, Astro.site).href
 
     <div class="shell">
       {chrome && <Ticker />}
-      {chrome && <SiteHeader active={active} />}
+      {chrome && <SiteHeader active={active} width={width} />}
       <main id="top"><slot /></main>
-      {footer && <SiteFooter />}
+      {footer && <SiteFooter width={width} />}
     </div>
 
     <style>

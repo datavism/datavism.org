@@ -1,0 +1,216 @@
+---
+// Case File detail (design: Case File - Border Signal Leak.dc.html). Published-
+// evidence layout following the 10-part Case File canon. Data from caseFiles.ts;
+// only CF-07 is published. Marked as an illustrative example.
+import Base from '../../layouts/Base.astro'
+import CopyCite from '../../components/CopyCite.svelte'
+import { CASE_DETAIL, severityDots } from '../../lib/caseFiles'
+import { getLineById } from '../../lib/curriculum/lines'
+
+export function getStaticPaths() {
+  return Object.values(CASE_DETAIL).map((cf) => ({ params: { slug: cf.slug }, props: { cf } }))
+}
+
+const { cf } = Astro.props
+const line = getLineById(cf.line)
+const color = line.color.hex
+const lineName = line.name.toUpperCase()
+const sev = severityDots(cf.severity)
+---
+<Base title={`${cf.titleLines.join(' ')} — ${cf.id} — DATAVISM`} description={cf.dek} footer={false}>
+  <main class="cf">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="classbar">
+        <span class="cleared">// CASE FILE · CLEARED FOR PUBLIC</span>
+        <span class="barcode">▌▍▌▎▌▍▎▌ {cf.id}</span>
+      </div>
+      <div class="meta">
+        <span style={`color:${color};`}>{cf.id}</span><span class="dot">·</span>
+        <span style={`color:${color};`}>{lineName}</span><span class="dot">·</span>
+        <span class="ink3">{cf.artifact.toUpperCase()}</span><span class="dot">·</span>
+        <span class="pub">PUBLISHED {cf.published}</span>
+      </div>
+      <h1 class="font-display title" set:html={cf.titleLines.join('<br />')}></h1>
+      <p class="dek">{cf.dek}</p>
+      <div class="hook">
+        <div class="hook-stat">
+          <div class="hook-num font-display" style={`color:${color};`}>{cf.hookStat.value}</div>
+          <div class="hook-label">{cf.hookStat.label}</div>
+        </div>
+        <div class="substats">
+          {cf.subStats.map((s) => (
+            <div class="substat"><div class="sn font-display">{s.n}</div><div class="sl" set:html={s.label.replace(' ', '<br />')}></div></div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- BODY -->
+    <div class="body">
+      <article class="article">
+        <div class="part">
+          <div class="ph"><span class="pn font-display" style={`color:${color};`}>01</span><span class="pk">QUESTION</span></div>
+          <p class="q">{cf.question}</p>
+        </div>
+        <div class="part top">
+          <div class="ph"><span class="pn font-display" style={`color:${color};`}>02</span><span class="pk">CONTEXT</span></div>
+          <p class="p">{cf.context}</p>
+        </div>
+        <div class="part top">
+          <div class="ph"><span class="pn font-display" style={`color:${color};`}>03</span><span class="pk">SOURCES</span></div>
+          <div class="srcs">{cf.sources.map((s) => <div class="src"><span class="sn2">{s.n}</span><span>{s.t}</span></div>)}</div>
+        </div>
+        <div class="part top">
+          <div class="ph"><span class="pn font-display" style={`color:${color};`}>04</span><span class="pk">METHOD</span></div>
+          <p class="p">{cf.method}</p>
+        </div>
+        <div class="part top">
+          <div class="ph"><span class="pn font-display blue">05</span><span class="pk">AI USE</span></div>
+          <div class="callout"><p>{cf.aiUse}</p></div>
+        </div>
+        <div class="part top">
+          <div class="ph"><span class="pn font-display" style={`color:${color};`}>06</span><span class="pk">VERIFICATION</span></div>
+          <div class="vtable">
+            <div class="vhead"><span>CLAIM</span><span>SOURCE</span><span>STATUS</span></div>
+            {cf.verify.map((v) => (
+              <div class="vrow"><span class="vclaim">{v.claim}</span><span class="vsrc">{v.src}</span><span class="vstatus" style={`color:${v.color};`}>{v.status}</span></div>
+            ))}
+          </div>
+        </div>
+        <div class="part top">
+          <div class="ph"><span class="pn font-display" style={`color:${color};`}>07</span><span class="pk">FINDINGS</span></div>
+          <p class="p mb">Before the consent banner is answered, the app already contacts the destinations below. Three of them receive coarse location.</p>
+          <div class="findings">
+            {cf.findings.map((f) => (
+              <div class="finding">
+                <div class="frow"><span>{f.name} <span style={`color:${f.tagColor};`}>{f.tag}</span></span><span class="fcount">{f.count}</span></div>
+                <div class="fbar"><div class="ffill" style={`width:${f.w};background:${color};`}></div></div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="part top">
+          <div class="ph"><span class="pn font-display red">08</span><span class="pk">LIMITS</span></div>
+          <p class="p">{cf.limits}</p>
+        </div>
+        <div class="part top">
+          <div class="ph"><span class="pn font-display" style={`color:${color};`}>09</span><span class="pk">PUBLIC OUTPUT</span></div>
+          <p class="p mb">This Case File, plus the raw request log and a one-page poster, are public and reproducible.</p>
+          <div class="downloads">{cf.publicOutput.map((d) => <span class="dl">{d}</span>)}</div>
+        </div>
+        <div class="part top">
+          <div class="ph"><span class="pn font-display violet">10</span><span class="pk">NEXT QUESTIONS</span></div>
+          <p class="p next-q">{cf.next}</p>
+        </div>
+      </article>
+
+      <!-- RAIL -->
+      <aside class="rail">
+        <div class="glance" style={`border-top:3px solid ${color};`}>
+          <div class="rk">AT A GLANCE</div>
+          <div class="glist">
+            <div><div class="gk">CURATOR</div><div class="gv cur"><span class="cbadge" style={`border-color:${color};color:${color};`}>{cf.line.toUpperCase()}</span>{line.mentor} · {line.motto}</div></div>
+            <div class="gtop"><div class="gk">SEVERITY</div><div class="gv sev" style={`color:${color};`}>{'●'.repeat(sev.filled)}<span class="empty">{'○'.repeat(sev.empty)}</span></div></div>
+            <div class="gtop"><div class="gk">ARTIFACT</div><div class="gv ink">{cf.artifact}</div></div>
+            <div class="gtop"><div class="gk">SOURCES · READ</div><div class="gv ink">{cf.sourcesRead}</div></div>
+          </div>
+        </div>
+        <div class="cite">
+          <div class="rk">CITE THIS FILE</div>
+          <p class="cite-text">{cf.citation}</p>
+          <CopyCite client:visible citation={cf.citation} />
+        </div>
+        <a class="seemap" href="/#network">See it on the map <span style={`color:${color};`}>→</span></a>
+      </aside>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="cf-foot">
+      <span class="fnav"><span class="muted">← {cf.prev.id}</span> {cf.prev.title}</span>
+      <span class="illustrative">Illustrative example · CC-BY · datavism.org</span>
+      <span class="fnav">{cf.nextFile.title} <span class="muted">{cf.nextFile.id} →</span></span>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .cf { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+  .ink3 { color: var(--color-ink-3); } .ink { color: var(--color-ink); }
+
+  .hero { padding: 30px 0 34px; border-bottom: 1px solid var(--color-edge); }
+  .classbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; border: 1px solid var(--color-edge); padding: 9px 14px; margin-bottom: 30px; }
+  .cleared { font-size: 10.5px; letter-spacing: 0.16em; color: var(--color-ghost); }
+  .barcode { font-family: var(--font-display); font-size: 10px; letter-spacing: 0.3em; color: var(--color-ink-5); }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; font-size: 11px; letter-spacing: 0.1em; margin-bottom: 22px; }
+  .meta .dot { color: var(--color-ink-5); }
+  .meta .pub { color: var(--color-ghost); }
+  .title { font-weight: 800; font-size: clamp(36px, 6.6vw, 80px); line-height: 0.98; letter-spacing: -0.05em; margin: 0; color: var(--color-ink); }
+  .dek { max-width: 56ch; font-size: clamp(16px, 2vw, 21px); line-height: 1.45; color: var(--color-ink-2); margin: 24px 0 0; }
+  .hook { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 22px 40px; margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--color-edge); }
+  .hook-num { font-weight: 800; font-size: clamp(56px, 9vw, 104px); line-height: 0.86; letter-spacing: -0.05em; }
+  .hook-label { font-size: 11.5px; letter-spacing: 0.08em; color: var(--color-ink-3); margin-top: 8px; max-width: 22ch; }
+  .substats { display: flex; gap: 28px; }
+  .sn { font-size: 24px; font-weight: 700; color: var(--color-ink); }
+  .sl { font-size: 10px; color: var(--color-ink-4); letter-spacing: 0.06em; margin-top: 2px; }
+
+  .body { display: grid; grid-template-columns: 1fr 290px; gap: 44px; padding: 38px 0 56px; align-items: start; }
+  .article { display: grid; gap: 30px; max-width: 680px; min-width: 0; }
+  .part.top { border-top: 1px solid var(--color-edge); padding-top: 26px; }
+  .ph { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+  .pn { font-weight: 800; font-size: 13px; }
+  .pn.blue { color: var(--color-line-b); } .pn.red { color: var(--color-line-r); } .pn.violet { color: var(--color-line-v); }
+  .pk { font-size: 11px; letter-spacing: 0.16em; color: var(--color-ink-4); }
+  .q { font-size: 19px; line-height: 1.45; color: var(--color-ink); margin: 0; }
+  .p { font-size: 15px; line-height: 1.65; color: var(--color-ink-2); margin: 0; }
+  .p.mb { margin: 0 0 20px; }
+  .next-q { color: var(--color-ink-3); }
+  .srcs { display: grid; gap: 8px; }
+  .src { display: flex; gap: 12px; align-items: baseline; font-size: 13.5px; line-height: 1.5; color: var(--color-ink-3); }
+  .sn2 { color: var(--color-ink-5); flex: none; }
+  .callout { border: 1px solid var(--color-edge); border-left: 3px solid var(--color-line-b); background: var(--color-panel); padding: 16px 18px; }
+  .callout p { font-size: 14px; line-height: 1.6; color: var(--color-ink-2); margin: 0; }
+
+  .vtable { border: 1px solid var(--color-edge); }
+  .vhead { display: grid; grid-template-columns: 1fr 110px 96px; font-size: 9.5px; letter-spacing: 0.1em; color: var(--color-ink-4); background: var(--color-panel); border-bottom: 1px solid var(--color-edge); }
+  .vhead span { padding: 10px 12px; }
+  .vhead span + span { border-left: 1px solid var(--color-edge); }
+  .vrow { display: grid; grid-template-columns: 1fr 110px 96px; font-size: 12px; border-bottom: 1px solid #14151b; }
+  .vrow span { padding: 11px 12px; line-height: 1.4; }
+  .vclaim { color: var(--color-ink); }
+  .vsrc { color: var(--color-ink-3); border-left: 1px solid var(--color-edge); }
+  .vstatus { border-left: 1px solid var(--color-edge); letter-spacing: 0.04em; }
+
+  .findings { display: grid; gap: 11px; }
+  .frow { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; color: var(--color-ink); }
+  .fcount { color: var(--color-ink-3); }
+  .fbar { height: 8px; background: var(--color-panel-3); position: relative; }
+  .ffill { position: absolute; top: 0; bottom: 0; left: 0; }
+
+  .downloads { display: flex; flex-wrap: wrap; gap: 10px; }
+  .dl { font-size: 12px; color: var(--color-ink); border: 1px solid var(--color-edge-2); padding: 9px 13px; }
+
+  .rail { position: sticky; top: 20px; display: grid; gap: 16px; }
+  .glance, .cite { border: 1px solid var(--color-edge); background: var(--color-panel); padding: 18px; }
+  .rk { font-size: 10px; letter-spacing: 0.16em; color: var(--color-ink-4); margin-bottom: 14px; }
+  .glist { display: grid; gap: 12px; font-size: 12px; }
+  .gtop { border-top: 1px solid var(--color-edge); padding-top: 10px; }
+  .gk { color: var(--color-ink-4); margin-bottom: 3px; }
+  .gv.cur { display: flex; align-items: center; gap: 8px; color: var(--color-ink); }
+  .cbadge { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 1.5px solid; font-weight: 700; font-size: 11px; flex: none; }
+  .gv.sev { letter-spacing: 0.2em; }
+  .gv.sev .empty { color: var(--color-edge-2); }
+  .gv.ink { color: var(--color-ink); }
+  .cite-text { font-size: 11px; line-height: 1.55; color: var(--color-ink-3); margin: 0 0 13px; }
+  .seemap { display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--color-edge); background: var(--color-panel); padding: 14px 16px; text-decoration: none; color: var(--color-ink-3); font-size: 12px; }
+
+  .cf-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--color-edge); padding: 26px 0 56px; }
+  .fnav { color: var(--color-ink-3); font-size: 12px; }
+  .fnav .muted { color: var(--color-ink-4); }
+  .illustrative { font-size: 10.5px; color: var(--color-ink-5); letter-spacing: 0.06em; }
+
+  @media (max-width: 940px) {
+    .body { grid-template-columns: 1fr; }
+    .rail { position: static; }
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+// The Underground — public Case File index (design: The Underground - Case
+// Files.dc.html). Enriches the case data with canonical line colour + curator
+// from lines.ts, then hands it to the filter island.
+import Base from '../../layouts/Base.astro'
+import Underground from '../../components/Underground.svelte'
+import { CASE_INDEX, CASE_STATUS } from '../../lib/caseFiles'
+import { getLineById } from '../../lib/curriculum/lines'
+
+const cards = CASE_INDEX.map((c) => {
+  const line = getLineById(c.line)
+  const locked = c.status === 'locked'
+  const sm = CASE_STATUS[c.status]
+  const dots = locked ? '— — —' : '●●●●●'.slice(0, c.severity) + '○○○○○'.slice(0, 5 - c.severity)
+  return {
+    id: c.id,
+    line: c.line,
+    lineCode: c.line.toUpperCase(),
+    color: line.color.hex,
+    title: c.title,
+    finding: c.finding,
+    statusLabel: sm.label,
+    statusColor: sm.color,
+    titleColor: locked ? '#a7ada3' : '#f2f1ea',
+    curator: `${line.mentor} · ${locked ? 'queued' : 'verified'}`,
+    severity: dots,
+    op: locked ? 0.62 : 1,
+    href: c.slug ? `/underground/${c.slug}` : '#',
+  }
+})
+
+const filterOrder = ['all', 'g', 'k', 'r', 'b', 'v'] as const
+const labels: Record<string, string> = { all: 'ALL', g: 'G', k: 'K', r: 'R', b: 'B', v: 'V' }
+const filters = filterOrder.map((id) => ({
+  id,
+  label: labels[id],
+  color: id === 'all' ? '#ffd23f' : getLineById(id as any).color.hex,
+}))
+const published = CASE_INDEX.filter((c) => c.status === 'published').length
+---
+<Base title="The Underground — Case Files — DATAVISM" description="Public evidence from the Data Underground. Every line ends in a Case File — sourced, verified, reproducible.">
+  <main class="ug">
+    <section class="intro">
+      <div class="eb">// PUBLIC EVIDENCE · THE DATA UNDERGROUND</div>
+      <div class="intro-row">
+        <h1 class="font-display title">THE<br />UNDERGROUND</h1>
+        <p class="lede">Every line ends in a Case File. This is where the evidence goes public — sourced, verified, reproducible. <span class="ink">{published} of 25 published.</span></p>
+      </div>
+    </section>
+
+    <Underground client:load cards={cards} filters={filters} />
+  </main>
+</Base>
+
+<style>
+  .ug { max-width: 1320px; margin: 0 auto; padding: 0 28px 64px; }
+  .intro { padding: 44px 0 28px; }
+  .eb { font-size: 11px; letter-spacing: 0.22em; color: var(--color-ink-4); margin-bottom: 18px; }
+  .intro-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .title { font-weight: 800; font-size: clamp(40px, 7vw, 92px); line-height: 0.94; letter-spacing: -0.05em; margin: 0; }
+  .lede { font-size: 14px; line-height: 1.6; color: var(--color-ink-3); max-width: 34ch; margin: 0; }
+  .lede .ink { color: var(--color-ink); }
+</style>

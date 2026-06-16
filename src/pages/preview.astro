@@ -1,0 +1,10 @@
+---
+// Progress Map / dashboard — INTENTIONALLY UNLINKED preview (/preview). There
+// is no auth or progress backend yet, so the numbers are example data. Nothing
+// on the site links here; it exists for review only.
+import Base from '../layouts/Base.astro'
+import ProgressDashboard from '../components/ProgressDashboard.svelte'
+---
+<Base title="Progress Map (preview) — DATAVISM" description="Preview of the DATAVISM progress dashboard. Example data." chrome={false} footer={false}>
+  <ProgressDashboard client:load />
+</Base>

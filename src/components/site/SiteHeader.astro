@@ -6,9 +6,8 @@ import GhostMark from './GhostMark.astro'
 
 interface Props {
   active?: 'network' | 'lines' | 'method' | 'manifesto'
-  width?: number // align the header/nav to the page's content width
 }
-const { active, width = 1560 } = Astro.props
+const { active } = Astro.props
 const nav = [
   { label: 'Network', href: '/#network', key: 'network' },
   { label: 'Lines', href: '/#lines', key: 'lines' },
@@ -16,7 +15,7 @@ const nav = [
   { label: 'Manifesto', href: '/manifesto', key: 'manifesto' },
 ]
 ---
-<header class="site-header" style={`max-width:${width}px;`}>
+<header class="site-header">
   <a class="brand" href="/">
     <GhostMark size={31} blink />
     <span class="wordmark">
@@ -36,7 +35,7 @@ const nav = [
   .site-header {
     display: flex; align-items: center; justify-content: space-between; gap: 24px;
     padding: 16px 30px; border-bottom: 1px solid var(--color-edge);
-    margin: 0 auto;
+    width: 100%;
   }
   .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
   .wordmark { display: flex; flex-direction: column; line-height: 1; }

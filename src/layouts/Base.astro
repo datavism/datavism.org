@@ -27,6 +27,7 @@ interface Props {
   image?: string
   active?: 'network' | 'lines' | 'method' | 'manifesto'
   footer?: boolean
+  chrome?: boolean // ticker + header; off for focused funnels (onboarding)
 }
 const {
   title = COPY.meta.title,
@@ -34,6 +35,7 @@ const {
   image = '/og/datavism.png',
   active,
   footer = true,
+  chrome = true,
 } = Astro.props
 const canonical = new URL(Astro.url.pathname, Astro.site).href
 const ogImage = new URL(image, Astro.site).href
@@ -67,8 +69,8 @@ const ogImage = new URL(image, Astro.site).href
     <div class="crop crop-br" aria-hidden="true"></div>
 
     <div class="shell">
-      <Ticker />
-      <SiteHeader active={active} />
+      {chrome && <Ticker />}
+      {chrome && <SiteHeader active={active} />}
       <main id="top"><slot /></main>
       {footer && <SiteFooter />}
     </div>

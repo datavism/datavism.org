@@ -1,0 +1,11 @@
+---
+// Onboarding intake — focused 4-step funnel (no marketing chrome).
+import Base from '../layouts/Base.astro'
+import Onboarding from '../components/Onboarding.svelte'
+import { LINES } from '../lib/curriculum/lines'
+
+const nonG = LINES.filter((l) => l.id !== 'g')
+---
+<Base title="Intake — DATAVISM" description="Bring a question. Choose a line. Enter G1. Your first investigation starts here." chrome={false} footer={false}>
+  <Onboarding client:load lines={nonG} />
+</Base>

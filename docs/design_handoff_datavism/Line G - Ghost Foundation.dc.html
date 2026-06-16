@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #060608; }
+  ::selection { background: #3df07a; color: #060608; }
+  .lg-link { transition: color .2s ease; }
+  .lg-link:hover { color: #3df07a !important; }
+  .lg-row { transition: background .2s ease, border-color .2s ease; }
+  .lg-row:hover { background: #11121a; border-color: #3df07a !important; }
+  @media (max-width: 940px) { .lg-body { grid-template-columns: 1fr !important; } .lg-rail { position: static !important; } }
+</style>
+</helmet>
+
+<div style="position: relative; background: #060608; color: #f2f1ea; font-family: 'Spline Sans Mono', monospace; min-height: 100vh;">
+  <div style="position: fixed; inset: 0; pointer-events: none; z-index: 1; background: radial-gradient(56% 38% at 50% 0%, rgba(57,255,20,0.05), transparent 70%);"></div>
+
+  <div style="position: relative; z-index: 5;">
+
+    <header style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 28px; border-bottom: 1px solid #20222b; max-width: 1160px; margin: 0 auto;">
+      <a href="DATAVISM.dc.html" class="lg-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+        <svg width="24" height="24" viewBox="-8 -8 146 146" aria-hidden="true" style="flex: none;"><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#ff2a6d" stroke-width="12" opacity="0.9" transform="translate(3,3)"/><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#39ff14" stroke-width="10" stroke-linejoin="round"/><circle cx="78" cy="64" r="7" fill="#39ff14"/><circle cx="110" cy="64" r="7" fill="#39ff14"/></svg>
+        <span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 17px; letter-spacing: -0.04em;">DATAVISM</span>
+      </a>
+      <nav style="display: flex; align-items: center; gap: 22px; font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase;">
+        <a href="Progress Map.dc.html" class="lg-link" style="color: #a7ada3; text-decoration: none;">Progress</a>
+        <a href="DATAVISM.dc.html" class="lg-link" style="color: #a7ada3; text-decoration: none;">← The Map</a>
+      </nav>
+    </header>
+
+    <main style="max-width: 1160px; margin: 0 auto; padding: 0 28px;">
+
+      <!-- HERO -->
+      <section style="padding: 40px 0 34px; border-bottom: 1px solid #20222b;">
+        <div style="font-size: 11px; letter-spacing: 0.14em; color: #6b7280; margin-bottom: 24px;">NETWORK <span style="color: #565c66;">/</span> <span style="color: #3df07a;">LINE G</span></div>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-bottom: 6px;">
+          <span style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border: 2px solid #3df07a; color: #3df07a; font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 36px;">G</span>
+          <h1 style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: clamp(34px, 5.5vw, 62px); line-height: 0.96; letter-spacing: -0.04em; margin: 0;">GHOST<span style="color: #565c66;"> / </span>FOUNDATION</h1>
+        </div>
+        <p style="font-size: clamp(17px, 2.2vw, 22px); line-height: 1.35; color: #3df07a; margin: 20px 0 0;">Ask better. Command cleaner. Verify harder.</p>
+        <p style="max-width: 62ch; font-size: 15px; line-height: 1.65; color: #a7ada3; margin: 18px 0 0;">Line G is the operating system of DATAVISM — the method every other line runs on. You learn to turn a vague suspicion into a verifiable investigation, then carry that method into surveillance, money, feeds or the future.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 26px; margin-top: 26px; font-size: 11px; letter-spacing: 0.04em;">
+          <div><div style="color: #565c66; margin-bottom: 4px;">CORE QUESTION</div><div style="color: #f2f1ea;">How do I make a suspicion verifiable?</div></div>
+          <div><div style="color: #565c66; margin-bottom: 4px;">FINAL ARTIFACT</div><div style="color: #3df07a;">Eval Report</div></div>
+          <div><div style="color: #565c66; margin-bottom: 4px;">STATIONS</div><div style="color: #f2f1ea;">5 · G1 live now</div></div>
+        </div>
+      </section>
+
+      <!-- BODY -->
+      <div class="lg-body" style="display: grid; grid-template-columns: 1fr 320px; gap: 40px; padding: 36px 0 56px; align-items: start;">
+
+        <div style="min-width: 0;">
+          <div style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280; margin-bottom: 18px;">// FIVE STOPS</div>
+          <div style="display: grid; gap: 12px;">
+            <sc-for list="{{ stations }}" as="st" hint-placeholder-count="5">
+              <a href="{{ st.href }}" class="lg-row" style="display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; border: 1px solid #20222b; border-left: 3px solid {{ st.edge }}; background: #0e0f14; padding: 18px 20px; text-decoration: none; color: inherit;">
+                <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 46px; height: 38px; padding: 0 9px; background: {{ st.codeBg }}; color: {{ st.codeFg }}; border: 1px solid {{ st.edge }}; font-weight: 800; font-size: 17px;">{{ st.code }}</span>
+                <span style="min-width: 0;">
+                  <span style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;"><span style="font-family: 'Martian Mono', monospace; font-weight: 700; font-size: 18px; color: {{ st.titleColor }};">{{ st.title }}</span><span style="font-size: 9.5px; letter-spacing: 0.1em; color: {{ st.statusColor }}; border: 1px solid {{ st.statusColor }}; padding: 2px 7px;">{{ st.statusLabel }}</span></span>
+                  <span style="display: block; font-size: 13px; line-height: 1.5; color: #a7ada3; margin-top: 6px;">{{ st.role }}</span>
+                </span>
+                <span style="text-align: right; font-size: 11px;"><span style="display: block; color: #565c66; margin-bottom: 3px;">ARTIFACT</span><span style="color: {{ st.artifactColor }};">{{ st.artifact }}</span></span>
+              </a>
+            </sc-for>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px;">
+            <a href="Station - G1 The Folder.dc.html" style="display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; text-decoration: none; padding: 15px 24px; background: #3df07a; color: #06120a;">Start the line · G1 →</a>
+          </div>
+        </div>
+
+        <!-- RAIL -->
+        <aside class="lg-rail" style="position: sticky; top: 20px; display: grid; gap: 16px;">
+          <div style="border: 1px solid #20222b; background: #0b0c10; padding: 12px;">
+            <div style="font-size: 10px; letter-spacing: 0.14em; color: #46525d; margin-bottom: 6px; padding: 2px 4px;">// G ON THE NETWORK</div>
+            <dc-import name="NetworkMap" selected="g1" live-line="g" labels="{{ noLabels }}" hint-size="100%,260px"></dc-import>
+          </div>
+          <div style="border: 1px solid #20222b; border-top: 3px solid #3df07a; background: #0e0f14; padding: 18px;">
+            <div style="font-size: 10px; letter-spacing: 0.16em; color: #6b7280; margin-bottom: 12px;">WHY START HERE</div>
+            <p style="font-size: 13px; line-height: 1.6; color: #a7ada3; margin: 0 0 12px;">Everyone starts with G. It is the shared grammar — the method the whole underground speaks.</p>
+            <div style="font-size: 12px; line-height: 1.7; color: #cfd2c9;"><span style="color: #f5b700;">K</span> trace the watchers<br><span style="color: #ff4d4d;">R</span> follow the value<br><span style="color: #4d8dff;">B</span> decode the feed<br><span style="color: #b48cff;">V</span> read the long signal</div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#3df07a&quot;,&quot;options&quot;:[&quot;#3df07a&quot;,&quot;#ffd23f&quot;,&quot;#f5b700&quot;,&quot;#ff4d4d&quot;,&quot;#4d8dff&quot;,&quot;#b48cff&quot;]}}">
+class Component extends DCLogic {
+  STATIONS = [
+    ['g1', 'G1', 'THE FOLDER', 'Turn discomfort into a testable question.', 'Case File #1', 'open'],
+    ['g2', 'G2', 'COMMAND', 'Command AI with specs, constraints and iteration.', 'Command Log', 'announced'],
+    ['g3', 'G3', 'INTAKE', 'Collect and structure raw material.', 'Intake Sheet', 'locked'],
+    ['g4', 'G4', 'THE CONFIDENT LIE', 'Detect plausible but false machine output.', 'Verification Protocol', 'locked'],
+    ['g5', 'G5', 'MASCHINENRAUM', 'Combine the full investigation workflow.', 'Eval Report', 'locked'],
+  ];
+
+  renderVals() {
+    const meta = {
+      open: { label: 'LIVE NOW', color: '#3df07a' },
+      announced: { label: 'ANNOUNCED', color: '#f5b700' },
+      locked: { label: 'LOCKED', color: '#6b7280' },
+    };
+    const stations = this.STATIONS.map((s) => {
+      const m = meta[s[5]];
+      const live = s[5] === 'open';
+      return {
+        code: s[1], title: s[2], role: s[3], artifact: s[4],
+        href: live ? 'Station - G1 The Folder.dc.html' : '#',
+        edge: live ? '#3df07a' : '#20222b',
+        codeBg: live ? '#3df07a' : 'transparent',
+        codeFg: live ? '#06120a' : '#3df07a',
+        titleColor: s[5] === 'locked' ? '#a7ada3' : '#f2f1ea',
+        statusLabel: m.label, statusColor: m.color,
+        artifactColor: live ? '#3df07a' : '#6b7280',
+      };
+    });
+    return { stations, noLabels: false };
+  }
+}
+</script>
+</body>
+</html>

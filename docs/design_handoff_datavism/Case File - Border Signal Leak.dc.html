@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #060608; }
+  ::selection { background: #ffd23f; color: #060608; }
+  .cf-link { transition: color .2s ease; }
+  .cf-link:hover { color: #ffd23f !important; }
+  @media (max-width: 940px) { .cf-body { grid-template-columns: 1fr !important; } .cf-rail { position: static !important; } }
+</style>
+</helmet>
+
+<div style="position: relative; background: #060608; color: #f2f1ea; font-family: 'Spline Sans Mono', monospace; min-height: 100vh;">
+  <div style="position: fixed; inset: 0; pointer-events: none; z-index: 1; background: radial-gradient(56% 38% at 50% 0%, rgba(245,183,0,0.05), transparent 70%);"></div>
+
+  <div style="position: relative; z-index: 5;">
+
+    <!-- HEADER -->
+    <header style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 28px; border-bottom: 1px solid #20222b; max-width: 1120px; margin: 0 auto;">
+      <a href="DATAVISM.dc.html" class="cf-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+        <svg width="24" height="24" viewBox="-8 -8 146 146" aria-hidden="true" style="flex: none;"><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#ff2a6d" stroke-width="12" opacity="0.9" transform="translate(3,3)"/><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#39ff14" stroke-width="10" stroke-linejoin="round"/><circle cx="78" cy="64" r="7" fill="#39ff14"/><circle cx="110" cy="64" r="7" fill="#39ff14"/></svg>
+        <span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 17px; letter-spacing: -0.04em;">DATAVISM</span>
+      </a>
+      <nav style="display: flex; align-items: center; gap: 22px; font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase;">
+        <a href="#" class="cf-link" style="color: #a7ada3; text-decoration: none;">Case Files</a>
+        <a href="DATAVISM.dc.html" class="cf-link" style="color: #a7ada3; text-decoration: none;">← The Map</a>
+      </nav>
+    </header>
+
+    <main style="max-width: 1120px; margin: 0 auto; padding: 0 28px;">
+
+      <!-- HERO -->
+      <section style="padding: 30px 0 34px; border-bottom: 1px solid #20222b;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; border: 1px solid #20222b; padding: 9px 14px; margin-bottom: 30px;">
+          <span style="font-size: 10.5px; letter-spacing: 0.16em; color: #39ff14;">// CASE FILE · CLEARED FOR PUBLIC</span>
+          <span style="font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.3em; color: #565c66;">▌▍▌▎▌▍▎▌ CF-07</span>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; font-size: 11px; letter-spacing: 0.1em; margin-bottom: 22px;">
+          <span style="color: #f5b700;">CF-07</span><span style="color: #565c66;">·</span>
+          <span style="color: #f5b700;">KEY / TRACKING &amp; OSINT</span><span style="color: #565c66;">·</span>
+          <span style="color: #a7ada3;">PANOPTICON FILE</span><span style="color: #565c66;">·</span>
+          <span style="color: #39ff14;">PUBLISHED 17 JUN 2026</span>
+        </div>
+
+        <h1 style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: clamp(36px, 6.6vw, 80px); line-height: 0.98; letter-spacing: -0.05em; margin: 0; color: #f2f1ea;">BORDER<br>SIGNAL LEAK</h1>
+
+        <p style="max-width: 56ch; font-size: clamp(16px, 2vw, 21px); line-height: 1.45; color: #cfd2c9; margin: 24px 0 0;">A travel-checkpoint app fires dozens of third-party trackers — and leaks location — <span style="color: #ffd23f;">before anyone taps "Accept"</span>.</p>
+
+        <!-- hook stat -->
+        <div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 22px 40px; margin-top: 34px; padding-top: 28px; border-top: 1px solid #20222b;">
+          <div>
+            <div style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: clamp(56px, 9vw, 104px); line-height: 0.86; letter-spacing: -0.05em; color: #f5b700;">42</div>
+            <div style="font-size: 11.5px; letter-spacing: 0.08em; color: #a7ada3; margin-top: 8px; max-width: 22ch;">third parties pinged before consent</div>
+          </div>
+          <div style="display: grid; gap: 14px;">
+            <div style="display: flex; gap: 28px;">
+              <div><div style="font-family: 'Martian Mono', monospace; font-size: 24px; font-weight: 700; color: #f2f1ea;">7</div><div style="font-size: 10px; color: #6b7280; letter-spacing: 0.06em;">REQUESTS<br>WITH LOCATION</div></div>
+              <div><div style="font-family: 'Martian Mono', monospace; font-size: 24px; font-weight: 700; color: #f2f1ea;">0</div><div style="font-size: 10px; color: #6b7280; letter-spacing: 0.06em;">CONSENT<br>GIVEN YET</div></div>
+              <div><div style="font-family: 'Martian Mono', monospace; font-size: 24px; font-weight: 700; color: #f2f1ea;">11</div><div style="font-size: 10px; color: #6b7280; letter-spacing: 0.06em;">SOURCES<br>ON RECORD</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BODY -->
+      <div class="cf-body" style="display: grid; grid-template-columns: 1fr 290px; gap: 44px; padding: 38px 0 56px; align-items: start;">
+
+        <!-- ARTICLE -->
+        <article style="display: grid; gap: 30px; max-width: 680px; min-width: 0;">
+
+          <div>
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px;"><span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 13px; color: #f5b700;">01</span><span style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280;">QUESTION</span></div>
+            <p style="font-size: 19px; line-height: 1.45; color: #f2f1ea; margin: 0;">Does the app transmit location and device identifiers to third parties <span style="color: #ffd23f;">before</span> the user agrees to anything?</p>
+          </div>
+
+          <div style="border-top: 1px solid #20222b; padding-top: 26px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px;"><span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 13px; color: #f5b700;">02</span><span style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280;">CONTEXT</span></div>
+            <p style="font-size: 15px; line-height: 1.65; color: #cfd2c9; margin: 0;">Travel and border apps sit at a uniquely sensitive checkpoint: identity, location, and movement, all at once. Consent banners promise control. This file tests whether the control is real — or theater that fires after the data has already left.</p>
+          </div>
+
+          <div style="border-top: 1px solid #20222b; padding-top: 26px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;"><span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 13px; color: #f5b700;">03</span><span style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280;">SOURCES</span></div>
+            <div style="display: grid; gap: 8px;">
+              <sc-for list="{{ sources }}" as="s" hint-placeholder-count="4">
+                <div style="display: flex; gap: 12px; align-items: baseline; font-size: 13.5px; line-height: 1.5; color: #a7ada3;"><span style="color: #565c66; flex: none;">{{ s.n }}</span><span>{{ s.t }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid #20222b; padding-top: 26px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px;"><span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 13px; color: #f5b700;">04</span><span style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280;">METHOD</span></div>
+            <p style="font-size: 15px; line-height: 1.65; color: #cfd2c9; margin: 0;">Captured the app's network traffic on a clean device, decoded every outbound request before any tap on the consent banner, and resolved each destination to an owner using public registries and SDK fingerprints.</p>
+          </div>
+
+          <div style="border-top: 1px solid #20222b; padding-top: 26px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px;"><span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 13px; color: #4d8dff;">05</span><span style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280;">AI USE</span></div>
+            <div style="border: 1px solid #20222b; border-left: 3px solid #4d8dff; background: #0e0f14; padding: 16px 18px;">
+              <p style="font-size: 14px; line-height: 1.6; color: #cfd2c9; margin: 0;">AI clustered 1,200+ raw requests by destination, cleaned the host list, and drafted owner hypotheses. <strong style="color: #f2f1ea; font-weight: 700;">Every claim below was re-checked by hand against a primary source.</strong> AI was a co-pilot, never the witness.</p>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid #20222b; padding-top: 26px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;"><span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 13px; color: #f5b700;">06</span><span style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280;">VERIFICATION</span></div>
+            <div style="border: 1px solid #20222b;">
+              <div style="display: grid; grid-template-columns: 1fr 110px 96px; font-size: 9.5px; letter-spacing: 0.1em; color: #6b7280; background: #0e0f14; border-bottom: 1px solid #20222b;"><span style="padding: 10px 12px;">CLAIM</span><span style="padding: 10px 12px; border-left: 1px solid #20222b;">SOURCE</span><span style="padding: 10px 12px; border-left: 1px solid #20222b;">STATUS</span></div>
+              <sc-for list="{{ verify }}" as="v" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: 1fr 110px 96px; font-size: 12px; border-bottom: 1px solid #14151b;"><span style="padding: 11px 12px; color: #f2f1ea; line-height: 1.4;">{{ v.claim }}</span><span style="padding: 11px 12px; color: #a7ada3; border-left: 1px solid #20222b; line-height: 1.4;">{{ v.src }}</span><span style="padding: 11px 12px; border-left: 1px solid #20222b; color: {{ v.color }}; letter-spacing: 0.04em;">{{ v.status }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid #20222b; padding-top: 26px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;"><span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 13px; color: #f5b700;">07</span><span style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280;">FINDINGS</span></div>
+            <p style="font-size: 15px; line-height: 1.65; color: #cfd2c9; margin: 0 0 20px;">Before the consent banner is answered, the app already contacts the destinations below. Three of them receive coarse location.</p>
+            <div style="display: grid; gap: 11px;">
+              <sc-for list="{{ findings }}" as="f" hint-placeholder-count="4">
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px;"><span style="color: #f2f1ea;">{{ f.name }} <span style="color: {{ f.tagColor }};">{{ f.tag }}</span></span><span style="color: #a7ada3;">{{ f.count }}</span></div>
+                  <div style="height: 8px; background: #11121a; position: relative;"><div style="position: absolute; top: 0; bottom: 0; left: 0; width: {{ f.w }}; background: #f5b700;"></div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid #20222b; padding-top: 26px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px;"><span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 13px; color: #ff4d4d;">08</span><span style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280;">LIMITS</span></div>
+            <p style="font-size: 15px; line-height: 1.65; color: #cfd2c9; margin: 0;">One device, one session, one app version. This proves the requests happened — <span style="color: #f2f1ea;">not</span> that anyone intended harm, nor that the data was later sold. The leak is reproducible; the motive is not in scope.</p>
+          </div>
+
+          <div style="border-top: 1px solid #20222b; padding-top: 26px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px;"><span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 13px; color: #f5b700;">09</span><span style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280;">PUBLIC OUTPUT</span></div>
+            <p style="font-size: 15px; line-height: 1.65; color: #cfd2c9; margin: 0 0 14px;">This Case File, plus the raw request log and a one-page poster, are public and reproducible.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+              <a href="#" class="cf-link" style="font-size: 12px; color: #f2f1ea; border: 1px solid #2c2f3a; padding: 9px 13px; text-decoration: none;">Dataset (HAR) ↓</a>
+              <a href="#" class="cf-link" style="font-size: 12px; color: #f2f1ea; border: 1px solid #2c2f3a; padding: 9px 13px; text-decoration: none;">Poster ↓</a>
+              <a href="#" class="cf-link" style="font-size: 12px; color: #f2f1ea; border: 1px solid #2c2f3a; padding: 9px 13px; text-decoration: none;">Method notes ↓</a>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid #20222b; padding-top: 26px;">
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px;"><span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 13px; color: #b48cff;">10</span><span style="font-size: 11px; letter-spacing: 0.16em; color: #6b7280;">NEXT QUESTIONS</span></div>
+            <p style="font-size: 15px; line-height: 1.65; color: #a7ada3; margin: 0;">Where does the signal go after it leaves? <span style="color: #ff4d4d;">ROOK</span> follows the money to the broker. <span style="color: #b48cff;">VESPER</span> asks what a year of these leaks builds. Every answer is another file.</p>
+          </div>
+
+        </article>
+
+        <!-- RAIL -->
+        <aside class="cf-rail" style="position: sticky; top: 20px; display: grid; gap: 16px;">
+          <div style="border: 1px solid #20222b; border-top: 3px solid #f5b700; background: #0e0f14; padding: 18px;">
+            <div style="font-size: 10px; letter-spacing: 0.16em; color: #6b7280; margin-bottom: 14px;">AT A GLANCE</div>
+            <div style="display: grid; gap: 12px; font-size: 12px;">
+              <div><div style="color: #6b7280; margin-bottom: 3px;">CURATOR</div><div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 1.5px solid #f5b700; color: #f5b700; font-weight: 700; font-size: 11px;">K</span><span style="color: #f2f1ea;">KEY · Trace the watchers.</span></div></div>
+              <div style="border-top: 1px solid #20222b; padding-top: 10px;"><div style="color: #6b7280; margin-bottom: 3px;">SEVERITY</div><div style="color: #f5b700; letter-spacing: 0.2em;">●●●●<span style="color: #2c2f3a;">○</span></div></div>
+              <div style="border-top: 1px solid #20222b; padding-top: 10px;"><div style="color: #6b7280; margin-bottom: 3px;">ARTIFACT</div><div style="color: #f2f1ea;">Panopticon Case File</div></div>
+              <div style="border-top: 1px solid #20222b; padding-top: 10px;"><div style="color: #6b7280; margin-bottom: 3px;">SOURCES · READ</div><div style="color: #f2f1ea;">11 sources · 6 min</div></div>
+            </div>
+          </div>
+
+          <div style="border: 1px solid #20222b; background: #0e0f14; padding: 18px;">
+            <div style="font-size: 10px; letter-spacing: 0.16em; color: #6b7280; margin-bottom: 12px;">CITE THIS FILE</div>
+            <p style="font-size: 11px; line-height: 1.55; color: #a7ada3; margin: 0 0 13px;">{{ citation }}</p>
+            <button onClick="{{ onCopy }}" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: transparent; border: 1px solid {{ copyBorder }}; color: {{ copyColor }}; font-family: inherit; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 11px; cursor: pointer;">{{ copyLabel }}</button>
+          </div>
+
+          <a href="DATAVISM.dc.html" class="cf-link" style="display: flex; align-items: center; justify-content: space-between; border: 1px solid #20222b; background: #0e0f14; padding: 14px 16px; text-decoration: none; color: #a7ada3; font-size: 12px;">See it on the map <span style="color: #f5b700;">→</span></a>
+        </aside>
+      </div>
+
+      <!-- FOOTER -->
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid #20222b; padding: 26px 0 56px;">
+        <a href="#" class="cf-link" style="text-decoration: none; color: #a7ada3; font-size: 12px;"><span style="color: #6b7280;">← CF-06</span> &nbsp;Shell Network Map</a>
+        <span style="font-size: 10.5px; color: #565c66; letter-spacing: 0.06em;">Illustrative example · CC-BY · datavism.org</span>
+        <a href="#" class="cf-link" style="text-decoration: none; color: #a7ada3; font-size: 12px;">Ad-Tech Autopsy&nbsp; <span style="color: #6b7280;">CF-04 →</span></a>
+      </div>
+
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#f5b700&quot;,&quot;options&quot;:[&quot;#f5b700&quot;,&quot;#ffd23f&quot;,&quot;#3df07a&quot;,&quot;#ff4d4d&quot;,&quot;#4d8dff&quot;,&quot;#b48cff&quot;]}}">
+class Component extends DCLogic {
+  state = { copied: false };
+
+  citation = 'DATAVISM (2026). Case File CF-07 — Border Signal Leak. The Data Underground. datavism.org/cases/border-signal-leak';
+
+  onCopy() {
+    try {
+      navigator.clipboard.writeText(this.citation);
+      this.setState({ copied: true });
+      clearTimeout(this._t);
+      this._t = setTimeout(() => this.setState({ copied: false }), 2000);
+    } catch (e) { this.setState({ copied: true }); }
+  }
+
+  renderVals() {
+    const copied = this.state.copied;
+    return {
+      citation: this.citation,
+      sources: [
+        { n: '01', t: 'Network capture (HAR) — clean device, app v8.2, pre-consent session' },
+        { n: '02', t: 'App store privacy manifest & declared SDKs' },
+        { n: '03', t: 'Company & ownership registries (owner resolution)' },
+        { n: '04', t: 'DSA transparency database — declared ad partners' },
+      ],
+      verify: [
+        { claim: '42 distinct third parties contacted before consent', src: 'HAR capture', status: 'VERIFIED', color: '#39ff14' },
+        { claim: 'Coarse location present in 7 pre-consent payloads', src: 'decoded requests', status: 'VERIFIED', color: '#39ff14' },
+        { claim: 'Top destination owned by a major ad network', src: 'registry', status: 'PARTIAL', color: '#f5b700' },
+        { claim: 'Data resold to downstream brokers', src: '—', status: 'UNVERIFIED', color: '#6b7280' },
+      ],
+      findings: [
+        { name: 'adnet-edge.io', tag: '· location', tagColor: '#ff4d4d', count: '14 req', w: '100%' },
+        { name: 'trackr-sdk.net', tag: '· location', tagColor: '#ff4d4d', count: '11 req', w: '78%' },
+        { name: 'geo-ping.co', tag: '· location', tagColor: '#ff4d4d', count: '9 req', w: '64%' },
+        { name: 'metrics-hub.com', tag: '', tagColor: '#6b7280', count: '8 req', w: '57%' },
+      ],
+      onCopy: () => this.onCopy(),
+      copyLabel: copied ? 'Copied ✓' : 'Copy citation',
+      copyColor: copied ? '#39ff14' : '#f2f1ea',
+      copyBorder: copied ? '#39ff14' : '#2c2f3a',
+    };
+  }
+}
+</script>
+</body>
+</html>

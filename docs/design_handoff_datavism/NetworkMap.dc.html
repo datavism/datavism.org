@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@700;800&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @keyframes dv-draw { from { stroke-dashoffset: var(--len); } to { stroke-dashoffset: 0; } }
+  .dv-line { animation: dv-draw 1.7s cubic-bezier(.65,0,.2,1) both; }
+  @keyframes dv-packets { to { stroke-dashoffset: -480; } }
+  .dv-packets { animation: dv-packets 7s linear infinite; }
+  @keyframes dv-pulse { 0%,100% { opacity: .5; transform: scale(1); } 60% { opacity: 0; transform: scale(1.5); } }
+  .dv-pulse { transform-box: fill-box; transform-origin: center; animation: dv-pulse 2.8s ease-out infinite; }
+  @keyframes dv-spin { to { transform: rotate(360deg); } }
+  .dv-spin { transform-box: fill-box; transform-origin: center; animation: dv-spin 22s linear infinite; }
+  @media (prefers-reduced-motion: reduce) { .dv-pulse, .dv-spin, .dv-packets { animation: none !important; } .dv-line { animation: none !important; stroke-dashoffset: 0 !important; } }
+</style>
+</helmet>
+<div style="width: 100%; display: block;">{{ map }}</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1000,&quot;height&quot;:540},&quot;statuses&quot;:{&quot;editor&quot;:null},&quot;selected&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:null},&quot;onSelect&quot;:{&quot;editor&quot;:null},&quot;liveLine&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;g&quot;},&quot;dimInactive&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true},&quot;labels&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd23f&quot;}}">
+class Component extends DCLogic {
+  state = { hovered: null, internalSel: null };
+
+  GEO = {
+    g1: { x: 150, y: 290, anchor: 'above', terminus: true }, g2: { x: 320, y: 290, anchor: 'above' }, g3: { x: 490, y: 290, anchor: 'above' }, g4: { x: 600, y: 350, anchor: 'left' }, g5: { x: 660, y: 410, anchor: 'left' },
+    k1: { x: 900, y: 120, anchor: 'above', terminus: true }, k2: { x: 810, y: 120, anchor: 'above' }, k3: { x: 720, y: 210, anchor: 'right' }, k4: { x: 720, y: 300, anchor: 'right' }, k5: { x: 720, y: 400, anchor: 'right' },
+    r1: { x: 1290, y: 300, anchor: 'left', terminus: true }, r2: { x: 1290, y: 400, anchor: 'left' }, r3: { x: 1130, y: 470, anchor: 'above' }, r4: { x: 990, y: 470, anchor: 'above' }, r5: { x: 850, y: 470, anchor: 'above' },
+    b1: { x: 1110, y: 650, anchor: 'below', terminus: true }, b2: { x: 985, y: 650, anchor: 'below' }, b3: { x: 850, y: 600, anchor: 'right' }, b4: { x: 800, y: 550, anchor: 'right' }, b5: { x: 760, y: 510, anchor: 'right' },
+    v1: { x: 150, y: 650, anchor: 'below', terminus: true }, v2: { x: 320, y: 650, anchor: 'below' }, v3: { x: 490, y: 650, anchor: 'below' }, v4: { x: 600, y: 590, anchor: 'left' }, v5: { x: 660, y: 530, anchor: 'left' },
+  };
+
+  ROUTEPTS = {
+    g: [[150, 290], [540, 290], [720, 470]], k: [[900, 120], [720, 120], [720, 470]], r: [[1290, 300], [1290, 470], [720, 470]], b: [[1110, 650], [900, 650], [720, 470]], v: [[150, 650], [540, 650], [720, 470]],
+  };
+
+  LC = { g: '#3df07a', k: '#f5b700', r: '#ff4d4d', b: '#4d8dff', v: '#b48cff' };
+
+  LINES = [
+    { id: 'g', st: [['g1', 'G1', 'THE FOLDER', 'open'], ['g2', 'G2', 'COMMAND', 'announced'], ['g3', 'G3', 'INTAKE', 'locked'], ['g4', 'G4', 'THE CONFIDENT LIE', 'locked'], ['g5', 'G5', 'MASCHINENRAUM', 'locked']] },
+    { id: 'k', st: [['k1', 'K1', 'FOOTPRINTS', 'locked'], ['k2', 'K2', 'SIGNALS', 'locked'], ['k3', 'K3', 'IDENTITY GRAPH', 'locked'], ['k4', 'K4', 'WATCHTOWER', 'locked'], ['k5', 'K5', 'PANOPTICON FILE', 'locked']] },
+    { id: 'r', st: [['r1', 'R1', 'LEDGER', 'locked'], ['r2', 'R2', 'ACTORS', 'locked'], ['r3', 'R3', 'FLOWS', 'locked'], ['r4', 'R4', 'LEVERAGE', 'locked'], ['r5', 'R5', 'MAMMON FILE', 'locked']] },
+    { id: 'b', st: [['b1', 'B1', 'SOURCE', 'locked'], ['b2', 'B2', 'CAPTURE', 'locked'], ['b3', 'B3', 'NORMALIZE', 'locked'], ['b4', 'B4', 'DETECT', 'locked'], ['b5', 'B5', 'FEED AUTOPSY', 'locked']] },
+    { id: 'v', st: [['v1', 'V1', 'ARCHIVE', 'locked'], ['v2', 'V2', 'PATTERNS', 'locked'], ['v3', 'V3', 'SCENARIOS', 'locked'], ['v4', 'V4', 'IMPACT', 'locked'], ['v5', 'V5', 'CUMULUS FILE', 'locked']] },
+  ];
+
+  stations() {
+    const out = [];
+    this.LINES.forEach((L) => L.st.forEach((s) => out.push({ id: s[0], code: s[1], title: s[2], def: s[3], lineId: L.id, color: this.LC[L.id] })));
+    return out;
+  }
+
+  selId() { return this.props.selected != null ? this.props.selected : this.state.internalSel; }
+  select(id) { if (typeof this.props.onSelect === 'function') this.props.onSelect(id); else this.setState({ internalSel: id }); }
+
+  pathLen(pts) { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y); return Math.round(L); }
+
+  roundedPath(pts, r) {
+    if (!pts.length) return '';
+    let d = 'M ' + pts[0].x + ' ' + pts[0].y;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const prev = pts[i - 1], p = pts[i], next = pts[i + 1];
+      const v1x = p.x - prev.x, v1y = p.y - prev.y, l1 = Math.hypot(v1x, v1y);
+      const v2x = next.x - p.x, v2y = next.y - p.y, l2 = Math.hypot(v2x, v2y);
+      const rr = Math.min(r, l1 / 2, l2 / 2);
+      d += ' L ' + (p.x - v1x / l1 * rr) + ' ' + (p.y - v1y / l1 * rr) + ' Q ' + p.x + ' ' + p.y + ' ' + (p.x + v2x / l2 * rr) + ' ' + (p.y + v2y / l2 * rr);
+    }
+    const last = pts[pts.length - 1];
+    return d + ' L ' + last.x + ' ' + last.y;
+  }
+
+  labelPos(x, y, a) {
+    if (a === 'above') return { cx: x, cy: y - 17, tx: x, ty: y - 28, ta: 'middle' };
+    if (a === 'below') return { cx: x, cy: y + 19, tx: x, ty: y + 30, ta: 'middle' };
+    if (a === 'left') return { cx: x - 13, cy: y - 2, tx: x - 13, ty: y + 9, ta: 'end' };
+    return { cx: x + 13, cy: y - 2, tx: x + 13, ty: y + 9, ta: 'start' };
+  }
+
+  buildMap() {
+    const h = React.createElement;
+    const LC = this.LC;
+    const accent = this.props.accent || '#ffd23f';
+    const liveLine = this.props.liveLine || 'g';
+    const dimInactive = this.props.dimInactive !== false;
+    const showLabels = this.props.labels !== false;
+    const statuses = this.props.statuses || {};
+    const selId = this.selId();
+    const hov = this.state.hovered;
+    const selLineId = (selId || '').charAt(0);
+    const kids = [];
+
+    kids.push(h('defs', { key: 'd' },
+      h('filter', { id: 'dvg', x: '-50%', y: '-50%', width: '200%', height: '200%' },
+        h('feGaussianBlur', { stdDeviation: 3.4, result: 'b' }),
+        h('feMerge', null, h('feMergeNode', { in: 'b' }), h('feMergeNode', { in: 'SourceGraphic' }))),
+      h('pattern', { id: 'dvgrid', width: 40, height: 40, patternUnits: 'userSpaceOnUse' },
+        h('path', { d: 'M40 0 H0 V40', fill: 'none', stroke: '#111922', strokeWidth: 1 }))));
+    kids.push(h('rect', { key: 'bg', x: 0, y: 0, width: 1440, height: 760, fill: 'url(#dvgrid)' }));
+
+    const RP = this.ROUTEPTS;
+    const order = { g: 0, k: 1, r: 2, b: 3, v: 4 };
+    Object.keys(RP).forEach((id) => {
+      const d = this.roundedPath(RP[id].map((p) => ({ x: p[0], y: p[1] })), 26);
+      kids.push(h('path', { key: id + 'cas', d, fill: 'none', stroke: '#0b0c10', strokeWidth: 16, strokeLinecap: 'round', strokeLinejoin: 'round' }));
+    });
+    Object.keys(RP).forEach((id) => {
+      const pts = RP[id].map((p) => ({ x: p[0], y: p[1] }));
+      const d = this.roundedPath(pts, 26);
+      const L = this.pathLen(pts);
+      const delay = order[id] * 0.13;
+      const isLive = id === liveLine;
+      const isSel = id === selLineId;
+      const on = isLive || isSel;
+      const op = dimInactive ? (on ? 1 : 0.32) : (on ? 1 : 0.85);
+      kids.push(h('path', {
+        key: id + 'ln', d, className: 'dv-line', fill: 'none', stroke: LC[id],
+        strokeWidth: isSel ? 9 : (isLive ? 8 : 7), strokeLinecap: 'round', strokeLinejoin: 'round',
+        opacity: op, strokeDasharray: L,
+        style: { '--len': L, animationDelay: delay + 's', transition: 'opacity .4s ease, stroke-width .4s ease' },
+      }));
+      if (isLive || isSel) {
+        kids.push(h('path', { key: id + 'pk', d, className: 'dv-packets', fill: 'none', stroke: '#f2fffb', strokeWidth: 3.6, strokeLinecap: 'round', strokeDasharray: '2 22', opacity: isLive ? 1 : 0.7, style: { animationDelay: (1.5 + delay) + 's', pointerEvents: 'none' } }));
+      }
+    });
+
+    this.stations().forEach((s) => {
+      const g = this.GEO[s.id];
+      const x = g.x, y = g.y, col = s.color;
+      const status = statuses[s.id] || s.def;
+      const isSel = s.id === selId, isHov = s.id === hov;
+      const baseR = g.terminus ? 8 : 7;
+
+      kids.push(h('circle', { key: s.id + 'h', cx: x, cy: y, r: 19, fill: 'transparent', style: { cursor: 'pointer' }, onClick: () => this.select(s.id), onMouseEnter: () => this.setState({ hovered: s.id }), onMouseLeave: () => this.setState({ hovered: null }) }));
+      if (isSel) kids.push(h('circle', { key: s.id + 'sel', cx: x, cy: y, r: 13, fill: 'none', stroke: accent, strokeWidth: 1.6, filter: 'url(#dvg)', style: { pointerEvents: 'none' } }));
+
+      const m = [];
+      if (status === 'completed') {
+        m.push(h('circle', { key: 'a', cx: x, cy: y, r: baseR, fill: '#0b0c10', stroke: '#3df07a', strokeWidth: 2.6 }));
+        m.push(h('path', { key: 'c', d: 'M ' + (x - 3.4) + ' ' + (y + 0.3) + ' L ' + (x - 1) + ' ' + (y + 2.7) + ' L ' + (x + 3.9) + ' ' + (y - 2.9), fill: 'none', stroke: '#3df07a', strokeWidth: 1.9, strokeLinecap: 'round', strokeLinejoin: 'round' }));
+      } else if (status === 'current') {
+        m.push(h('circle', { key: 'p', cx: x, cy: y, r: 13, fill: 'none', stroke: col, strokeWidth: 1.3, opacity: 0.5, className: 'dv-pulse' }));
+        m.push(h('circle', { key: 'a', cx: x, cy: y, r: 8, fill: '#0b0c10', stroke: col, strokeWidth: 3, filter: 'url(#dvg)' }));
+        m.push(h('circle', { key: 'b', cx: x, cy: y, r: 3.4, fill: col }));
+      } else if (status === 'unlocked') {
+        m.push(h('circle', { key: 'a', cx: x, cy: y, r: baseR, fill: '#0b0c10', stroke: '#4d8dff', strokeWidth: 2.6 }));
+        m.push(h('circle', { key: 'b', cx: x, cy: y, r: 2.6, fill: '#4d8dff' }));
+      } else if (status === 'open') {
+        m.push(h('circle', { key: 'a', cx: x, cy: y, r: baseR, fill: '#0b0c10', stroke: col, strokeWidth: 3 }));
+        m.push(h('circle', { key: 'b', cx: x, cy: y, r: 2.6, fill: col }));
+      } else if (status === 'locked') {
+        m.push(h('circle', { key: 'a', cx: x, cy: y, r: 6.5, fill: '#0b0c10', stroke: col, strokeWidth: 3, strokeDasharray: '3 3', opacity: 0.55 }));
+      } else {
+        m.push(h('circle', { key: 'a', cx: x, cy: y, r: baseR, fill: '#0b0c10', stroke: col, strokeWidth: 2.6 }));
+      }
+      kids.push(h('g', { key: s.id + 'm', style: { pointerEvents: 'none' } }, m));
+
+      if (showLabels) {
+        const lp = this.labelPos(x, y, g.anchor);
+        const dim = status === 'locked' && !isSel && !isHov;
+        kids.push(h('text', { key: s.id + 'lc', x: lp.cx, y: lp.cy, textAnchor: lp.ta, fontFamily: "'Spline Sans Mono', monospace", fontSize: 11.5, fontWeight: 700, fill: col, opacity: dim ? 0.72 : 1, style: { pointerEvents: 'none', letterSpacing: '0.03em' } }, s.code));
+        kids.push(h('text', { key: s.id + 'lt', x: lp.tx, y: lp.ty, textAnchor: lp.ta, fontFamily: "'Spline Sans Mono', monospace", fontSize: 8.8, fontWeight: 500, fill: isSel ? '#f2f1ea' : '#7c8276', opacity: dim ? 0.72 : 1, style: { pointerEvents: 'none', letterSpacing: '0.02em' } }, s.title));
+      }
+    });
+
+    kids.push(h('circle', { key: 'hp', cx: 720, cy: 470, r: 62, fill: 'none', stroke: '#39ff14', strokeWidth: 1.4, opacity: 0.45, className: 'dv-pulse' }));
+    kids.push(h('circle', { key: 'hspin', cx: 720, cy: 470, r: 58, fill: 'none', stroke: '#39ff14', strokeWidth: 1, strokeDasharray: '2 9', opacity: 0.45, className: 'dv-spin' }));
+    kids.push(h('circle', { key: 'h0', cx: 720, cy: 470, r: 54, fill: '#0b0c10', stroke: '#343843', strokeWidth: 1.5 }));
+    const GH = 'M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z';
+    kids.push(h('g', { key: 'gh', transform: 'translate(680,420) scale(0.62)' },
+      h('path', { d: GH, fill: 'none', stroke: '#ff2a6d', strokeWidth: 12, opacity: 0.9, transform: 'translate(3,3)' }),
+      h('path', { d: GH, fill: 'none', stroke: '#39ff14', strokeWidth: 10, strokeLinejoin: 'round', filter: 'url(#dvg)' }),
+      h('circle', { cx: 78, cy: 64, r: 7, fill: '#39ff14' }), h('circle', { cx: 110, cy: 64, r: 7, fill: '#39ff14' })));
+    kids.push(h('text', { key: 'hl1', x: 720, y: 556, textAnchor: 'middle', fontFamily: "'Martian Mono', monospace", fontSize: 14, fontWeight: 800, fill: '#f2f1ea', style: { letterSpacing: '-0.02em' } }, 'THE GHOST'));
+    kids.push(h('text', { key: 'hl2', x: 720, y: 572, textAnchor: 'middle', fontFamily: "'Spline Sans Mono', monospace", fontSize: 9.5, fontWeight: 600, fill: '#39ff14', style: { letterSpacing: '0.12em' } }, 'CONVERGENCE · ALL LINES'));
+
+    return h('svg', { viewBox: '0 0 1440 760', width: '100%', role: 'img', 'aria-label': 'DATAVISM underground network map: five lines and 25 stations meeting at the Ghost interchange', style: { display: 'block', width: '100%', height: 'auto' } }, kids);
+  }
+
+  renderVals() { return { map: this.buildMap() }; }
+}
+</script>
+</body>
+</html>

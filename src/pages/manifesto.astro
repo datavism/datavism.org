@@ -1,47 +1,258 @@
 ---
-// src/pages/manifesto.astro — copy source of truth: docs/MANIFESTO.md (v2)
+// Manifesto v0.2 — "The Evidence Engine". Long-form reading page (width 780),
+// recreated from docs/design_handoff_datavism/Manifesto.dc.html. Static copy.
 import Base from '../layouts/Base.astro'
-import GhostLogo from '../components/GhostLogo.astro'
+
+const trackList = ['Your clicks.', 'Your pauses.', 'Your location.', 'Your face.', 'Your purchases.', 'Your fears.', 'Your habits.', 'Your future value.']
+const lines = [
+  { code: 'G', title: 'GHOST / Foundation', tagline: 'G teaches the method.', stations: 'Question · Command · Intake · Verification · Evaluation', question: 'Before you investigate the world, you learn how not to fool yourself.', color: '#3df07a' },
+  { code: 'K', title: 'KEY / Tracking & OSINT', tagline: 'K traces surveillance.', stations: 'Footprints · Signals · Identity graphs · Watchtowers · Panopticon files', question: 'Who watches us, and how?', color: '#f5b700' },
+  { code: 'R', title: 'ROOK / Economy & Power', tagline: 'R follows power.', stations: 'Ledgers · Actors · Flows · Leverage · Mammon files', question: 'Who benefits?', color: '#ff4d4d' },
+  { code: 'B', title: 'BITE / Feeds & Behavior', tagline: 'B decodes behavior.', stations: 'Sources · Capture · Normalization · Detection · Feed autopsies', question: 'Why do we keep watching, clicking, scrolling and returning?', color: '#4d8dff' },
+  { code: 'V', title: 'VESPER / Climate & Future', tagline: 'V reads the future.', stations: 'Archives · Patterns · Scenarios · Impact · Cumulus files', question: 'What changes over time, and what remains when the feed has moved on?', color: '#b48cff' },
+]
+const rules = [
+  'No claim without evidence.',
+  'No AI output without verification.',
+  'No outrage without an artifact.',
+  'No fake numbers. No fake social proof.',
+  'No tracking disguised as community.',
+  'No dark patterns in the name of growth.',
+  'No hero mythology without method.',
+  'No movement without work.',
+  'No monetization that corrupts the mission.',
+]
+const builds = [
+  { head: 'Maps', items: ['Of incentives.', 'Of surveillance.', 'Of ownership.', 'Of feeds.', 'Of risk.', 'Of what was too hidden to see.'] },
+  { head: 'Methods', items: ['Question design.', 'AI commanding.', 'Source intake.', 'Data wrangling.', 'Verification & OSINT.', 'Flow & signal mapping.', 'Scenario thinking.'] },
+  { head: 'Artifacts', items: ['Briefs.', 'Logs.', 'Tables.', 'Graphs.', 'Monitors.', 'Protocols.', 'Case Files.'] },
+]
+const whyMatters = [
+  'If people cannot inspect those systems, democracy becomes decorative.',
+  'If people cannot question machine outputs, truth becomes interface.',
+  'If people cannot follow money, power becomes fog.',
+  'If people cannot read long signals, crisis becomes surprise.',
+  'If people cannot produce evidence, outrage becomes weather.',
+]
+const invite = [
+  'A system that bothers you.',
+  'A claim that feels too smooth.',
+  'A pattern that keeps appearing.',
+  'A dataset nobody has opened.',
+  'A feed that keeps pulling people in.',
+  'A money trail that explains too much.',
+  'A long signal that deserves attention.',
+]
+const signal = [
+  { a: 'They track you.', b: 'Learn to track back.' },
+  { a: 'They model you.', b: 'Learn to model the system.' },
+  { a: 'They optimize the feed.', b: 'Learn to inspect the loop.' },
+  { a: 'They hide power in complexity.', b: 'Learn to turn complexity into evidence.' },
+]
 ---
-<Base title="The Datavism Manifesto — Data Underground">
-  <div class="flex items-center gap-4">
-    <GhostLogo size={44} />
-    <div>
-      <p class="text-phosphor-dim tracking-[0.35em] text-xs">DATAVISM</p>
-      <h1 class="text-phosphor-hi text-3xl font-bold mt-1">THE MANIFESTO</h1>
-    </div>
-  </div>
+<Base title="Manifesto — DATAVISM" description="Manifesto v0.2 · The Evidence Engine. Power has become computational. Turn hidden systems into public evidence." active="manifesto">
+  <main class="mf">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="eb green">// MANIFESTO v0.2 · THE EVIDENCE ENGINE</div>
+      <h1 class="font-display title">THEY<br />TRACK<br />YOU.</h1>
+      <div class="tracklist">{trackList.map((t) => <span>{t}</span>)}</div>
+      <p class="big">They turn your life into signals. Then they <span class="sig">optimize against you</span>.</p>
+      <p class="p">Not always with malice. Often with dashboards. With models. With bidding and ranking systems. With risk scores and recommendation engines. With plausible language and invisible incentives.</p>
+      <p class="font-display punch">The machine does not need to hate you.<br /><span class="green">It only needs to measure you.</span></p>
+    </section>
 
-  <section class="mt-10 space-y-4 leading-relaxed">
-    <h2 class="text-signal font-bold">THE PROBLEM</h2>
-    <p>Algorithms decide more of your life than you know. What you see, what you pay, what you’re offered, what you believe — computed for someone else’s profit.</p>
-    <p class="text-phosphor-hi font-bold">You are not the customer. You are the product being optimized.</p>
-    <p>And now the machines that profile you write poetry. AI didn’t level the field — it tilted it further. The corporations that track you run frontier models on your data. You get a chat window and a subscription.</p>
-    <p>Meanwhile you’re told to “trust the algorithm” — while the algorithm is a trade secret, the data is locked away, and the manipulation is deniable by design.</p>
-  </section>
+    <section class="sec">
+      <div class="eb">// THE PROBLEM</div>
+      <h2 class="font-display">Power has become computational.</h2>
+      <p class="p">It hides in feeds. In prices. In targeting systems. In ownership chains. In datasets. In defaults — in the gap between what a system says it does and what it actually optimizes.</p>
+      <p class="p lead">Most people feel the system. Few can inspect it. That is the imbalance.</p>
+      <p class="p">A small number of institutions can turn the world into data. A much larger number of people have to live inside the results.</p>
+    </section>
 
-  <section class="mt-10 space-y-4 leading-relaxed">
-    <h2 class="text-signal font-bold">THE SOLUTION</h2>
-    <p><strong class="text-phosphor-hi">Datavism</strong> — the practice of turning data into evidence, and evidence into change.</p>
-    <p>We don’t teach you to code. The machines code now.<br/>
-       We teach you to <strong class="text-phosphor-hi">command</strong>: to orchestrate AI, to ask the questions that break a cover story, to build pipelines with a co-pilot instead of a keyboard-decade, to check the machine’s work — because the machine lies confidently.</p>
-    <p>You learn by doing what the Underground does: real investigations on real data against real systems of manipulation. Your homework makes the digital world more transparent. Your capstone is not a certificate — it’s a case file in the Vault.</p>
-    <p class="text-phosphor-hi font-bold">The same tools they use on you. Pointed back.</p>
-  </section>
+    <section class="sec">
+      <div class="eb">// THE OLD LITERACY IS NOT ENOUGH</div>
+      <h2 class="font-display">Reading was once enough to challenge power.</h2>
+      <p class="p">Then media literacy. Then digital literacy. Then data literacy. Now the machines write, code, summarize, classify, predict, rank and decide. So literacy must change again.</p>
+      <p class="p lead">It is no longer enough to know how to use a tool. We need to know how to question a system.</p>
+      <p class="p">How to follow a signal. How to inspect a claim. How to trace an incentive. How to verify a machine. How to turn scattered evidence into something public. <span class="ink">That is the work.</span></p>
+    </section>
 
-  <section class="mt-10 space-y-4 leading-relaxed">
-    <h2 class="text-signal font-bold">THE MISSION</h2>
-    <p>Train a generation of <strong class="text-phosphor-hi">Datavists</strong> — people who can make any algorithm explain itself.</p>
-    <p>Build the infrastructure of algorithmic accountability: a network of trained eyes, a growing archive of case files, an AI mentor — GHOST — that gets sharper with every graduate.</p>
-    <p>Keep the bootcamp open: free to learn, sliding-scale to join a cohort, funded by the mission — never by selling you.</p>
-    <p class="text-phosphor-hi font-bold">When every citizen can analyze data, evil has nowhere to hide.</p>
-  </section>
+    <section class="sec">
+      <div class="eb">// WE ARE NOT HERE TO TEACH CODING</div>
+      <p class="p lead">The machines can write code now. That does not make humans obsolete. It changes the human job.</p>
+      <p class="p">The new work is not typing every line by hand. It is asking better questions. Commanding AI with intent. Finding sources. Structuring evidence. Checking claims. Understanding uncertainty. Publishing what holds.</p>
+      <p class="p">Code may appear. SQL may appear. Scrapers, notebooks, APIs may appear. But they are not the point. <span class="sig">The point is evidence.</span></p>
+    </section>
 
-  <blockquote class="mt-12 border-l-2 border-signal pl-4 text-phosphor-hi leading-relaxed">
-    <p>They track you. Learn to track back.</p>
-    <p>The revolution will be computed.</p>
-    <p class="text-signal mt-2">— The Data Underground</p>
-  </blockquote>
+    <section class="sec">
+      <div class="eb green">// DATAVISM IS AN EVIDENCE ENGINE</div>
+      <h2 class="font-display">A data-activism lab for the AI era.</h2>
+      <p class="p">A place where people learn to investigate hidden systems with AI, data and verifiable methods. Not by watching passive tutorials. Not by collecting certificates. Not by trusting the machine. Not by shouting into the feed. <span class="ink">By opening cases.</span></p>
+      <p class="p">Every line is a method. Every station is a capability. Every capability produces an artifact. Every artifact can become a <span class="sig">Case File</span>.</p>
+      <div class="callout">
+        <p class="co-lead">A Case File is not homework. It is a public record of a question, a method, a source trail, a verification process and a finding.</p>
+        <div class="co-list">
+          <span>This is what we asked.</span><span>This is what we found.</span><span>This is how we checked it.</span><span>This is what remains uncertain.</span><span>This is what should be investigated next.</span>
+        </div>
+        <p class="co-foot">That is how suspicion becomes evidence.</p>
+      </div>
+    </section>
 
-  <p class="mt-10 text-sm"><a class="text-signal underline decoration-dashed underline-offset-4" href="/">← back to the entrance</a></p>
+    <section class="sec">
+      <div class="eb">// THE LINES · FIVE METHODS, ONE NETWORK</div>
+      <div class="lines">
+        {lines.map((l) => (
+          <div class="line" style={`border-left:3px solid ${l.color};`}>
+            <div class="line-head">
+              <span class="font-display line-code" style={`color:${l.color};`}>{l.code}</span>
+              <span class="line-title">{l.title}</span>
+              <span class="line-tag" style={`color:${l.color};`}>{l.tagline}</span>
+            </div>
+            <div class="line-stations">{l.stations}</div>
+            <div class="line-q">{l.question}</div>
+          </div>
+        ))}
+      </div>
+      <p class="font-display close-line">Five lines. Twenty-five stations. One network. <span class="green">Every line ends in a Case File.</span></p>
+    </section>
+
+    <section class="sec">
+      <div class="eb">// GHOST</div>
+      <h2 class="font-display">Ghost is the voice in the machine room.</h2>
+      <p class="p">Not an oracle. Not a guru. It does not ask you to believe — it asks you to check. It does not replace judgment; it trains it.</p>
+      <p class="p">It helps you command AI, but teaches you to distrust fluent answers. It gives you tools, but asks what the tools hide. It opens the door, but you still have to read the file.</p>
+      <p class="p lead">The machine can assist. It cannot absolve.</p>
+    </section>
+
+    <section class="sec">
+      <div class="eb red">// OUR RULES</div>
+      <div class="rules">
+        {rules.map((r) => <div class="rule"><span class="x">×</span>{r}</div>)}
+      </div>
+      <div class="rules-foot">
+        <p>We would rather be slower than manipulative.</p>
+        <p>We would rather be smaller than dishonest.</p>
+        <p class="sig">We would rather publish uncertainty than sell certainty we do not have.</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="eb">// WHAT WE BUILD</div>
+      <div class="builds">
+        {builds.map((b) => (
+          <div class="build">
+            <div class="font-display build-head">{b.head}</div>
+            <div class="build-items">{b.items.map((i) => <span>{i}</span>)}</div>
+          </div>
+        ))}
+      </div>
+      <p class="font-display close-line">We build people who can build evidence. <span class="green">Those people are Datavists.</span></p>
+    </section>
+
+    <section class="sec">
+      <div class="eb">// WHY THIS MATTERS</div>
+      <div class="why">{whyMatters.map((w) => <div class="why-row">{w}</div>)}</div>
+      <p class="p" style="margin-top:24px;">The ability to investigate systems must not belong only to states, corporations, consultants and intelligence teams. <span class="sig">It must become civic infrastructure.</span></p>
+    </section>
+
+    <section class="sec">
+      <div class="eb">// THE INVITATION</div>
+      <h2 class="font-display">You don't need permission. You need a question.</h2>
+      <p class="p">Not a programmer. Not an expert. Bring a system that bothers you — and the network teaches the method.</p>
+      <div class="invite">{invite.map((x) => <div class="inv"><span class="green">&gt;</span>{x}</div>)}</div>
+    </section>
+
+    <!-- THE SIGNAL / CLOSE -->
+    <section class="sec close">
+      <div class="eb green">// THE SIGNAL</div>
+      <div class="signal">
+        {signal.map((s) => (
+          <div>
+            <div class="sig-a">{s.a}</div>
+            <div class="font-display sig-b">{s.b}</div>
+          </div>
+        ))}
+      </div>
+      <p class="font-display turn">Turn hidden systems into <span class="sig">public evidence</span>.</p>
+      <p class="p tagline">DATAVISM is not a course. DATAVISM is the map. The map is the method. <span class="green">The method is the movement.<span class="dv-cursor">▋</span></span></p>
+      <div class="ctas">
+        <a class="cta-yellow" href="/#waitlist">Join the waitlist →</a>
+        <a class="cta-ghost" href="/line-g">Enter through G</a>
+      </div>
+      <div class="colophon">DATAVISM · MANIFESTO v0.2 · THE DATA UNDERGROUND · datavism.org</div>
+    </section>
+  </main>
 </Base>
+
+<style>
+  .mf { max-width: 780px; margin: 0 auto; padding: 0 28px 60px; }
+  .eb { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--color-ink-4); margin-bottom: 16px; }
+  .eb.green { color: var(--color-ghost); letter-spacing: 0.22em; }
+  .eb.red { color: var(--color-line-r); }
+  .green { color: var(--color-ghost); }
+  .sig { color: var(--color-signal); }
+  .ink { color: var(--color-ink); }
+
+  .hero { padding: 60px 0 44px; }
+  .hero .eb { margin-bottom: 30px; }
+  .title { font-weight: 800; font-size: clamp(44px, 9vw, 104px); line-height: 0.92; letter-spacing: -0.05em; margin: 0; }
+  .tracklist { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 32px 0 0; }
+  .tracklist span { font-size: 14px; color: var(--color-ink-3); }
+  .big { font-size: clamp(18px, 2.4vw, 24px); line-height: 1.4; color: var(--color-ink); margin: 34px 0 0; max-width: 26ch; }
+  .punch { font-weight: 700; font-size: clamp(20px, 2.8vw, 30px); line-height: 1.2; letter-spacing: -0.03em; color: var(--color-ink); margin: 30px 0 0; text-transform: uppercase; }
+
+  .sec { padding: 44px 0; border-top: 1px solid var(--color-edge); }
+  .sec h2 { font-weight: 800; font-size: clamp(24px, 3.6vw, 38px); line-height: 1.05; letter-spacing: -0.035em; margin: 0 0 20px; text-transform: uppercase; }
+  .p { font-size: 16px; line-height: 1.7; color: var(--color-ink-2); margin: 0 0 16px; }
+  .p.lead { font-size: 17px; color: var(--color-ink); }
+  .p:last-child { margin-bottom: 0; }
+
+  .callout { border: 1px solid var(--color-edge); border-left: 3px solid var(--color-signal); background: var(--color-panel); padding: 20px 22px; margin-top: 8px; }
+  .co-lead { margin: 0; color: var(--color-ink); line-height: 1.7; font-size: 16px; }
+  .co-list { display: grid; gap: 4px; margin-top: 14px; font-size: 14px; color: var(--color-ink-3); }
+  .co-foot { margin: 16px 0 0; color: var(--color-ghost); }
+
+  .lines { display: grid; gap: 14px; }
+  .line { padding: 4px 0 4px 20px; }
+  .line-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .line-code { font-weight: 800; font-size: 22px; }
+  .line-title { font-size: 14px; font-weight: 700; color: var(--color-ink); }
+  .line-tag { font-size: 12px; }
+  .line-stations { font-size: 12.5px; color: var(--color-ink-4); margin: 8px 0 4px; }
+  .line-q { font-size: 14px; color: var(--color-ink-2); }
+  .close-line { font-weight: 700; font-size: 18px; letter-spacing: -0.02em; color: var(--color-ink); margin: 26px 0 0; text-transform: uppercase; }
+
+  .rules { display: grid; gap: 10px; }
+  .rule { display: flex; gap: 12px; align-items: baseline; font-size: 15px; line-height: 1.5; color: var(--color-ink); }
+  .rule .x { color: var(--color-line-r); }
+  .rules-foot { border-top: 1px solid var(--color-edge); margin-top: 24px; padding-top: 22px; display: grid; gap: 8px; }
+  .rules-foot p { margin: 0; font-size: 16px; color: var(--color-ink-2); }
+  .rules-foot p.sig { color: var(--color-signal); }
+
+  .builds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--color-edge); border: 1px solid var(--color-edge); }
+  .build { background: var(--color-panel-2); padding: 20px; }
+  .build-head { font-weight: 700; font-size: 16px; color: var(--color-ink); margin-bottom: 12px; }
+  .build-items { display: grid; gap: 5px; font-size: 12.5px; color: var(--color-ink-3); }
+
+  .why { display: grid; gap: 11px; }
+  .why-row { font-size: 15.5px; line-height: 1.5; color: var(--color-ink); }
+
+  .invite { display: grid; gap: 9px; margin-top: 6px; }
+  .inv { display: flex; gap: 12px; align-items: baseline; font-size: 14px; color: var(--color-ink-3); }
+
+  .close { padding: 56px 0 20px; }
+  .signal { display: grid; gap: 16px; }
+  .sig-a { font-size: 15px; color: var(--color-ink-4); }
+  .sig-b { font-weight: 700; font-size: clamp(18px, 2.6vw, 26px); letter-spacing: -0.02em; color: var(--color-ink); }
+  .turn { font-weight: 800; font-size: clamp(26px, 4.6vw, 50px); line-height: 1.02; letter-spacing: -0.04em; color: var(--color-ink); margin: 44px 0 0; text-transform: uppercase; }
+  .tagline { margin: 18px 0 0; font-size: 14px; color: var(--color-ink-3); }
+  .ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+  .cta-yellow { display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; text-decoration: none; padding: 15px 26px; background: var(--color-signal); color: var(--color-panel-2); }
+  .cta-yellow:hover { background: var(--color-signal-hi); }
+  .cta-ghost { display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; padding: 15px 26px; border: 1px solid var(--color-edge-2); color: var(--color-ink); }
+  .cta-ghost:hover { border-color: var(--color-ink-3); }
+  .colophon { font-size: 10.5px; color: var(--color-ink-5); letter-spacing: 0.08em; margin-top: 40px; }
+
+  @media (max-width: 820px) { .builds { grid-template-columns: 1fr; } }
+</style>

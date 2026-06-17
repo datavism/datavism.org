@@ -150,8 +150,11 @@
      compositor reuses the same rasterized image — no per-frame filter recompute
      (animating feTurbulence's seed/baseFrequency would be the expensive way). */
   .noise {
-    position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.2;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='3' intercept='-1'/%3E%3CfeFuncG type='linear' slope='3' intercept='-1'/%3E%3CfeFuncB type='linear' slope='3' intercept='-1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23s)'/%3E%3C/svg%3E");
+    position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.4;
+    /* feColorMatrix flattens the turbulence to OPAQUE grayscale (alpha=1) so the
+       speckles aren't lost to the noise's own alpha; feComponentTransfer pushes
+       it to high-contrast black/white = real snow. */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 0 1'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='4' intercept='-1.4'/%3E%3CfeFuncG type='linear' slope='4' intercept='-1.4'/%3E%3CfeFuncB type='linear' slope='4' intercept='-1.4'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23s)'/%3E%3C/svg%3E");
     background-size: 256px 256px;
     animation: dv-noise 0.6s steps(1, end) infinite;
   }

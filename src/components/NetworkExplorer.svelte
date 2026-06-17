@@ -41,6 +41,9 @@
   <div class="maprail">
     <div class="board">
       <div class="dv-drift glow"></div>
+      <div class="glow2"></div>
+      <div class="scanlines"></div>
+      <div class="sweep"></div>
       <div class="word-wrap"><span class="word font-display">DATAVISM</span></div>
       <div class="board-label">// DATAVISM · NETWORK DIAGRAM · NOT TO SCALE</div>
       <div class="board-map">
@@ -139,8 +142,16 @@
   .sec-desc { font-family: var(--font-mono); font-size: 11.5px; line-height: 1.7; color: var(--color-ink-4); max-width: 44ch; text-align: right; margin: 0; }
 
   .maprail { display: grid; grid-template-columns: 1fr 360px; gap: 22px; align-items: stretch; }
-  .board { position: relative; border: 1px solid var(--color-edge); background: var(--color-panel-2); overflow: hidden; min-height: 420px; }
-  .glow { position: absolute; inset: -25%; pointer-events: none; z-index: 0; background: radial-gradient(38% 38% at 50% 48%, rgba(57, 255, 20, 0.07), transparent 72%); }
+  .board { position: relative; border: 1px solid var(--color-edge); background: radial-gradient(120% 90% at 50% 0%, #0d1016, var(--color-panel-2) 60%); overflow: hidden; min-height: 420px; }
+  .glow { position: absolute; inset: -25%; pointer-events: none; z-index: 0; background: radial-gradient(38% 38% at 50% 48%, rgba(57, 255, 20, 0.09), transparent 72%); }
+  /* second, counter-drifting tint for a slow shifting wash */
+  .glow2 { position: absolute; inset: -25%; pointer-events: none; z-index: 0; background: radial-gradient(30% 30% at 64% 38%, rgba(255, 210, 63, 0.05), transparent 70%); animation: dv-drift 23s ease-in-out infinite reverse; }
+  /* faint CRT scanlines */
+  .scanlines { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.5; background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3px); }
+  /* slow scanning beam (surveillance/radar feel) */
+  .sweep { position: absolute; left: 0; right: 0; top: 0; height: 26%; pointer-events: none; z-index: 0; background: linear-gradient(to bottom, transparent, rgba(57, 255, 20, 0.055) 55%, transparent); animation: dv-sweep 9s linear infinite; }
+  @keyframes dv-sweep { 0% { transform: translateY(-130%); } 100% { transform: translateY(420%); } }
+  @media (prefers-reduced-motion: reduce) { .glow2 { animation: none; } .sweep { display: none; } }
   .word-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 0; overflow: hidden; }
   /* Cinematic backdrop: slowly zoom out to reveal the whole DATAVISM wordmark,
      then back in (with a gentle pan + opacity lift). */

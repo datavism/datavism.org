@@ -201,9 +201,17 @@
   <g transform="translate(680,420) scale(0.62)">
     <path d={GH} fill="none" stroke="#ff2a6d" stroke-width="12" opacity="0.9" transform="translate(3,3)" />
     <path d={GH} fill="none" stroke="#39ff14" stroke-width="10" stroke-linejoin="round" filter="url(#dvg)" />
-    <circle cx="78" cy="64" r="7" fill="#39ff14" />
-    <circle cx="110" cy="64" r="7" fill="#39ff14" />
+    <g class="gh-eyes">
+      <circle cx="78" cy="64" r="7" fill="#39ff14" />
+      <circle cx="110" cy="64" r="7" fill="#39ff14" />
+    </g>
   </g>
   <text x="720" y="556" text-anchor="middle" font-family="'Martian Mono', monospace" font-size="14" font-weight="800" fill="#f2f1ea" style="letter-spacing:-0.02em;">THE GHOST</text>
   <text x="720" y="572" text-anchor="middle" font-family="'Spline Sans Mono', monospace" font-size="9.5" font-weight="600" fill="#39ff14" style="letter-spacing:0.12em;">CONVERGENCE · ALL LINES</text>
 </svg>
+
+<style>
+  /* interchange ghost blinks, gently (shares the global dv-eyeblink keyframe) */
+  .gh-eyes { transform-box: fill-box; transform-origin: center; animation: dv-eyeblink 7.5s infinite; animation-delay: 2.4s; }
+  @media (prefers-reduced-motion: reduce) { .gh-eyes { animation: none; } }
+</style>

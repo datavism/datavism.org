@@ -94,8 +94,8 @@ a { color: inherit; }
 @keyframes dv-drift { 0%, 100% { transform: translate(-5%,-3%); } 50% { transform: translate(5%,3%); } }
 .dv-drift { animation: dv-drift 16s ease-in-out infinite; }
 
-/* ghost eye-blink (logo) */
-@keyframes dv-eyeblink { 0%, 92%, 100% { transform: scaleY(1); } 95%, 97% { transform: scaleY(0.08); } }
+/* ghost eye-blink (logo + interchange) — gentle, infrequent */
+@keyframes dv-eyeblink { 0%, 95%, 100% { transform: scaleY(1); } 97.5% { transform: scaleY(0.18); } }
 
 /* nav underline that grows from 0 on hover */
 .dv-nav a { position: relative; }

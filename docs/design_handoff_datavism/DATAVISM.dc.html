@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #060608; }
+  ::selection { background: #ffd23f; color: #060608; }
+  @keyframes dv-pulse { 0%,100% { opacity: .55; transform: scale(1); } 60% { opacity: 0; transform: scale(1.5); } }
+  .dv-pulse { transform-box: fill-box; transform-origin: center; animation: dv-pulse 3s ease-out infinite; }
+  @keyframes dv-blink { 0%,48% { opacity: 1; } 50%,100% { opacity: 0; } }
+  .dv-cursor { animation: dv-blink 1.1s step-end infinite; }
+  @keyframes dv-ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .dv-track { animation: dv-ticker 48s linear infinite; }
+  .dv-ribbon:hover .dv-track { animation-play-state: paused; }
+  .dv-nav a { position: relative; }
+  .dv-nav a::after { content: ''; position: absolute; left: 0; bottom: -5px; width: 0; height: 1px; background: var(--ac, #ffd23f); transition: width .25s ease; }
+  .dv-nav a:hover::after { width: 100%; }
+  @keyframes dv-draw { from { stroke-dashoffset: var(--len); } to { stroke-dashoffset: 0; } }
+  .dv-line { animation: dv-draw 1.7s cubic-bezier(.65,0,.2,1) both; }
+  @keyframes dv-packets { to { stroke-dashoffset: -480; } }
+  .dv-packets { animation: dv-packets 7s linear infinite; }
+  @keyframes dv-spin { to { transform: rotate(360deg); } }
+  .dv-spin { transform-box: fill-box; transform-origin: center; animation: dv-spin 22s linear infinite; }
+  @keyframes dv-drift { 0%,100% { transform: translate(-5%,-3%); } 50% { transform: translate(5%,3%); } }
+  .dv-drift { animation: dv-drift 16s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .dv-pulse, .dv-cursor, .dv-track, .dv-spin, .dv-drift { animation: none !important; } .dv-line { animation: none !important; stroke-dashoffset: 0 !important; } .dv-packets { display: none !important; } }
+  @media (max-width: 1080px) { .dv-maprail { grid-template-columns: 1fr !important; } .dv-hero { grid-template-columns: 1fr !important; } .dv-lcard { grid-template-columns: 1fr !important; } .dv-3 { grid-template-columns: 1fr !important; } }
+</style>
+</helmet>
+
+<div style="--ac: {{ accent }}; position: relative; background: #060608; color: #f2f1ea; font-family: 'Spline Sans Mono', monospace; min-height: 100vh; overflow-x: hidden;">
+
+  <div style="position: fixed; inset: 0; pointer-events: none; z-index: 1; background: radial-gradient(58% 40% at 50% 4%, rgba(57,255,20,0.05), transparent 70%);"></div>
+
+  <!-- CROP MARKS -->
+  <div style="position: fixed; top: 14px; left: 14px; width: 18px; height: 18px; border-left: 1px solid #343843; border-top: 1px solid #343843; pointer-events: none; z-index: 30;"></div>
+  <div style="position: fixed; top: 14px; right: 14px; width: 18px; height: 18px; border-right: 1px solid #343843; border-top: 1px solid #343843; pointer-events: none; z-index: 30;"></div>
+  <div style="position: fixed; bottom: 14px; left: 14px; width: 18px; height: 18px; border-left: 1px solid #343843; border-bottom: 1px solid #343843; pointer-events: none; z-index: 30;"></div>
+  <div style="position: fixed; bottom: 14px; right: 14px; width: 18px; height: 18px; border-right: 1px solid #343843; border-bottom: 1px solid #343843; pointer-events: none; z-index: 30;"></div>
+
+  <div style="position: relative; z-index: 5;">
+
+    <!-- UTILITY RIBBON -->
+    <div class="dv-ribbon" style="height: 28px; border-bottom: 1px solid #20222b; background: #060608; overflow: hidden; display: flex; align-items: center;">
+      <div class="dv-track" style="display: flex; white-space: nowrap; flex: none; font-family: 'Spline Sans Mono', monospace; font-size: 10.5px; letter-spacing: 0.16em; color: #6b7280;">
+        <span style="padding: 0 20px;">DATA UNDERGROUND TRANSIT AUTHORITY</span><span style="padding: 0 20px; color: #f5b700;">◆ STILL COOKING</span><span style="padding: 0 20px;">5 LINES · 25 STATIONS</span><span style="padding: 0 20px;">37.7749°N 122.4194°W</span><span style="padding: 0 20px; color: #3df07a;">G</span><span style="padding: 0 20px; color: #f5b700;">K</span><span style="padding: 0 20px; color: #ff4d4d;">R</span><span style="padding: 0 20px; color: #4d8dff;">B</span><span style="padding: 0 20px; color: #b48cff;">V</span><span style="padding: 0 20px;">DATA IS INFRASTRUCTURE · AWARENESS IS POWER</span><span style="padding: 0 20px; color: #39ff14;">&gt; THE REVOLUTION WILL BE COMPUTED</span><span style="padding: 0 20px; color: #ffd23f;">WEAPONS OF MASS INSTRUCTION</span>
+        <span style="padding: 0 20px;">DATA UNDERGROUND TRANSIT AUTHORITY</span><span style="padding: 0 20px; color: #f5b700;">◆ STILL COOKING</span><span style="padding: 0 20px;">5 LINES · 25 STATIONS</span><span style="padding: 0 20px;">37.7749°N 122.4194°W</span><span style="padding: 0 20px; color: #3df07a;">G</span><span style="padding: 0 20px; color: #f5b700;">K</span><span style="padding: 0 20px; color: #ff4d4d;">R</span><span style="padding: 0 20px; color: #4d8dff;">B</span><span style="padding: 0 20px; color: #b48cff;">V</span><span style="padding: 0 20px;">DATA IS INFRASTRUCTURE · AWARENESS IS POWER</span><span style="padding: 0 20px; color: #39ff14;">&gt; THE REVOLUTION WILL BE COMPUTED</span><span style="padding: 0 20px; color: #ffd23f;">WEAPONS OF MASS INSTRUCTION</span>
+      </div>
+    </div>
+
+    <!-- HEADER -->
+    <header style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 30px; border-bottom: 1px solid #20222b; max-width: 1560px; margin: 0 auto;">
+      <a href="#top" style="display: flex; align-items: center; gap: 13px; text-decoration: none;">
+        <svg width="26" height="26" viewBox="-8 -8 146 146" aria-hidden="true" style="flex: none;">
+          <path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#ff2a6d" stroke-width="12" opacity="0.9" transform="translate(3,3)"/>
+          <path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#39ff14" stroke-width="10" stroke-linejoin="round"/>
+          <circle cx="78" cy="64" r="7" fill="#39ff14"/><circle cx="110" cy="64" r="7" fill="#39ff14"/>
+        </svg>
+        <span style="display: flex; flex-direction: column; line-height: 1;">
+          <span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 18px; letter-spacing: -0.04em; color: #f2f1ea;">DATAVISM</span>
+          <span style="font-family: 'Spline Sans Mono', monospace; font-size: 8.5px; letter-spacing: 0.32em; color: #6f8f76; margin-top: 4px;">THE DATA UNDERGROUND</span>
+        </span>
+      </a>
+      <nav class="dv-nav" style="display: flex; align-items: center; gap: 28px; font-family: 'Spline Sans Mono', monospace; font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase;">
+        <a href="#network" style="color: #a7ada3; text-decoration: none;">Network</a>
+        <a href="#lines" style="color: #a7ada3; text-decoration: none;">Lines</a>
+        <a href="#method" style="color: #a7ada3; text-decoration: none;">Method</a>
+        <a href="#manifesto" style="color: #a7ada3; text-decoration: none;">Manifesto</a>
+        <a href="#waitlist" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: #ffd23f; color: #0b0c10; font-weight: 700; text-decoration: none;">Join waitlist →</a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section id="top" class="dv-hero" style="max-width: 1560px; margin: 0 auto; padding: 64px 30px 30px; display: grid; grid-template-columns: 1.7fr 1fr; gap: 48px; align-items: end;">
+      <div>
+        <div style="font-family: 'Spline Sans Mono', monospace; font-size: 13px; letter-spacing: 0.34em; color: #6f8f76; margin-bottom: 26px;">THE DATA UNDERGROUND</div>
+        <h1 style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: clamp(52px, 10.5vw, 156px); line-height: 0.92; letter-spacing: -0.06em; margin: 0; color: #ffd23f; white-space: nowrap; text-shadow: 0.045em 0.045em 0 #ff2a6d;">DATAVISM</h1>
+        <p style="font-family: 'Spline Sans Mono', monospace; font-size: clamp(16px, 2.1vw, 22px); line-height: 1.4; color: #f2f1ea; margin: 26px 0 12px;">They track you. <span style="color: #ffd23f;">Learn to track back.</span></p>
+        <p style="font-family: 'Spline Sans Mono', monospace; font-size: clamp(15px, 1.9vw, 20px); line-height: 1.4; color: #39ff14; margin: 0 0 26px;">&gt; The revolution will be computed.<span class="dv-cursor" style="color: #ffd23f;">▋</span></p>
+        <p style="max-width: 54ch; font-family: 'Spline Sans Mono', monospace; font-size: 14px; line-height: 1.65; color: #a7ada3; margin: 0 0 32px;">You won't learn to code here. You'll learn to <strong style="color: #f2f1ea; font-weight: 700;">command</strong> — AI, data, and the right questions — and turn what's hidden into public evidence.</p>
+        <div style="max-width: 540px;">
+          <div style="font-family: 'Spline Sans Mono', monospace; font-size: 11px; letter-spacing: 0.16em; color: #39ff14; margin-bottom: 12px;">// LINE G IS STILL COOKING — GET FIRST ACCESS</div>
+          <sc-if value="{{ waitNotSubscribed }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+              <input type="email" placeholder="you@domain.com" onInput="{{ onWaitInput }}" onKeyDown="{{ onWaitKey }}" style="flex: 1; min-width: 220px; background: #0e0f14; border: 1px solid #2c2f3a; color: #f2f1ea; font-family: 'Spline Sans Mono', monospace; font-size: 14px; padding: 14px 16px; outline: none;" style-focus="border-color: #ffd23f;" />
+              <button onClick="{{ onWaitSubmit }}" style="font-family: 'Spline Sans Mono', monospace; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; padding: 14px 24px; background: #ffd23f; color: #0b0c10; border: none; cursor: pointer; white-space: nowrap;" style-hover="background: #ffdd66;">Join the waitlist →</button>
+            </div>
+            <sc-if value="{{ waitHasError }}" hint-placeholder-val="{{ false }}">
+              <div style="font-family: 'Spline Sans Mono', monospace; font-size: 12px; color: #ff4d4d; margin-top: 10px;">{{ waitError }}</div>
+            </sc-if>
+          </sc-if>
+          <sc-if value="{{ waitSubscribed }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #2c2f3a; border-left: 3px solid #39ff14; background: #0e0f14; padding: 14px 16px; font-family: 'Spline Sans Mono', monospace; font-size: 13.5px; line-height: 1.45; color: #f2f1ea;"><span style="color: #39ff14;">◆</span> You're on the list. Mind the signal — we ping you when Line G opens.</div>
+          </sc-if>
+          <div style="display: flex; flex-wrap: wrap; gap: 18px; margin-top: 18px; font-family: 'Spline Sans Mono', monospace; font-size: 12px;">
+            <a href="#network" style="color: #a7ada3; text-decoration: none; border-bottom: 1px solid #343843; padding-bottom: 2px;">Explore the network →</a>
+            <a href="#manifesto" style="color: #a7ada3; text-decoration: none; border-bottom: 1px solid #343843; padding-bottom: 2px;">Read the manifesto →</a>
+          </div>
+        </div>
+      </div>
+
+      <div style="border: 1px solid #20222b; background: #0e0f14; padding: 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-family: 'Spline Sans Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #6b7280; padding: 11px 16px; border-bottom: 1px solid #20222b;"><span>SYSTEM STATUS</span><span style="color: #f5b700;">◆ STILL COOKING</span></div>
+        <div style="padding: 16px 18px; font-family: 'Spline Sans Mono', monospace; font-size: 12px; line-height: 2;">
+          <div style="display: flex; justify-content: space-between;"><span style="color: #6b7280;">network</span><span style="color: #f5b700;">booting</span></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: #6b7280;">lines</span><span style="color: #f2f1ea;">5 planned</span></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: #6b7280;">stations</span><span style="color: #f2f1ea;">25</span></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: #6b7280;">first line</span><span style="color: #3df07a;">G · THE FOLDER</span></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: #6b7280;">waitlist</span><span style="color: #39ff14;">open</span></div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px solid #20222b; margin-top: 6px; padding-top: 6px;"><span style="color: #6b7280;">you</span><span style="color: var(--ac, #ffd23f);">awake <span class="dv-cursor">▋</span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NETWORK MAP -->
+    <section id="network" style="max-width: 1560px; margin: 0 auto; padding: 40px 30px 76px;">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 22px; border-bottom: 1px solid #20222b; padding-bottom: 18px;">
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'Spline Sans Mono', monospace; font-size: 12px; letter-spacing: 0.16em; color: #6b7280;">01</span>
+          <h2 style="font-weight: 800; font-size: clamp(26px, 3.4vw, 42px); line-height: 1; letter-spacing: -0.01em; margin: 0; text-transform: uppercase; color: #f2f1ea;">The Network</h2>
+        </div>
+        <p style="font-family: 'Spline Sans Mono', monospace; font-size: 11.5px; line-height: 1.7; color: #6b7280; max-width: 44ch; text-align: right;">Octolinear diagram · click any station to read its brief · every line terminates in a public Case File at the Ghost interchange.</p>
+      </div>
+
+      <div class="dv-maprail" style="display: grid; grid-template-columns: 1fr 360px; gap: 22px; align-items: stretch;">
+        <!-- MAP BOARD -->
+        <div style="position: relative; border: 1px solid #20222b; background: #0b0c10; overflow: hidden;">
+          <div class="dv-drift" style="position: absolute; inset: -25%; pointer-events: none; z-index: 0; background: radial-gradient(38% 38% at 50% 48%, rgba(57,255,20,0.07), transparent 72%);"></div>
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 0;">
+            <span class="dv-par-word" style="font-weight: 900; font-size: 24vw; letter-spacing: -0.03em; color: #f2f1ea; opacity: 0.025; white-space: nowrap;">DATAVISM</span>
+          </div>
+          <div style="position: absolute; top: 14px; left: 16px; font-family: 'Spline Sans Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #565c66; z-index: 2;">// DATAVISM · NETWORK DIAGRAM · NOT TO SCALE</div>
+          <div style="position: relative; z-index: 1; padding: 10px;"><dc-import name="NetworkMap" selected="{{ mapSelected }}" on-select="{{ onMapSelect }}" accent="{{ accent }}" hint-size="100%,520px"></dc-import></div>
+        </div>
+
+        <!-- RIGHT RAIL -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- STATION DETAIL -->
+          <aside style="border: 1px solid #20222b; border-top: 3px solid {{ sel.lineColor }}; background: #11121a; padding: 22px 22px 24px; flex: 1;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; font-family: 'Spline Sans Mono', monospace; font-size: 10.5px; letter-spacing: 0.12em;">
+              <span style="color: {{ sel.lineColor }};">{{ sel.lineCode }} · {{ sel.lineName }}</span>
+              <span style="border: 1px solid {{ sel.statusColor }}; color: {{ sel.statusColor }}; padding: 3px 8px;">{{ sel.statusLabel }}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 13px; margin: 20px 0 4px;">
+              <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 36px; padding: 0 9px; background: {{ sel.lineColor }}; color: #0b0c10; font-weight: 900; font-size: 19px; letter-spacing: 0.02em;">{{ sel.code }}</span>
+              <h3 style="font-weight: 800; font-size: 25px; letter-spacing: -0.01em; text-transform: uppercase; margin: 0; color: #f2f1ea; line-height: 1;">{{ sel.title }}</h3>
+            </div>
+            <p style="font-style: italic; font-weight: 500; font-size: 19px; line-height: 1.25; color: #f2f1ea; margin: 18px 0 16px;">{{ sel.coreQuestion }}</p>
+            <p style="font-size: 14px; line-height: 1.55; color: #a7ada3; margin: 0 0 20px;">{{ sel.learns }}</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; border-top: 1px solid #20222b; padding-top: 16px;">
+              <div>
+                <div style="font-family: 'Spline Sans Mono', monospace; font-size: 9.5px; letter-spacing: 0.12em; color: #565c66; margin-bottom: 5px;">SKILL</div>
+                <div style="font-size: 12.5px; line-height: 1.45; color: #a7ada3;">{{ sel.skill }}</div>
+              </div>
+              <div>
+                <div style="font-family: 'Spline Sans Mono', monospace; font-size: 9.5px; letter-spacing: 0.12em; color: #565c66; margin-bottom: 5px;">ARTIFACT</div>
+                <div style="font-family: 'Spline Sans Mono', monospace; font-size: 12.5px; line-height: 1.4; color: {{ sel.lineColor }};">{{ sel.artifact }}</div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- NETWORK KEY -->
+          <div style="border: 1px solid #20222b; background: #11121a; padding: 18px 20px;">
+            <div style="font-family: 'Spline Sans Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #565c66; margin-bottom: 14px;">NETWORK KEY</div>
+            <div style="display: grid; gap: 11px;">
+              <sc-for list="{{ lines }}" as="line" hint-placeholder-count="5">
+                <button onClick="{{ line.onSelectFirst }}" style="display: flex; align-items: center; gap: 12px; background: transparent; border: none; padding: 0; cursor: pointer; text-align: left; font-family: inherit;">
+                  <span style="width: 26px; height: 4px; border-radius: 2px; background: {{ line.color }}; flex: none;"></span>
+                  <span style="font-weight: 700; font-size: 13px; color: #f2f1ea; letter-spacing: 0.01em;">{{ line.code }} · {{ line.shortName }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="display: grid; gap: 9px; border-top: 1px solid #20222b; margin-top: 16px; padding-top: 14px; font-family: 'Spline Sans Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: #6b7280;">
+              <span style="display: inline-flex; align-items: center; gap: 9px;"><span style="width: 11px; height: 11px; border: 2.5px solid #a7ada3; border-radius: 50%; background: #0b0c10;"></span>STATION · A CAPABILITY</span>
+              <span style="display: inline-flex; align-items: center; gap: 9px;"><span style="display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; border: 1.5px solid #a7ada3; border-radius: 50%;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #a7ada3;"></span></span>GHOST · INTERCHANGE</span>
+              <span style="display: inline-flex; align-items: center; gap: 9px;"><span style="width: 11px; height: 11px; border-radius: 50%; background: #ffd23f;"></span>OPEN · STARTS HERE</span>
+              <span style="display: inline-flex; align-items: center; gap: 9px;"><span style="width: 11px; height: 11px; border: 2.5px dashed #565c66; border-radius: 50%;"></span>LOCKED · NOT YET RUNNING</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIVE LINES -->
+    <section id="lines" style="max-width: 1560px; margin: 0 auto; padding: 60px 30px; border-top: 1px solid #20222b;">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 36px; border-bottom: 1px solid #20222b; padding-bottom: 18px;">
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'Spline Sans Mono', monospace; font-size: 12px; letter-spacing: 0.16em; color: #6b7280;">02</span>
+          <h2 style="font-weight: 800; font-size: clamp(26px, 3.4vw, 42px); line-height: 1; letter-spacing: -0.01em; margin: 0; text-transform: uppercase; color: #f2f1ea;">The Five Lines</h2>
+        </div>
+        <p style="font-family: 'Spline Sans Mono', monospace; font-size: 11.5px; line-height: 1.7; color: #6b7280; max-width: 40ch; text-align: right;">LINE G + one thematic line = your first full investigation. Learn the method, then choose a system to ride.</p>
+      </div>
+
+      <div style="display: grid; gap: 14px;">
+        <sc-for list="{{ lines }}" as="line" hint-placeholder-count="5">
+          <article class="dv-lcard" style="border: 1px solid #20222b; background: #11121a; padding: 24px 26px; display: grid; grid-template-columns: 300px 1fr; gap: 30px; align-items: start;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 13px; margin-bottom: 16px;">
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: {{ line.color }}; color: #0b0c10; font-weight: 900; font-size: 24px;">{{ line.code }}</span>
+                <div>
+                  <div style="font-weight: 800; font-size: 17px; letter-spacing: 0.01em; text-transform: uppercase; color: #f2f1ea; line-height: 1.05;">{{ line.name }}</div>
+                  <div style="font-family: 'Spline Sans Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; color: {{ line.color }}; margin-top: 5px;">{{ line.motto }}</div>
+                </div>
+              </div>
+              <p style="font-style: italic; font-weight: 500; font-size: 18px; line-height: 1.25; color: #cfd2c9; margin: 14px 0 16px;">{{ line.coreQuestion }}</p>
+              <div style="display: flex; gap: 24px; font-family: 'Spline Sans Mono', monospace; font-size: 10.5px; letter-spacing: 0.04em;">
+                <div><span style="color: #565c66;">SYSTEM</span><br><span style="color: {{ line.color }};">{{ line.system }}</span></div>
+                <div><span style="color: #565c66;">CASE FILE</span><br><span style="color: #f2f1ea;">{{ line.finalArtifact }}</span></div>
+              </div>
+            </div>
+            <div style="position: relative; display: grid; grid-template-columns: repeat(5, 1fr); align-items: start; padding-top: 6px;">
+              <div style="position: absolute; left: 0; right: 0; top: 12px; height: 3px; background: {{ line.color }}; opacity: 0.85;"></div>
+              <sc-for list="{{ line.stations }}" as="st" hint-placeholder-count="5">
+                <button onClick="{{ st.onSelect }}" style="position: relative; text-align: left; background: transparent; border: none; padding: 0 12px 0 0; cursor: pointer; font-family: inherit;">
+                  <span style="position: relative; z-index: 1; display: block; width: 14px; height: 14px; border-radius: 50%; background: {{ st.dotFill }}; border: 3px {{ st.dotStyle }} {{ line.color }}; margin-bottom: 14px;"></span>
+                  <div style="font-family: 'Spline Sans Mono', monospace; font-size: 11.5px; font-weight: 700; color: {{ line.color }}; letter-spacing: 0.04em; opacity: {{ st.textOpacity }};">{{ st.code }}</div>
+                  <div style="font-family: 'Spline Sans Mono', monospace; font-size: 10.5px; line-height: 1.3; color: {{ st.titleColor }}; margin-top: 6px; letter-spacing: 0.01em;">{{ st.title }}</div>
+                  <div style="font-family: 'Spline Sans Mono', monospace; font-size: 9px; color: #565c66; margin-top: 8px;">{{ st.artifact }}</div>
+                </button>
+              </sc-for>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- METHOD -->
+    <section id="method" style="max-width: 1560px; margin: 0 auto; padding: 60px 30px; border-top: 1px solid #20222b;">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px 16px; margin-bottom: 34px; border-bottom: 1px solid #20222b; padding-bottom: 18px;">
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'Spline Sans Mono', monospace; font-size: 12px; letter-spacing: 0.16em; color: #6b7280;">03</span>
+          <h2 style="font-weight: 800; font-size: clamp(26px, 3.4vw, 42px); line-height: 1; letter-spacing: -0.01em; margin: 0; text-transform: uppercase; color: #f2f1ea;">The Method</h2>
+        </div>
+        <span style="font-family: 'Spline Sans Mono', monospace; font-size: 12px; letter-spacing: 0.16em; color: #39ff14; text-transform: uppercase; white-space: nowrap;">// Weapons of Mass Instruction</span>
+      </div>
+
+      <div class="dv-3" style="display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: start;">
+        <div>
+          <h3 style="font-weight: 800; font-size: clamp(28px, 3.6vw, 46px); line-height: 1.04; letter-spacing: -0.01em; margin: 0 0 30px; text-transform: uppercase; color: #f2f1ea; max-width: 16ch;">Story is the interface. Skill is the substance.</h3>
+          <div style="font-family: 'Spline Sans Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em; color: #565c66; margin-bottom: 16px;">DATAVISM DOES NOT BOARD AT</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-bottom: 38px;">
+            <sc-for list="{{ oldWay }}" as="w" hint-placeholder-count="5">
+              <span style="font-family: 'Spline Sans Mono', monospace; font-size: 12px; color: #6b7280; border: 1px dashed #2c2f3a; padding: 8px 12px; text-decoration: line-through;">{{ w }}</span>
+            </sc-for>
+          </div>
+          <div style="font-family: 'Spline Sans Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em; color: var(--ac, #ffd23f); margin-bottom: 16px;">IT RUNS</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+            <sc-for list="{{ progression }}" as="step" hint-placeholder-count="6">
+              <span style="display: inline-flex; align-items: center; gap: 8px;">
+                <span style="font-family: 'Spline Sans Mono', monospace; font-size: 13px; color: #f2f1ea; border: 1px solid var(--ac, #ffd23f); padding: 9px 13px; letter-spacing: 0.03em;">{{ step.label }}</span>
+                <span style="color: var(--ac, #ffd23f); font-size: 15px;">{{ step.sep }}</span>
+              </span>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="border: 1px solid #20222b; background: #0e0f14; padding: 30px;">
+          <div style="font-family: 'Spline Sans Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em; color: #565c66; margin-bottom: 20px;">EVERY STATION ANSWERS THREE QUESTIONS</div>
+          <div style="display: grid; gap: 18px;">
+            <div style="display: flex; gap: 16px; align-items: baseline;"><span style="font-weight: 900; font-size: 26px; color: var(--ac, #ffd23f); min-width: 32px;">01</span><span style="font-size: 16px; line-height: 1.45; color: #cfd2c9;">What hidden system are we looking at?</span></div>
+            <div style="display: flex; gap: 16px; align-items: baseline;"><span style="font-weight: 900; font-size: 26px; color: var(--ac, #ffd23f); min-width: 32px;">02</span><span style="font-size: 16px; line-height: 1.45; color: #cfd2c9;">What method does the rider acquire?</span></div>
+            <div style="display: flex; gap: 16px; align-items: baseline;"><span style="font-weight: 900; font-size: 26px; color: var(--ac, #ffd23f); min-width: 32px;">03</span><span style="font-size: 16px; line-height: 1.45; color: #cfd2c9;">What evidence artifact gets produced?</span></div>
+          </div>
+          <div style="border-top: 1px solid #20222b; margin-top: 24px; padding-top: 18px; font-style: italic; font-weight: 500; font-size: 19px; line-height: 1.3; color: #f2f1ea;">A Datavist: a person who uses data, AI and investigative method to make hidden systems visible.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section id="manifesto" style="position: relative; padding: 84px 30px; border-top: 1px solid #20222b; background: #0e0f14;">
+      <div style="max-width: 1180px; margin: 0 auto;">
+        <div style="font-family: 'Spline Sans Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #ffd23f; margin-bottom: 28px;">// DATA UNDERGROUND · CLASSIFIED</div>
+        <p style="font-weight: 900; font-size: clamp(30px, 5vw, 66px); line-height: 1.0; letter-spacing: -0.015em; text-transform: uppercase; color: #f2f1ea; margin: 0; max-width: 20ch;">{{ manifestoLine }} <span style="color: #6b7280;">We don't follow the feed.</span> <span style="color: var(--ac, #ffd23f);">We build the map.</span></p>
+        <div class="dv-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #20222b; border: 1px solid #20222b; margin-top: 52px;">
+          <div style="background: #0e0f14; padding: 30px 26px;"><div style="font-weight: 800; font-size: 26px; line-height: 1.1; text-transform: uppercase; color: #f2f1ea;">You are the node.</div><div style="font-family: 'Spline Sans Mono', monospace; font-size: 11.5px; color: #a7ada3; margin-top: 16px; line-height: 1.6;">No exit without action. The network grows as you move.</div></div>
+          <div style="background: #0e0f14; padding: 30px 26px;"><div style="font-weight: 800; font-size: 26px; line-height: 1.1; text-transform: uppercase; color: #f2f1ea;">The map is the mission.</div><div style="font-family: 'Spline Sans Mono', monospace; font-size: 11.5px; color: #a7ada3; margin-top: 16px; line-height: 1.6;">Every truth connects. Every path leads to the Ghost.</div></div>
+          <div style="background: #0e0f14; padding: 30px 26px;"><div style="font-weight: 800; font-size: 26px; line-height: 1.1; text-transform: uppercase; color: #f2f1ea;">The work is the weapon.</div><div style="font-family: 'Spline Sans Mono', monospace; font-size: 11.5px; color: #a7ada3; margin-top: 16px; line-height: 1.6;">A Case File is evidence, portfolio and intervention at once.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WAITLIST -->
+    <section id="waitlist" style="position: relative; padding: 88px 30px; border-top: 1px solid #20222b; background: #0b0c10;">
+      <div style="max-width: 760px; margin: 0 auto; text-align: center;">
+        <div style="font-family: 'Spline Sans Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: #39ff14; margin-bottom: 22px;">// STILL COOKING · NOT LIVE YET</div>
+        <h2 style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: clamp(30px, 5vw, 58px); line-height: 1.0; letter-spacing: -0.04em; margin: 0; color: #ffd23f; text-shadow: 0.04em 0.04em 0 #ff2a6d;">Join the underground</h2>
+        <p style="font-family: 'Spline Sans Mono', monospace; font-size: clamp(14px, 1.7vw, 17px); line-height: 1.55; color: #a7ada3; margin: 22px auto 30px; max-width: 52ch;">Line G opens first. Get on the list and you are first through the gate — no spam, just the signal when the doors unlock.</p>
+        <div style="max-width: 520px; margin: 0 auto;">
+          <sc-if value="{{ waitNotSubscribed }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+              <input type="email" placeholder="you@domain.com" onInput="{{ onWaitInput }}" onKeyDown="{{ onWaitKey }}" style="flex: 1; min-width: 220px; background: #060608; border: 1px solid #2c2f3a; color: #f2f1ea; font-family: 'Spline Sans Mono', monospace; font-size: 14px; padding: 15px 16px; outline: none; text-align: left;" style-focus="border-color: #ffd23f;" />
+              <button onClick="{{ onWaitSubmit }}" style="font-family: 'Spline Sans Mono', monospace; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; padding: 15px 26px; background: #ffd23f; color: #0b0c10; border: none; cursor: pointer; white-space: nowrap;" style-hover="background: #ffdd66;">Join the waitlist →</button>
+            </div>
+            <sc-if value="{{ waitHasError }}" hint-placeholder-val="{{ false }}">
+              <div style="font-family: 'Spline Sans Mono', monospace; font-size: 12px; color: #ff4d4d; margin-top: 10px; text-align: left;">{{ waitError }}</div>
+            </sc-if>
+          </sc-if>
+          <sc-if value="{{ waitSubscribed }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #2c2f3a; border-top: 3px solid #39ff14; background: #060608; padding: 18px 20px; font-family: 'Spline Sans Mono', monospace; font-size: 14px; line-height: 1.45; color: #f2f1ea;"><span style="color: #39ff14;">◆</span> You're on the list. Mind the signal.</div>
+          </sc-if>
+        </div>
+        <div style="font-family: 'Spline Sans Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #6b7280; margin-top: 18px;">no spam · unsubscribe anytime · <span style="color: #a7ada3;">datavism.org</span></div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="max-width: 1560px; margin: 0 auto; padding: 52px 30px 64px; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; align-items: start; border-top: 1px solid #20222b;">
+      <div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <svg width="24" height="24" viewBox="-8 -8 146 146" aria-hidden="true" style="flex: none;"><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#ff2a6d" stroke-width="12" opacity="0.9" transform="translate(3,3)"/><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#39ff14" stroke-width="10" stroke-linejoin="round"/><circle cx="78" cy="64" r="7" fill="#39ff14"/><circle cx="110" cy="64" r="7" fill="#39ff14"/></svg>
+          <span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 17px; letter-spacing: -0.04em; color: #f2f1ea;">DATAVISM</span>
+        </div>
+        <p style="font-size: 19px; line-height: 1.3; color: #a7ada3; max-width: 30ch; margin: 0; font-weight: 500;">See clearer. Build deeper. Resist smarter.</p>
+      </div>
+      <div>
+        <div style="font-family: 'Spline Sans Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #565c66; margin-bottom: 14px;">THE NETWORK</div>
+        <div class="dv-nav" style="display: grid; gap: 9px; font-family: 'Spline Sans Mono', monospace; font-size: 12px;">
+          <a href="#network" style="color: #a7ada3; text-decoration: none; width: max-content;">The Network Map</a>
+          <a href="#lines" style="color: #a7ada3; text-decoration: none; width: max-content;">The Five Lines</a>
+          <a href="#method" style="color: #a7ada3; text-decoration: none; width: max-content;">The Method</a>
+          <a href="#manifesto" style="color: #a7ada3; text-decoration: none; width: max-content;">Manifesto</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: 'Spline Sans Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #565c66; margin-bottom: 14px;">SYSTEM</div>
+        <div style="font-family: 'Spline Sans Mono', monospace; font-size: 11.5px; line-height: 2; color: #6b7280;">
+          <div>version <span style="color: #f2f1ea;">0.1 · MMXXVI</span></div>
+          <div>stations <span style="color: #f2f1ea;">25</span></div>
+          <div>movement <span style="color: #ffd23f;">growing</span></div>
+          <div>train · build · share · <span style="color: var(--ac, #ffd23f);">repeat</span></div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd23f&quot;,&quot;options&quot;:[&quot;#ffd23f&quot;,&quot;#3df07a&quot;,&quot;#f5b700&quot;,&quot;#ff4d4d&quot;,&quot;#4d8dff&quot;,&quot;#b48cff&quot;]},&quot;manifestoLine&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;The data underground exists beneath the noise.&quot;}}">
+class Component extends DCLogic {
+  state = { selected: 'g1', hovered: null, subscribed: false, error: '' };
+  _email = '';
+
+  LINES = (function () {
+    const mk = (id, code, title, status, role, skill, artifact, cq, learns) =>
+      ({ id, code, title, status, role, skill, artifact, coreQuestion: cq, learns });
+    return [
+      {
+        id: 'g', code: 'G', name: 'GHOST / Foundation', shortName: 'Foundation', motto: 'Ask better. Command cleaner. Verify harder.',
+        coreQuestion: 'How do I turn a vague suspicion into a verifiable investigation?',
+        system: 'Your own uncertainty', finalArtifact: 'Eval Report', color: '#3df07a',
+        stations: [
+          mk('g1', 'G1', 'THE FOLDER', 'open', 'Orientation: turn discomfort into a testable question.', 'Question design & investigability.', 'Case File #1', 'What exactly can be tested?', 'Turning diffuse discomfort into a testable data question.'),
+          mk('g2', 'G2', 'COMMAND', 'announced', 'Access: command AI with specs, constraints and iteration.', 'AI orchestration & prompt-as-spec.', 'Command Log', 'How do I make the machine useful without trusting it blindly?', 'Using AI with specs, constraints, iterations and clear intent.'),
+          mk('g3', 'G3', 'INTAKE', 'locked', 'Structure: collect and structure raw material.', 'Source intake & pipeline thinking.', 'Intake Sheet', 'What raw material do I need, and how do I structure it?', 'Collecting and structuring sources, data and raw material.'),
+          mk('g4', 'G4', 'THE CONFIDENT LIE', 'locked', 'Verification: detect plausible but false output.', 'Critical AI literacy & claim checking.', 'Verification Protocol', 'Which claims survive contact with the source?', 'Detecting hallucinations, false claims and misleading conclusions.'),
+          mk('g5', 'G5', 'MASCHINENRAUM', 'locked', 'Integration: combine the full workflow.', 'Evaluation & method design.', 'Eval Report', 'Does the whole machine produce a reliable result?', 'Combining question, command, intake and verification into one method.'),
+        ],
+      },
+      {
+        id: 'k', code: 'K', name: 'KEY / Tracking & OSINT', shortName: 'Tracking & OSINT', motto: 'Trace the watchers.',
+        coreQuestion: 'Who watches us, and how?',
+        system: 'PANOPTICON', finalArtifact: 'Panopticon Case File', color: '#f5b700',
+        stations: [
+          mk('k1', 'K1', 'FOOTPRINTS', 'locked', 'Orientation: understand traces from people and devices.', 'Trace literacy & footprint mapping.', 'Footprint Map', 'What traces exist before anyone calls them data?', 'Understanding the traces people, browsers, devices and platforms generate.'),
+          mk('k2', 'K2', 'SIGNALS', 'locked', 'Access: inspect pixels, cookies, SDKs and consent flows.', 'Tracking signal inspection.', 'Signal Sheet', 'Which technical signals prove that tracking is happening?', 'Reading pixels, cookies, SDKs, consent flows and request patterns.'),
+          mk('k3', 'K3', 'IDENTITY GRAPH', 'locked', 'Structure: connect IDs, segments, brokers and profiles.', 'Identity graph & entity resolution.', 'Identity Sketch', 'How does a scattered trace become a profile?', 'Understanding IDs, segments, brokers, profiles and entity resolution.'),
+          mk('k4', 'K4', 'WATCHTOWER', 'locked', 'Analysis: monitor change across sources and actors.', 'OSINT monitoring & change detection.', 'Watchlist', 'What changes when nobody is looking?', 'Monitoring changes, sources, pages, systems or actors with OSINT.'),
+          mk('k5', 'K5', 'PANOPTICON FILE', 'locked', 'Case File: document a surveillance structure.', 'Surveillance investigation packaging.', 'Panopticon File', 'How do we make a surveillance structure verifiable?', 'Turning a concrete tracking or surveillance structure into public evidence.'),
+        ],
+      },
+      {
+        id: 'r', code: 'R', name: 'ROOK / Economy & Power', shortName: 'Economy & Power', motto: 'Follow the value.',
+        coreQuestion: 'Who benefits?',
+        system: 'MAMMON', finalArtifact: 'Mammon Case File', color: '#ff4d4d',
+        stations: [
+          mk('r1', 'R1', 'LEDGER', 'locked', 'Orientation: formulate the economic question.', 'Economic question design.', 'Money Brief', 'Who pays, who profits, and who carries risk?', 'Formulating the economic question behind a system.'),
+          mk('r2', 'R2', 'ACTORS', 'locked', 'Access: identify owners, funders and lobby actors.', 'Actor mapping & entity research.', 'Actor Map', 'Which actors make the system work?', 'Mapping companies, people, owners, funders and lobby actors.'),
+          mk('r3', 'R3', 'FLOWS', 'locked', 'Structure: turn money and ownership into flows.', 'Flow modeling & tabular evidence.', 'Flow Table', 'Where does value move?', 'Structuring money, contracts, subsidies and ownership flows.'),
+          mk('r4', 'R4', 'LEVERAGE', 'locked', 'Analysis: find dependencies and pressure points.', 'Leverage & dependency analysis.', 'Leverage Map', 'Where is the system vulnerable or exposed?', 'Identifying dependencies, risks, pressure points and power positions.'),
+          mk('r5', 'R5', 'MAMMON FILE', 'locked', 'Case File: document an economic power structure.', 'Economic investigation packaging.', 'Mammon File', 'How do we make economic power legible?', 'Turning an economic power structure into public evidence.'),
+        ],
+      },
+      {
+        id: 'b', code: 'B', name: 'BITE / Feeds & Behavior', shortName: 'Feeds & Behavior', motto: 'Decode the feed.',
+        coreQuestion: 'Why do we keep watching, clicking, scrolling, returning?',
+        system: 'THE FEED', finalArtifact: 'Feed Autopsy Case File', color: '#4d8dff',
+        stations: [
+          mk('b1', 'B1', 'SOURCE', 'locked', 'Orientation: identify feeds, channels, APIs and streams.', 'Source selection & stream framing.', 'Source Inventory', 'Which feed defines the signal environment?', 'Identifying relevant feeds, platforms, channels, APIs and streams.'),
+          mk('b2', 'B2', 'CAPTURE', 'locked', 'Access: collect stream and event data responsibly.', 'Responsible capture pipelines.', 'Capture Pipeline', 'How do we capture the signal without distorting it?', 'Collecting feed, stream, event or content data responsibly.'),
+          mk('b3', 'B3', 'NORMALIZE', 'locked', 'Structure: clean timestamps, categories and events.', 'Event cleaning & normalization.', 'Clean Event Table', 'What structure makes this stream analyzable?', 'Cleaning timestamps, categories, duplicates and event structures.'),
+          mk('b4', 'B4', 'DETECT', 'locked', 'Analysis: find peaks, loops, anomalies and signals.', 'Signal detection in behavioral data.', 'Signal Report', 'What rhythm, anomaly or loop does the feed reveal?', 'Finding peaks, patterns, repetitions, anomalies and engagement signals.'),
+          mk('b5', 'B5', 'FEED AUTOPSY', 'locked', 'Case File: explain a feed or behavior dynamic.', 'Feed investigation packaging.', 'Feed Autopsy File', 'How do we make a feed dynamic visible?', 'Explaining a platform, feed or behavior dynamic as public evidence.'),
+        ],
+      },
+      {
+        id: 'v', code: 'V', name: 'VESPER / Climate & Future', shortName: 'Climate & Future', motto: 'Read the long signal.',
+        coreQuestion: 'What changes over time, and what remains when the feed has moved on?',
+        system: 'CUMULUS REX', finalArtifact: 'Cumulus Case File', color: '#b48cff',
+        stations: [
+          mk('v1', 'V1', 'ARCHIVE', 'locked', 'Orientation: find historical and long-term sources.', 'Archive & long-term source discovery.', 'Archive Map', 'Where does the long signal live?', 'Finding historical sources, long-term datasets and institutional records.'),
+          mk('v2', 'V2', 'PATTERNS', 'locked', 'Analysis: read trends, breaks and baselines.', 'Longitudinal pattern analysis.', 'Pattern Sheet', 'What is changing, what is stable, what is noise?', 'Reading trends, seasonality, breaks, baselines and long-term movement.'),
+          mk('v3', 'V3', 'SCENARIOS', 'locked', 'Analysis: work with uncertainty and futures.', 'Scenario reasoning & uncertainty.', 'Scenario Board', 'What futures are plausible under which assumptions?', 'Working with uncertainty, futures, assumptions and scenario logic.'),
+          mk('v4', 'V4', 'IMPACT', 'locked', 'Interpretation: connect patterns to affected groups.', 'Impact & public-interest framing.', 'Impact Brief', 'Who is affected, how, when and with what uncertainty?', 'Connecting long-term patterns to affected groups, risks and consequences.'),
+          mk('v5', 'V5', 'CUMULUS FILE', 'locked', 'Case File: turn a long-system finding into evidence.', 'Long-horizon investigation packaging.', 'Cumulus File', 'How do we make a slow system impossible to ignore?', 'Turning a long-system finding into public evidence.'),
+        ],
+      },
+    ];
+  })();
+
+  allStations() {
+    const out = [];
+    this.LINES.forEach((L) => L.stations.forEach((s, i) => out.push(Object.assign({}, s, {
+      idx: i, lineId: L.id, lineCode: L.code, lineName: L.name, lineColor: L.color,
+      lineMotto: L.motto, system: L.system, finalArtifact: L.finalArtifact,
+    }))));
+    return out;
+  }
+
+  select(id) { this.setState({ selected: id }); }
+
+  componentDidMount() {
+    try { if (localStorage.getItem('dv_waitlist_email')) this.setState({ subscribed: true }); } catch (e) {}
+    this.initGsap();
+  }
+
+  inputWait(e) {
+    this._email = e.target.value;
+    if (this.state.error) this.setState({ error: '' });
+  }
+
+  submitWait() {
+    const em = (this._email || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+      this.setState({ error: 'Enter a valid email address.' });
+      return;
+    }
+    try { localStorage.setItem('dv_waitlist_email', em); } catch (e) {}
+    this.setState({ subscribed: true, error: '' });
+  }
+
+  keyWait(e) {
+    if (e.key === 'Enter') { e.preventDefault(); this.submitWait(); }
+  }
+
+  initGsap() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let tries = 0;
+    const go = () => {
+      if (window.gsap && window.ScrollTrigger) {
+        try { this.runAnims(window.gsap); } catch (e) { /* ignore */ }
+      } else if (tries++ < 70) {
+        setTimeout(go, 80);
+      }
+    };
+    go();
+  }
+
+  runAnims(gsap) {
+    gsap.registerPlugin(window.ScrollTrigger);
+    const ease = 'power3.out';
+    // hero entrance
+    gsap.from('#top > div:first-child > *', { y: 36, opacity: 0, duration: 0.75, ease, stagger: 0.09, delay: 0.1 });
+    gsap.from('#top > div:last-child', { y: 36, opacity: 0, duration: 0.75, ease, delay: 0.5 });
+    // scroll reveals
+    const reveal = (sel, vars) => gsap.utils.toArray(sel).forEach((el) => {
+      gsap.from(el, Object.assign({ opacity: 0, y: 44, duration: 0.7, ease, scrollTrigger: { trigger: el, start: 'top 86%' } }, vars || {}));
+    });
+    reveal('#network > div:first-child');
+    reveal('.dv-maprail > *', { y: 54 });
+    reveal('#lines > div:first-child');
+    gsap.utils.toArray('.dv-lcard').forEach((el) => {
+      gsap.from(el, { opacity: 0, y: 48, duration: 0.7, ease, scrollTrigger: { trigger: el, start: 'top 88%' } });
+    });
+    reveal('#method > div:first-child');
+    reveal('#method .dv-3 > *', { y: 46 });
+    reveal('#manifesto p');
+    gsap.utils.toArray('#manifesto .dv-3 > div').forEach((el, i) => {
+      gsap.from(el, { opacity: 0, y: 42, duration: 0.65, ease, delay: i * 0.08, scrollTrigger: { trigger: '#manifesto .dv-3', start: 'top 85%' } });
+    });
+    reveal('#waitlist > div > *', { y: 36, duration: 0.6 });
+    reveal('footer > *', { y: 30, duration: 0.6 });
+    // parallax
+    gsap.to('.dv-par-word', { yPercent: -16, ease: 'none', scrollTrigger: { trigger: '#network', start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+    setTimeout(() => { try { window.ScrollTrigger.refresh(); } catch (e) {} }, 400);
+  }
+
+  renderVals() {
+    const statusMap = {
+      open: { label: 'OPENS FIRST', color: '#ffd23f', dot: '#ffd23f', op: '1', style: 'solid' },
+      announced: { label: 'ANNOUNCED', color: '#f5b700', dot: '#11121a', op: '1', style: 'solid' },
+      locked: { label: 'LOCKED', color: '#6b7280', dot: '#11121a', op: '0.55', style: 'dashed' },
+    };
+    const selRaw = this.allStations().find((s) => s.id === this.state.selected) || this.allStations()[0];
+    const sm = statusMap[selRaw.status];
+    const sel = Object.assign({}, selRaw, { statusLabel: sm.label, statusColor: sm.color });
+
+    const lines = this.LINES.map((L) => Object.assign({}, L, {
+      onSelectFirst: () => this.select(L.stations[0].id),
+      stations: L.stations.map((s) => {
+        const m = statusMap[s.status];
+        return Object.assign({}, s, {
+          color: L.color,
+          onSelect: () => this.select(s.id),
+          dotFill: s.status === 'open' ? L.color : '#11121a',
+          dotStyle: m.style,
+          textOpacity: s.status === 'locked' ? '0.62' : '1',
+          titleColor: s.status === 'locked' ? '#6b7280' : '#a7ada3',
+        });
+      }),
+    }));
+
+    const prog = ['Question', 'Data', 'AI', 'Verification', 'Evidence', 'Intervention'];
+    return {
+      accent: this.props.accent ?? '#ffd23f',
+      manifestoLine: this.props.manifestoLine ?? 'The data underground exists beneath the noise.',
+      mapSelected: this.state.selected,
+      onMapSelect: (id) => this.select(id),
+      waitSubscribed: this.state.subscribed,
+      waitNotSubscribed: !this.state.subscribed,
+      waitHasError: !!this.state.error,
+      waitError: this.state.error,
+      onWaitInput: (e) => this.inputWait(e),
+      onWaitKey: (e) => this.keyWait(e),
+      onWaitSubmit: () => this.submitWait(),
+      sel,
+      lines,
+      oldWay: ['Python', 'SQL', 'Statistics', 'Machine Learning', 'Dashboard'],
+      progression: prog.map((p, i) => ({ label: p, sep: i < prog.length - 1 ? '→' : '' })),
+    };
+  }
+}
+</script>
+</body>
+</html>

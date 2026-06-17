@@ -1,0 +1,49 @@
+---
+// Utility ribbon — a 28px scrolling mono ticker (Data Underground Transit
+// Authority chrome). The fragment list is rendered twice for a seamless
+// translateX(-50%) loop; pauses on hover; freezes under reduced-motion.
+const FRAGMENTS: { text: string; color?: string }[] = [
+  { text: 'DATA UNDERGROUND TRANSIT AUTHORITY' },
+  { text: '◆ STILL COOKING', color: 'var(--color-line-k)' },
+  { text: '5 LINES · 25 STATIONS' },
+  { text: '37.7749°N 122.4194°W' },
+  { text: 'G', color: 'var(--color-line-g)' },
+  { text: 'K', color: 'var(--color-line-k)' },
+  { text: 'R', color: 'var(--color-line-r)' },
+  { text: 'B', color: 'var(--color-line-b)' },
+  { text: 'V', color: 'var(--color-line-v)' },
+  { text: 'DATA IS INFRASTRUCTURE · AWARENESS IS POWER' },
+  { text: '> THE REVOLUTION WILL BE COMPUTED', color: 'var(--color-ghost)' },
+  { text: 'WEAPONS OF MASS INSTRUCTION', color: 'var(--color-signal)' },
+]
+---
+<div class="dv-ribbon ticker" aria-hidden="true">
+  <div class="dv-track track">
+    {[0, 1].map(() =>
+      FRAGMENTS.map((f) => (
+        <span class="frag" style={f.color ? `color:${f.color}` : undefined}>{f.text}</span>
+      )),
+    )}
+  </div>
+</div>
+
+<style>
+  .ticker {
+    height: 28px;
+    border-bottom: 1px solid var(--color-edge);
+    background: var(--color-bg);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  .track {
+    display: flex;
+    white-space: nowrap;
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    color: var(--color-ink-4);
+  }
+  .frag { padding: 0 20px; }
+</style>

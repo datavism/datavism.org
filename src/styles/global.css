@@ -1,18 +1,108 @@
-/* src/styles/global.css */
+/* src/styles/global.css — DATAVISM "Evidence Engine" design system.
+ * Tokens mirror docs/design_handoff_datavism/README.md §Design Tokens.
+ * Fonts are self-hosted (@fontsource, imported in Base.astro) — no third-party
+ * CDN call, in keeping with the project's no-tracking ethos.
+ */
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #050805;        /* page background */
-  --color-phosphor: #9ef0a8;   /* primary terminal green */
-  --color-phosphor-dim: #5c8c63; /* ≥4.5:1 on ink (WCAG AA, review fix) */
-  --color-phosphor-hi: #d9ffe0;
-  --color-signal: #ffd23f;     /* warm accent (links, line G) */
-  --color-line-k: #46c8ff;     /* Key cyan */
-  --color-line-r: #c0c8d8;     /* Rook steel */
-  --color-line-b: #ff4fd2;     /* Bite magenta */
-  --color-line-v: #b48cff;     /* Vesper violet */
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* — surfaces & ink — */
+  --color-bg: #060608;        /* page background (near-black, cool tint) */
+  --color-panel: #0e0f14;     /* cards / panels */
+  --color-panel-2: #0b0c10;   /* insets, map board, alt panels */
+  --color-panel-3: #11121a;   /* raised rail panels (landing) */
+  /* borders (README: line / line-2 / line-3 — renamed to avoid colliding
+     with the five line-colour tokens below) */
+  --color-edge: #20222b;      /* default 1px border */
+  --color-edge-2: #2c2f3a;    /* hairline / input borders */
+  --color-edge-3: #343843;    /* slightly stronger border / crop marks */
+  /* ink scale */
+  --color-ink: #f2f1ea;       /* primary text (warm off-white) */
+  --color-ink-2: #cfd2c9;     /* body text */
+  --color-ink-3: #a7ada3;     /* secondary text */
+  --color-ink-4: #6b7280;     /* muted / mono captions */
+  --color-ink-5: #565c66;     /* disabled / separators */
+  --color-eyebrow: #6f8f76;   /* dim green mono eyebrows */
+
+  /* — brand accents (canonical) — */
+  --color-signal: #ffd23f;    /* PRIMARY UI accent — buttons, links, wordmark */
+  --color-signal-hi: #ffdd66; /* button hover */
+  --color-ghost: #39ff14;     /* neon ghost · live/online/terminal · > prompts */
+  --color-magenta: #ff2a6d;   /* secondary pop / logo drop-shadow */
+
+  /* — the five lines (canonical, do not change meaning) — */
+  --color-line-g: #3df07a;    /* GHOST / Foundation */
+  --color-line-k: #f5b700;    /* KEY / Tracking & OSINT */
+  --color-line-r: #ff4d4d;    /* ROOK / Economy & Power */
+  --color-line-b: #4d8dff;    /* BITE / Feeds & Behavior */
+  --color-line-v: #b48cff;    /* VESPER / Climate & Future */
+
+  /* — type — */
+  --font-display: "Martian Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-html { background: var(--color-ink); color: var(--color-phosphor); }
-body { font-family: var(--font-mono); margin: 0; }
+html { background: var(--color-bg); color: var(--color-ink); -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font-mono); margin: 0; overflow-x: hidden; }
+* { box-sizing: border-box; }
+::selection { background: var(--color-signal); color: var(--color-bg); }
+
+a { color: inherit; }
+
+/* Display face — headings & wordmarks. */
+.font-display { font-family: var(--font-display); }
+
+/* Mono eyebrow: `// LABEL`, uppercase, wide tracking. */
+.eyebrow {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-ink-4);
+}
+
+/* ——————————————————————————————————————————————————————————————
+ * Shared motion. All gated by prefers-reduced-motion at the bottom.
+ * Mirrors docs/design_handoff_datavism §Motion.
+ * ———————————————————————————————————————————————————————————————*/
+
+/* blinking terminal cursor `▋` */
+@keyframes dv-blink { 0%, 48% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.dv-cursor { animation: dv-blink 1.1s step-end infinite; }
+
+/* interchange pulse ring */
+@keyframes dv-pulse { 0%, 100% { opacity: .55; transform: scale(1); } 60% { opacity: 0; transform: scale(1.5); } }
+.dv-pulse { transform-box: fill-box; transform-origin: center; animation: dv-pulse 3s ease-out infinite; }
+
+/* slow rotating dashed ring */
+@keyframes dv-spin { to { transform: rotate(360deg); } }
+.dv-spin { transform-box: fill-box; transform-origin: center; animation: dv-spin 22s linear infinite; }
+
+/* utility ribbon / ticker */
+@keyframes dv-ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.dv-track { animation: dv-ticker 48s linear infinite; }
+.dv-ribbon:hover .dv-track { animation-play-state: paused; }
+
+/* map line draw-on (stroke-dashoffset var(--len) → 0) */
+@keyframes dv-draw { from { stroke-dashoffset: var(--len); } to { stroke-dashoffset: 0; } }
+.dv-line { animation: dv-draw 1.7s cubic-bezier(.65,0,.2,1) both; }
+
+/* live-line data packets */
+@keyframes dv-packets { to { stroke-dashoffset: -480; } }
+.dv-packets { animation: dv-packets 7s linear infinite; }
+
+/* ghost eye-blink (logo + interchange) — gentle, infrequent */
+@keyframes dv-eyeblink { 0%, 95%, 100% { transform: scaleY(1); } 97.5% { transform: scaleY(0.18); } }
+
+/* nav underline that grows from 0 on hover */
+.dv-nav a { position: relative; }
+.dv-nav a::after {
+  content: ''; position: absolute; left: 0; bottom: -5px; width: 0; height: 1px;
+  background: var(--ac, var(--color-signal)); transition: width .25s ease;
+}
+.dv-nav a:hover::after { width: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dv-cursor, .dv-pulse, .dv-spin, .dv-track { animation: none !important; }
+  .dv-line { animation: none !important; stroke-dashoffset: 0 !important; }
+  .dv-packets { display: none !important; }
+}

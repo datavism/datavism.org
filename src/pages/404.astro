@@ -1,0 +1,29 @@
+---
+// 404 — station not found, in GHOST's voice.
+import Base from '../layouts/Base.astro'
+---
+<Base title="404 — off the map — DATAVISM" description="This station isn't on the map." footer={false}>
+  <main class="nf">
+    <div class="eb">// 404 · OFF THE MAP</div>
+    <h1 class="font-display title">This station<br />isn't on the map.</h1>
+    <p class="p">Either it hasn't opened yet, or you took a wrong turn in the dark. Either way — I logged it. Old habit.</p>
+    <p class="ghost">// GHOST</p>
+    <div class="ctas">
+      <a class="cta-yellow" href="/">Back to the surface →</a>
+      <a class="cta-ghost" href="/line-g">Ride LINE G</a>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .nf { max-width: 780px; margin: 0 auto; padding: 80px 28px; }
+  .eb { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; color: var(--color-ghost); margin-bottom: 24px; }
+  .title { font-weight: 800; font-size: clamp(34px, 6vw, 64px); line-height: 0.98; letter-spacing: -0.04em; margin: 0; color: var(--color-ink); text-transform: uppercase; }
+  .p { font-size: 16px; line-height: 1.7; color: var(--color-ink-3); margin: 26px 0 0; max-width: 52ch; }
+  .ghost { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--color-ink-4); margin: 16px 0 0; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+  .cta-yellow { display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; text-decoration: none; padding: 15px 26px; background: var(--color-signal); color: var(--color-panel-2); }
+  .cta-yellow:hover { background: var(--color-signal-hi); }
+  .cta-ghost { display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; padding: 15px 26px; border: 1px solid var(--color-edge-2); color: var(--color-ink); }
+  .cta-ghost:hover { border-color: var(--color-ink-3); }
+</style>

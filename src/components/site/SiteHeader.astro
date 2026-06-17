@@ -1,0 +1,61 @@
+---
+// Site header — ghost roundel + DATAVISM wordmark + sub, nav, and the yellow
+// "Join waitlist →" button. Nav uses site-absolute anchors so the links work
+// from any page (the section anchors live on the landing page).
+import GhostMark from './GhostMark.astro'
+
+interface Props {
+  active?: 'network' | 'lines' | 'method' | 'manifesto'
+}
+const { active } = Astro.props
+const nav = [
+  { label: 'Network', href: '/#network', key: 'network' },
+  { label: 'Lines', href: '/#lines', key: 'lines' },
+  { label: 'Method', href: '/#method', key: 'method' },
+  { label: 'Manifesto', href: '/manifesto', key: 'manifesto' },
+]
+---
+<header class="site-header">
+  <a class="brand" href="/">
+    <GhostMark size={31} blink />
+    <span class="wordmark">
+      <span class="name font-display">DATAVISM</span>
+      <span class="sub">THE DATA UNDERGROUND</span>
+    </span>
+  </a>
+  <nav class="dv-nav nav">
+    {nav.map((n) => (
+      <a href={n.href} aria-current={active === n.key ? 'page' : undefined} class:list={["nav-link", { current: active === n.key }]}>{n.label}</a>
+    ))}
+    <a class="join" href="/#waitlist">Join waitlist →</a>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding: 16px 30px; border-bottom: 1px solid var(--color-edge);
+    width: 100%;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .wordmark { display: flex; flex-direction: column; line-height: 1; }
+  .name { font-weight: 800; font-size: 21px; letter-spacing: -0.04em; color: var(--color-ink); }
+  .sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.3em; color: var(--color-eyebrow); margin-top: 4px; }
+  .nav {
+    display: flex; align-items: center; gap: 28px;
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .nav-link { color: var(--color-ink-3); text-decoration: none; transition: color .2s ease; }
+  .nav-link:hover { color: var(--color-ink); }
+  .nav-link.current { color: var(--color-ink); }
+  .join {
+    display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;
+    background: var(--color-signal); color: var(--color-panel-2); font-weight: 700;
+    text-decoration: none; transition: background .2s ease;
+  }
+  .join:hover { background: var(--color-signal-hi); }
+  @media (max-width: 720px) {
+    .site-header { flex-wrap: wrap; gap: 14px; padding: 14px 20px; }
+    .nav { gap: 18px; font-size: 10.5px; flex-wrap: wrap; }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+// Line G overview — GHOST / Foundation (design: Line G - Ghost Foundation.dc.html).
+// Five station rows + a small (label-less) NetworkMap rail. Data from lines.ts.
+import Base from '../../layouts/Base.astro'
+import NetworkMap from '../../components/NetworkMap.svelte'
+import { getLineById } from '../../lib/curriculum/lines'
+
+const line = getLineById('g')
+const STATUS = {
+  open: { label: 'LIVE NOW', color: '#3df07a' },
+  announced: { label: 'ANNOUNCED', color: '#f5b700' },
+  locked: { label: 'LOCKED', color: '#6b7280' },
+}
+const rows = line.stations.map((s) => {
+  const m = STATUS[s.status]
+  const live = s.status === 'open'
+  return {
+    ...s,
+    href: live ? `/line-g/${s.slug}` : '#',
+    edge: live ? '#3df07a' : '#20222b',
+    codeBg: live ? '#3df07a' : 'transparent',
+    codeFg: live ? '#06120a' : '#3df07a',
+    titleColor: s.status === 'locked' ? '#a7ada3' : '#f2f1ea',
+    statusLabel: m.label,
+    statusColor: m.color,
+    artifactColor: live ? '#3df07a' : '#6b7280',
+  }
+})
+---
+<Base title="LINE G · GHOST / Foundation — DATAVISM" description={line.motto} footer={false}>
+  <main class="lg">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="crumb">NETWORK <span class="sep">/</span> <span class="g">LINE G</span></div>
+      <div class="id">
+        <span class="badge font-display">G</span>
+        <h1 class="font-display title">GHOST<span class="sep"> / </span>FOUNDATION</h1>
+      </div>
+      <p class="motto">{line.motto}</p>
+      <p class="intro">Line G is the operating system of DATAVISM — the method every other line runs on. You learn to turn a vague suspicion into a verifiable investigation, then carry that method into surveillance, money, feeds or the future.</p>
+      <div class="meta">
+        <div><div class="ml">CORE QUESTION</div><div class="ink">How do I make a suspicion verifiable?</div></div>
+        <div><div class="ml">FINAL ARTIFACT</div><div class="g">{line.finalArtifact}</div></div>
+        <div><div class="ml">STATIONS</div><div class="ink">5 · G1 live now</div></div>
+      </div>
+    </section>
+
+    <!-- BODY -->
+    <div class="body">
+      <div class="main">
+        <div class="kicker">// FIVE STOPS</div>
+        <div class="rows">
+          {rows.map((st) => (
+            <a class="row" href={st.href} aria-disabled={st.href === '#' ? 'true' : undefined} style={`border-left:3px solid ${st.edge};`}>
+              <span class="rcode" style={`background:${st.codeBg};color:${st.codeFg};border:1px solid ${st.edge};`}>{st.code}</span>
+              <span class="rmid">
+                <span class="rtitle-row">
+                  <span class="font-display rtitle" style={`color:${st.titleColor};`}>{st.title}</span>
+                  <span class="rstatus" style={`color:${st.statusColor};border:1px solid ${st.statusColor};`}>{st.statusLabel}</span>
+                </span>
+                <span class="rrole">{st.role}</span>
+              </span>
+              <span class="rart"><span class="ral">ARTIFACT</span><span style={`color:${st.artifactColor};`}>{st.artifact}</span></span>
+            </a>
+          ))}
+        </div>
+        <div class="start-wrap">
+          <a class="start" href={`/line-g/${line.stations[0].slug}`}>Start the line · G1 →</a>
+        </div>
+      </div>
+
+      <!-- RAIL -->
+      <aside class="rail">
+        <div class="rail-map">
+          <div class="rail-kicker">// G ON THE NETWORK</div>
+          <NetworkMap client:visible selected="g1" liveLine="g" labels={false} accent="#3df07a" />
+        </div>
+        <div class="rail-why">
+          <div class="why-h">WHY START HERE</div>
+          <p class="why-p">Everyone starts with G. It is the shared grammar — the method the whole underground speaks.</p>
+          <div class="why-lines">
+            <span class="k">K</span> trace the watchers<br />
+            <span class="r">R</span> follow the value<br />
+            <span class="b">B</span> decode the feed<br />
+            <span class="v">V</span> read the long signal
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .lg { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+  .hero { padding: 40px 0 34px; border-bottom: 1px solid var(--color-edge); }
+  .crumb { font-size: 11px; letter-spacing: 0.14em; color: var(--color-ink-4); margin-bottom: 24px; }
+  .sep { color: var(--color-ink-5); }
+  .g { color: var(--color-line-g); }
+  .k { color: var(--color-line-k); } .r { color: var(--color-line-r); } .b { color: var(--color-line-b); } .v { color: var(--color-line-v); }
+  .id { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-bottom: 6px; }
+  .badge { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border: 2px solid var(--color-line-g); color: var(--color-line-g); font-weight: 800; font-size: 36px; }
+  .title { font-weight: 800; font-size: clamp(34px, 5.5vw, 62px); line-height: 0.96; letter-spacing: -0.04em; margin: 0; }
+  .motto { font-size: clamp(17px, 2.2vw, 22px); line-height: 1.35; color: var(--color-line-g); margin: 20px 0 0; }
+  .intro { max-width: 62ch; font-size: 15px; line-height: 1.65; color: var(--color-ink-3); margin: 18px 0 0; }
+  .meta { display: flex; flex-wrap: wrap; gap: 26px; margin-top: 26px; font-size: 11px; letter-spacing: 0.04em; }
+  .ml { color: var(--color-ink-5); margin-bottom: 4px; }
+  .ink { color: var(--color-ink); }
+
+  .body { display: grid; grid-template-columns: 1fr 320px; gap: 40px; padding: 36px 0 56px; align-items: start; }
+  .main { min-width: 0; }
+  .kicker { font-size: 11px; letter-spacing: 0.16em; color: var(--color-ink-4); margin-bottom: 18px; }
+  .rows { display: grid; gap: 12px; }
+  .row { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; border: 1px solid var(--color-edge); background: var(--color-panel); padding: 18px 20px; text-decoration: none; color: inherit; transition: background .2s ease, border-color .2s ease; }
+  .row[aria-disabled='true'] { cursor: default; }
+  .row:not([aria-disabled]):hover { background: var(--color-panel-3); }
+  .rcode { display: inline-flex; align-items: center; justify-content: center; min-width: 46px; height: 38px; padding: 0 9px; font-weight: 800; font-size: 17px; }
+  .rmid { min-width: 0; }
+  .rtitle-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .rtitle { font-weight: 700; font-size: 18px; }
+  .rstatus { font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 7px; }
+  .rrole { display: block; font-size: 13px; line-height: 1.5; color: var(--color-ink-3); margin-top: 6px; }
+  .rart { text-align: right; font-size: 11px; white-space: nowrap; }
+  .ral { display: block; color: var(--color-ink-5); margin-bottom: 3px; }
+  .start-wrap { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
+  .start { display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; text-decoration: none; padding: 15px 24px; background: var(--color-line-g); color: #06120a; }
+
+  .rail { position: sticky; top: 20px; display: grid; gap: 16px; }
+  .rail-map { border: 1px solid var(--color-edge); background: var(--color-panel-2); padding: 12px; }
+  .rail-kicker { font-size: 10px; letter-spacing: 0.14em; color: #46525d; margin-bottom: 6px; padding: 2px 4px; }
+  .rail-why { border: 1px solid var(--color-edge); border-top: 3px solid var(--color-line-g); background: var(--color-panel); padding: 18px; }
+  .why-h { font-size: 10px; letter-spacing: 0.16em; color: var(--color-ink-4); margin-bottom: 12px; }
+  .why-p { font-size: 13px; line-height: 1.6; color: var(--color-ink-3); margin: 0 0 12px; }
+  .why-lines { font-size: 12px; line-height: 1.7; color: var(--color-ink-2); }
+
+  @media (max-width: 940px) {
+    .body { grid-template-columns: 1fr; }
+    .rail { position: static; }
+    .rart { text-align: left; }
+  }
+</style>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #060608; }
+  ::selection { background: #ffd23f; color: #060608; }
+  @keyframes pm-pulse { 0%,100% { opacity: .5; transform: scale(1); } 60% { opacity: 0; transform: scale(1.5); } }
+  .pm-pulse { transform-box: fill-box; transform-origin: center; animation: pm-pulse 2.8s ease-out infinite; }
+  .pm-cur { filter: drop-shadow(0 0 5px currentColor); }
+  .pm-row:hover { background: #11121a; }
+  .pm-link { transition: color .2s ease; }
+  @media (prefers-reduced-motion: reduce) { .pm-pulse { animation: none !important; } }
+  @media (max-width: 1180px) {
+    .pm-shell { grid-template-columns: 1fr !important; }
+    .pm-map { grid-template-columns: 1fr !important; grid-template-areas: 'g' 'hub' 'k' 'r' 'b' 'v' !important; }
+  }
+</style>
+</helmet>
+
+<div style="position: relative; background: #060608; color: #f2f1ea; font-family: 'Spline Sans Mono', monospace; min-height: 100vh; padding: 0 0 40px;">
+
+  <!-- APP HEADER -->
+  <header style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 28px; border-bottom: 1px solid #20222b;">
+    <a href="DATAVISM.dc.html" class="pm-link" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+      <svg width="24" height="24" viewBox="-8 -8 146 146" aria-hidden="true" style="flex: none;"><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#ff2a6d" stroke-width="12" opacity="0.9" transform="translate(3,3)"/><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#39ff14" stroke-width="10" stroke-linejoin="round"/><circle cx="78" cy="64" r="7" fill="#39ff14"/><circle cx="110" cy="64" r="7" fill="#39ff14"/></svg>
+      <span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 17px; letter-spacing: -0.04em; color: #f2f1ea;">DATAVISM</span>
+      <span style="font-size: 10px; letter-spacing: 0.2em; color: #6b7280; border-left: 1px solid #20222b; padding-left: 12px;">PROGRESS MAP</span>
+    </a>
+    <div style="font-size: 10.5px; letter-spacing: 0.16em; color: #6b7280; text-align: right; line-height: 1.5;">TURN HIDDEN SYSTEMS<br>INTO PUBLIC EVIDENCE</div>
+  </header>
+
+  <div class="pm-shell" style="display: grid; grid-template-columns: 296px 1fr 320px; gap: 18px; padding: 22px 28px; max-width: 1640px; margin: 0 auto; align-items: start;">
+
+    <!-- LEFT SIDEBAR -->
+    <aside style="display: grid; gap: 16px;">
+      <!-- PROFILE -->
+      <div style="border: 1px solid #20222b; background: #0e0f14; padding: 16px; display: flex; align-items: center; gap: 14px;">
+        <span style="display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border: 1px solid #2c2f3a; border-radius: 50%; flex: none;">
+          <svg width="26" height="26" viewBox="-8 -8 146 146" aria-hidden="true"><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#ff2a6d" stroke-width="12" opacity="0.9" transform="translate(3,3)"/><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#39ff14" stroke-width="10" stroke-linejoin="round"/><circle cx="78" cy="64" r="7" fill="#39ff14"/><circle cx="110" cy="64" r="7" fill="#39ff14"/></svg>
+        </span>
+        <div style="min-width: 0;">
+          <div style="font-size: 10px; letter-spacing: 0.16em; color: #6b7280;">GHOST ANALYST</div>
+          <div style="font-family: 'Martian Mono', monospace; font-weight: 700; font-size: 16px; color: #39ff14; margin: 3px 0 8px;">LEVEL 12</div>
+          <div style="height: 5px; background: #11121a; border: 1px solid #20222b; position: relative;"><div style="position: absolute; inset: 0 39% 0 0; background: #39ff14;"></div></div>
+          <div style="display: flex; justify-content: space-between; font-size: 9.5px; color: #6b7280; margin-top: 5px;"><span>2,450 XP</span><span>2,450 / 4,000</span></div>
+        </div>
+      </div>
+
+      <!-- LINE PROGRESS -->
+      <div style="border: 1px solid #20222b; background: #0e0f14; padding: 16px;">
+        <div style="font-size: 10px; letter-spacing: 0.16em; color: #6b7280; margin-bottom: 14px;">LINE PROGRESS</div>
+        <div style="display: grid; gap: 13px;">
+          <sc-for list="{{ lines }}" as="line" hint-placeholder-count="5">
+            <div>
+              <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 6px;">
+                <span style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border: 1px solid {{ line.color }}; color: {{ line.color }}; font-size: 10px; font-weight: 700; flex: none;">{{ line.code }}</span>
+                <span style="font-size: 10.5px; color: #cfd2c9; letter-spacing: 0.04em;">{{ line.name }}</span>
+                <span style="margin-left: auto; font-size: 10.5px; color: {{ line.color }};">{{ line.progress }}%</span>
+              </div>
+              <div style="height: 4px; background: #11121a; position: relative;"><div style="position: absolute; top: 0; bottom: 0; left: 0; width: {{ line.progressW }}; background: {{ line.color }};"></div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- CASE FILE PROGRESS -->
+      <div style="border: 1px solid #20222b; background: #0e0f14; padding: 16px; display: flex; align-items: center; gap: 18px;">
+        <svg width="92" height="92" viewBox="0 0 100 100" style="flex: none;">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#20222b" stroke-width="7"/>
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#39ff14" stroke-width="7" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="211.1" transform="rotate(-90 50 50)"/>
+          <g fill="none" stroke="#6b7280" stroke-width="3.5" stroke-linejoin="round"><path d="M37 42 h10 l3 4 h13 v16 h-26 z"/></g>
+        </svg>
+        <div>
+          <div style="font-family: 'Martian Mono', monospace; font-size: 20px; color: #f2f1ea;"><span style="color: #39ff14;">5</span> / 25</div>
+          <div style="font-family: 'Martian Mono', monospace; font-size: 26px; font-weight: 800; color: #39ff14; line-height: 1.1;">20%</div>
+          <div style="font-size: 9.5px; letter-spacing: 0.12em; color: #6b7280; margin-top: 4px;">CASE FILES<br>COMPLETED</div>
+        </div>
+      </div>
+
+      <!-- CURRENT MISSION -->
+      <div style="border: 1px solid #20222b; border-left: 3px solid #f5b700; background: #0e0f14; padding: 16px;">
+        <div style="font-size: 10px; letter-spacing: 0.16em; color: #6b7280; margin-bottom: 12px;">CURRENT MISSION</div>
+        <div style="display: flex; align-items: center; gap: 11px;">
+          <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #f5b700; color: #0b0c10; font-weight: 800; font-size: 14px; flex: none;">{{ mission.lineCode }}</span>
+          <span style="font-family: 'Martian Mono', monospace; font-weight: 700; font-size: 17px; color: #f2f1ea;">{{ mission.title }}</span>
+          <span style="margin-left: auto; font-size: 11px; color: #f5b700;">{{ mission.code }}</span>
+        </div>
+        <div style="font-size: 11.5px; line-height: 1.5; color: #a7ada3; margin: 12px 0 14px;">{{ mission.note }}</div>
+        <button style="display: flex; align-items: center; justify-content: space-between; width: 100%; background: transparent; border: 1px solid #2c2f3a; color: #f2f1ea; font-family: inherit; font-size: 11px; letter-spacing: 0.1em; padding: 10px 13px; cursor: pointer;" style-hover="border-color: #f5b700;">VIEW MISSION <span style="color: #f5b700;">→</span></button>
+      </div>
+
+      <!-- LEGEND -->
+      <div style="border: 1px solid #20222b; background: #0e0f14; padding: 16px;">
+        <div style="font-size: 10px; letter-spacing: 0.16em; color: #6b7280; margin-bottom: 13px;">LEGEND</div>
+        <div style="display: grid; gap: 11px; font-size: 10.5px; letter-spacing: 0.04em; color: #a7ada3;">
+          <span style="display: inline-flex; align-items: center; gap: 11px;"><span style="display: inline-flex;">{{ legCompleted }}</span>COMPLETED</span>
+          <span style="display: inline-flex; align-items: center; gap: 11px;"><span style="display: inline-flex;">{{ legCurrent }}</span>CURRENT STATION</span>
+          <span style="display: inline-flex; align-items: center; gap: 11px;"><span style="display: inline-flex;">{{ legUnlocked }}</span>UNLOCKED</span>
+          <span style="display: inline-flex; align-items: center; gap: 11px;"><span style="display: inline-flex;">{{ legLocked }}</span>LOCKED</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER -->
+    <section>
+      <div style="text-align: center; margin-bottom: 6px;">
+        <h1 style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: clamp(26px, 3.4vw, 42px); letter-spacing: -0.04em; margin: 0; color: #f2f1ea;">DATAVISM PROGRESS MAP</h1>
+        <p style="font-size: 13px; color: #a7ada3; margin: 8px 0 0;">Track your path through the Evidence Engine.</p>
+      </div>
+
+      <div style="margin-top: 26px; border: 1px solid #20222b; background: #0b0c10; padding: 14px 14px 8px; position: relative;">
+        <div style="position: absolute; top: 12px; left: 16px; font-family: 'Spline Sans Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: #46525d; z-index: 2;">// NETWORK · YOUR PROGRESS</div>
+        <dc-import name="NetworkMap" statuses="{{ progressStatuses }}" selected="{{ focused }}" on-select="{{ onMapSelect }}" live-line="k" dim-inactive="{{ dimOff }}" hint-size="100%,560px"></dc-import>
+        <div style="display: flex; flex-wrap: wrap; gap: 16px 22px; padding: 10px 6px 12px; font-family: 'Spline Sans Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: #6b7280; border-top: 1px solid #20222b; margin-top: 4px;">
+          <span style="display: inline-flex; align-items: center; gap: 8px;"><span style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid #3df07a;"></span>COMPLETED</span>
+          <span style="display: inline-flex; align-items: center; gap: 8px;"><span style="width: 11px; height: 11px; border-radius: 50%; background: #f5b700;"></span>CURRENT</span>
+          <span style="display: inline-flex; align-items: center; gap: 8px;"><span style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid #4d8dff;"></span>UNLOCKED</span>
+          <span style="display: inline-flex; align-items: center; gap: 8px;"><span style="width: 11px; height: 11px; border-radius: 50%; border: 2px dashed #565c66;"></span>LOCKED</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside style="display: grid; gap: 16px;">
+      <!-- YOU ARE HERE -->
+      <div style="border: 1px solid {{ here.color }}; border-top: 3px solid {{ here.color }}; background: #0e0f14; padding: 18px;">
+        <div style="font-size: 10px; letter-spacing: 0.16em; color: #6b7280; margin-bottom: 14px;">YOU ARE HERE</div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 32px; padding: 0 8px; background: {{ here.color }}; color: #0b0c10; font-weight: 800; font-size: 16px;">{{ here.code }}</span>
+          <span style="font-family: 'Martian Mono', monospace; font-weight: 700; font-size: 18px; color: #f2f1ea;">{{ here.title }}</span>
+        </div>
+        <div style="font-size: 10.5px; letter-spacing: 0.06em; color: {{ here.color }}; margin: 12px 0 6px;">{{ here.lineName }}</div>
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 14px;">
+          <p style="font-size: 12px; line-height: 1.5; color: #a7ada3; margin: 0; max-width: 22ch;">{{ here.note }}</p>
+          <svg width="60" height="40" viewBox="0 0 60 40" style="flex: none;"><rect x="2" y="22" width="8" height="16" fill="#2c2f3a"/><rect x="15" y="14" width="8" height="24" fill="#2c2f3a"/><rect x="28" y="8" width="8" height="30" fill="#f5b700"/><rect x="41" y="18" width="8" height="20" fill="#2c2f3a"/></svg>
+        </div>
+      </div>
+
+      <!-- RECENT CASE FILES -->
+      <div style="border: 1px solid #20222b; background: #0e0f14; padding: 18px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+          <span style="font-size: 10px; letter-spacing: 0.16em; color: #6b7280;">RECENT CASE FILES</span>
+          <span class="pm-link" style="font-size: 9.5px; letter-spacing: 0.1em; color: #a7ada3; cursor: pointer;">VIEW ALL ›</span>
+        </div>
+        <div style="display: grid; gap: 1px; background: #20222b;">
+          <sc-for list="{{ caseFiles }}" as="cf" hint-placeholder-count="5">
+            <div style="display: flex; align-items: center; gap: 10px; background: #0e0f14; padding: 11px 4px;">
+              <span style="font-size: 10.5px; color: #6b7280; width: 42px; flex: none;">{{ cf.id }}</span>
+              <span style="font-size: 11.5px; color: {{ cf.titleColor }}; flex: 1;">{{ cf.title }}</span>
+              <span style="font-size: 10px; letter-spacing: 0.08em; color: {{ cf.statusColor }};">{{ cf.statusLabel }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #20222b; margin-top: 12px; padding-top: 12px; font-size: 11px;">
+          <span style="color: #6b7280;"><span style="color: #39ff14;">5</span> / 25 case files</span>
+          <span style="color: #39ff14;">20%</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- BOTTOM STRIP -->
+  <div style="max-width: 1640px; margin: 4px auto 0; padding: 0 28px;">
+    <div style="border: 1px solid #20222b; background: #0b0c10; padding: 22px 28px;">
+      <div style="text-align: center; font-size: 12px; letter-spacing: 0.22em; color: #6b7280; margin-bottom: 20px;">FIVE LINES. ONE NETWORK.</div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #20222b;">
+        <div style="background: #0b0c10; padding: 16px 20px; display: flex; align-items: center; gap: 14px;">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#39ff14" stroke-width="1.6"><circle cx="7" cy="13" r="4"/><circle cx="19" cy="13" r="4"/><path d="M11 13 h4"/></svg>
+          <div><div style="font-size: 12px; font-weight: 700; color: #f2f1ea; letter-spacing: 0.04em;">CROSS-LINE INSIGHT</div><div style="font-size: 11px; color: #6b7280; margin-top: 3px;">Connect methods.</div></div>
+        </div>
+        <div style="background: #0b0c10; padding: 16px 20px; display: flex; align-items: center; gap: 14px;">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#ffd23f" stroke-width="1.6"><circle cx="13" cy="13" r="9"/><circle cx="13" cy="13" r="2.5" fill="#ffd23f"/><path d="M13 1 v4 M13 21 v4 M1 13 h4 M21 13 h4"/></svg>
+          <div><div style="font-size: 12px; font-weight: 700; color: #f2f1ea; letter-spacing: 0.04em;">EVIDENCE-FIRST</div><div style="font-size: 11px; color: #6b7280; margin-top: 3px;">Verify everything.</div></div>
+        </div>
+        <div style="background: #0b0c10; padding: 16px 20px; display: flex; align-items: center; gap: 14px;">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#ff2a6d" stroke-width="1.6" stroke-linejoin="round"><path d="M3 7 h7 l2 3 h11 v12 h-20 z"/></svg>
+          <div><div style="font-size: 12px; font-weight: 700; color: #f2f1ea; letter-spacing: 0.04em;">CASE FILES</div><div style="font-size: 11px; color: #6b7280; margin-top: 3px;">Every line ends in one.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ffd23f&quot;,&quot;options&quot;:[&quot;#ffd23f&quot;,&quot;#3df07a&quot;,&quot;#f5b700&quot;,&quot;#ff4d4d&quot;,&quot;#4d8dff&quot;,&quot;#b48cff&quot;]}}">
+class Component extends DCLogic {
+  state = { focused: 'k2' };
+
+  LINES = [
+    { id: 'g', code: 'G', name: 'GHOST / FOUNDATION', color: '#3df07a', progress: 80, area: 'g', stations: [
+      ['G1', 'THE FOLDER', 'completed', 'Turn discomfort into a testable question.'],
+      ['G2', 'COMMAND', 'completed', 'Command AI. Prompts are specs.'],
+      ['G3', 'INTAKE', 'completed', 'Collect and structure the raw.'],
+      ['G4', 'THE CONFIDENT LIE', 'completed', 'Catch the confident lie.'],
+      ['G5', 'MASCHINENRAUM', 'unlocked', 'Run the whole machine.'],
+    ] },
+    { id: 'k', code: 'K', name: 'KEY / TRACKING & OSINT', color: '#f5b700', progress: 60, area: 'k', stations: [
+      ['K1', 'FOOTPRINTS', 'completed', 'Map the traces you leave.'],
+      ['K2', 'SIGNALS', 'current', 'Trace the noise. Find the pattern.'],
+      ['K3', 'IDENTITY GRAPH', 'unlocked', 'Scattered traces become a profile.'],
+      ['K4', 'WATCHTOWER', 'locked', 'Watch what changes in the dark.'],
+      ['K5', 'PANOPTICON FILE', 'locked', 'Package the surveillance file.'],
+    ] },
+    { id: 'r', code: 'R', name: 'ROOK / ECONOMY & POWER', color: '#ff4d4d', progress: 40, area: 'r', stations: [
+      ['R1', 'LEDGER', 'completed', 'Who pays, who profits?'],
+      ['R2', 'ACTORS', 'unlocked', 'Map the actors.'],
+      ['R3', 'FLOWS', 'locked', 'Follow where value moves.'],
+      ['R4', 'LEVERAGE', 'locked', 'Find the pressure points.'],
+      ['R5', 'MAMMON FILE', 'locked', 'Make economic power legible.'],
+    ] },
+    { id: 'b', code: 'B', name: 'BITE / FEEDS & BEHAVIOR', color: '#4d8dff', progress: 33, area: 'b', stations: [
+      ['B1', 'SOURCE', 'completed', 'Pick the feed that matters.'],
+      ['B2', 'CAPTURE', 'unlocked', 'Capture without distortion.'],
+      ['B3', 'NORMALIZE', 'locked', 'Clean the stream.'],
+      ['B4', 'DETECT', 'locked', 'Find the loop.'],
+      ['B5', 'FEED AUTOPSY', 'locked', 'Autopsy the feed.'],
+    ] },
+    { id: 'v', code: 'V', name: 'VESPER / CLIMATE & FUTURE', color: '#b48cff', progress: 20, area: 'v', stations: [
+      ['V1', 'ARCHIVE', 'locked', 'Find the long signal.'],
+      ['V2', 'PATTERNS', 'locked', 'Read the long trend.'],
+      ['V3', 'SCENARIOS', 'locked', 'Map plausible futures.'],
+      ['V4', 'IMPACT', 'locked', 'Who is affected, when?'],
+      ['V5', 'CUMULUS FILE', 'locked', 'Make the slow system impossible to ignore.'],
+    ] },
+  ];
+
+  CASE_FILES = [
+    ['CF-07', 'Border Signal Leak', 'completed'],
+    ['CF-06', 'Shell Network Map', 'completed'],
+    ['CF-05', 'Influence Pipeline', 'progress'],
+    ['CF-04', 'Ad-Tech Autopsy', 'locked'],
+    ['CF-03', 'Data Pollution Trail', 'locked'],
+  ];
+
+  icon(status, color) {
+    const h = React.createElement;
+    if (status === 'completed') {
+      return h('svg', { width: 22, height: 22, viewBox: '0 0 22 22' },
+        h('circle', { cx: 11, cy: 11, r: 9, fill: 'none', stroke: '#3df07a', strokeWidth: 2 }),
+        h('path', { d: 'M6.5 11.3 L9.4 14 L15 7.6', fill: 'none', stroke: '#3df07a', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }));
+    }
+    if (status === 'current') {
+      return h('svg', { width: 22, height: 22, viewBox: '0 0 22 22', className: 'pm-cur', style: { color } },
+        h('circle', { cx: 11, cy: 11, r: 9, fill: '#0b0c10', stroke: color, strokeWidth: 2.6 }),
+        h('circle', { cx: 11, cy: 11, r: 4, fill: color }));
+    }
+    if (status === 'unlocked') {
+      return h('svg', { width: 22, height: 22, viewBox: '0 0 22 22' },
+        h('circle', { cx: 11, cy: 11, r: 9, fill: 'none', stroke: '#4d8dff', strokeWidth: 2 }),
+        h('circle', { cx: 11, cy: 11, r: 3, fill: '#4d8dff' }));
+    }
+    return h('svg', { width: 22, height: 22, viewBox: '0 0 22 22' },
+      h('rect', { x: 6, y: 10, width: 10, height: 7.5, rx: 1, fill: 'none', stroke: '#565c66', strokeWidth: 1.5 }),
+      h('path', { d: 'M8 10 V8 a3 3 0 0 1 6 0 V10', fill: 'none', stroke: '#565c66', strokeWidth: 1.5 }));
+  }
+
+  mkStations(line) {
+    return line.stations.map((s) => {
+      const status = s[2];
+      const dim = status === 'locked';
+      return {
+        code: s[0], title: s[1], status, note: s[3],
+        icon: this.icon(status, line.color),
+        codeColor: dim ? '#565c66' : line.color,
+        titleColor: dim ? '#565c66' : (status === 'completed' ? '#a7ada3' : '#f2f1ea'),
+        onSelect: () => this.setState({ focused: s[0].toLowerCase() }),
+      };
+    });
+  }
+
+  renderVals() {
+    const lines = this.LINES.map((L) => ({
+      code: L.code, name: L.name, color: L.color, progress: L.progress,
+      progressW: L.progress + '%', area: L.area, stations: this.mkStations(L),
+    }));
+    const quad = lines.filter((l) => l.area !== 'v');
+    const vline = lines.find((l) => l.area === 'v');
+
+    // focused (you are here)
+    let here = null, mission = null;
+    this.LINES.forEach((L) => L.stations.forEach((s) => {
+      if (s[0].toLowerCase() === this.state.focused) here = { code: s[0], title: s[1], note: s[3], lineName: L.name, color: L.color };
+      if (s[2] === 'current') mission = { code: s[0], title: s[1], note: s[3], lineCode: L.code };
+    }));
+    if (!here) here = { code: 'K2', title: 'SIGNALS', note: 'Trace the noise. Find the pattern.', lineName: 'KEY / TRACKING & OSINT', color: '#f5b700' };
+
+    const cfMap = {
+      completed: { label: '✓ COMPLETED', color: '#3df07a', title: '#f2f1ea' },
+      progress: { label: 'IN PROGRESS', color: '#f5b700', title: '#f5b700' },
+      locked: { label: '🔒', color: '#565c66', title: '#6b7280' },
+    };
+    const caseFiles = this.CASE_FILES.map((c) => {
+      const m = cfMap[c[2]];
+      return { id: c[0], title: c[1], statusLabel: c[2] === 'locked' ? 'LOCKED' : m.label, statusColor: m.color, titleColor: m.title };
+    });
+
+    const progressStatuses = {};
+    this.LINES.forEach((L) => L.stations.forEach((s) => { progressStatuses[s[0].toLowerCase()] = s[2]; }));
+
+    return {
+      lines, quad, vline, here, mission, caseFiles,
+      progressStatuses, dimOff: false, focused: this.state.focused,
+      onMapSelect: (id) => this.setState({ focused: id }),
+      legCompleted: this.icon('completed', '#3df07a'),
+      legCurrent: this.icon('current', '#ffd23f'),
+      legUnlocked: this.icon('unlocked', '#4d8dff'),
+      legLocked: this.icon('locked', '#565c66'),
+    };
+  }
+}
+</script>
+</body>
+</html>

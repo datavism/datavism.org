@@ -1,0 +1,10 @@
+---
+// /network — a standalone view of the signature network explorer (map + the
+// five lines), reusing the same interactive island as the landing section.
+import Base from '../layouts/Base.astro'
+import NetworkExplorer from '../components/NetworkExplorer.svelte'
+import { LINES } from '../lib/curriculum/lines'
+---
+<Base title="The Network — DATAVISM" description="The octolinear map of the Data Underground: five lines, 25 stations, all converging at the Ghost interchange. Every line ends in a public Case File." active="network">
+  <NetworkExplorer client:load lines={LINES} accent="#ffd23f" />
+</Base>

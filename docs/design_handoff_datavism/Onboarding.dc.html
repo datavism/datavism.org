@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@500;600;700;800&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #060608; }
+  ::selection { background: #ffd23f; color: #060608; }
+  .ob-link { transition: color .2s ease; }
+  .ob-link:hover { color: #ffd23f !important; }
+  .ob-chip { transition: border-color .2s ease, color .2s ease; }
+  .ob-chip:hover { border-color: #39ff14 !important; color: #f2f1ea !important; }
+  .ob-card { transition: transform .2s ease, border-color .2s ease, background .2s ease; }
+  .ob-card:hover { transform: translateY(-3px); }
+  @keyframes ob-blink { 0%,48% { opacity: 1; } 50%,100% { opacity: 0; } }
+  .ob-cursor { animation: ob-blink 1.1s step-end infinite; }
+  @media (prefers-reduced-motion: reduce) { .ob-card:hover { transform: none; } .ob-cursor { animation: none; } }
+  @media (max-width: 820px) { .ob-split { grid-template-columns: 1fr !important; } }
+</style>
+</helmet>
+
+<div style="position: relative; background: #060608; color: #f2f1ea; font-family: 'Spline Sans Mono', monospace; min-height: 100vh; display: flex; flex-direction: column;">
+  <div style="position: fixed; inset: 0; pointer-events: none; z-index: 1; background: radial-gradient(54% 38% at 50% 0%, rgba(57,255,20,0.05), transparent 70%);"></div>
+
+  <div style="position: relative; z-index: 5; flex: 1; display: flex; flex-direction: column;">
+
+    <!-- HEADER + STEPPER -->
+    <header style="display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 28px; border-bottom: 1px solid #20222b;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <svg width="22" height="22" viewBox="-8 -8 146 146" aria-hidden="true" style="flex: none;"><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#ff2a6d" stroke-width="12" opacity="0.9" transform="translate(3,3)"/><path d="M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z" fill="none" stroke="#39ff14" stroke-width="10" stroke-linejoin="round"/><circle cx="78" cy="64" r="7" fill="#39ff14"/><circle cx="110" cy="64" r="7" fill="#39ff14"/></svg>
+        <span style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: 15px; letter-spacing: -0.04em;">DATAVISM</span>
+        <span style="font-size: 9px; letter-spacing: 0.2em; color: #565c66; border-left: 1px solid #20222b; padding-left: 10px;">INTAKE</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <sc-for list="{{ stepDots }}" as="d" hint-placeholder-count="4">
+          <span style="width: 22px; height: 4px; background: {{ d.bg }};"></span>
+        </sc-for>
+        <span style="font-size: 10px; letter-spacing: 0.12em; color: #6b7280; margin-left: 6px;">{{ stepLabel }}</span>
+      </div>
+    </header>
+
+    <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 28px;">
+      <div style="width: 100%; max-width: 720px;">
+
+        <!-- STEP 0 — WELCOME -->
+        <sc-if value="{{ isWelcome }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.2em; color: #39ff14; margin-bottom: 24px;">// ACCESS GRANTED · WELCOME TO THE NETWORK</div>
+            <h1 style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: clamp(36px, 6vw, 64px); line-height: 0.98; letter-spacing: -0.04em; margin: 0;">YOU ARE<br>THE NODE.</h1>
+            <p style="font-size: 16px; line-height: 1.7; color: #cfd2c9; margin: 26px 0 0; max-width: 54ch;">You're not enrolling in a course. You're entering a network that turns hidden systems into public evidence. No exit without action — so let's get your first investigation moving.</p>
+            <p style="font-size: 13px; line-height: 1.7; color: #6b7280; margin: 16px 0 0;">Three quick steps: <span style="color: #a7ada3;">bring a question</span> → <span style="color: #a7ada3;">choose a line</span> → <span style="color: #a7ada3;">enter G1</span>.</p>
+            <div style="margin-top: 36px;">
+              <button onClick="{{ onNext }}" style="display: inline-flex; align-items: center; gap: 10px; font-family: inherit; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; padding: 15px 28px; background: #39ff14; color: #06120a; border: none; cursor: pointer;">Begin intake →</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- STEP 1 — QUESTION -->
+        <sc-if value="{{ isQuestion }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.2em; color: #ffd23f; margin-bottom: 22px;">// STEP 01 · BRING A QUESTION</div>
+            <h2 style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: clamp(26px, 4vw, 42px); line-height: 1.02; letter-spacing: -0.035em; margin: 0;">What system bothers you?</h2>
+            <p style="font-size: 14.5px; line-height: 1.6; color: #a7ada3; margin: 18px 0 22px; max-width: 56ch;">Don't aim for a perfect research question. Name the unease — a feed, a price, a tracker, a money trail. The network sharpens it into something testable.</p>
+            <textarea onInput="{{ onQ }}" value="{{ qValue }}" placeholder="e.g. My weather app feels like an ad. What is it actually collecting?" style="width: 100%; min-height: 120px; resize: vertical; background: #0e0f14; border: 1px solid #2c2f3a; color: #f2f1ea; font-family: 'Spline Sans Mono', monospace; font-size: 15px; line-height: 1.6; padding: 16px; outline: none;" style-focus="border-color: #ffd23f;"></textarea>
+            <div style="display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px;">
+              <sc-for list="{{ examples }}" as="ex" hint-placeholder-count="4">
+                <button onClick="{{ ex.onPick }}" class="ob-chip" style="font-family: inherit; font-size: 11.5px; color: #a7ada3; background: transparent; border: 1px dashed #2c2f3a; padding: 8px 12px; cursor: pointer; text-align: left;">{{ ex.label }}</button>
+              </sc-for>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px; margin-top: 30px;">
+              <button onClick="{{ onBack }}" style="font-family: inherit; font-size: 12px; letter-spacing: 0.06em; color: #a7ada3; background: transparent; border: 1px solid #2c2f3a; padding: 13px 18px; cursor: pointer;">← Back</button>
+              <button onClick="{{ onNext }}" style="font-family: inherit; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; padding: 14px 24px; background: #ffd23f; color: #0b0c10; border: none; cursor: pointer;">Choose a line →</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- STEP 2 — PICK LINE -->
+        <sc-if value="{{ isLine }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.2em; color: #ffd23f; margin-bottom: 22px;">// STEP 02 · CHOOSE A LINE</div>
+            <h2 style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: clamp(24px, 3.6vw, 38px); line-height: 1.04; letter-spacing: -0.035em; margin: 0 0 8px;">Everyone starts at G. Then pick a system to ride.</h2>
+            <p style="font-size: 13.5px; line-height: 1.6; color: #a7ada3; margin: 0 0 22px;">Line G teaches the method. Your chosen line is where you'll apply it first.</p>
+            <div class="ob-split" style="display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start;">
+              <div style="display: grid; gap: 10px;">
+                <sc-for list="{{ lineCards }}" as="l" hint-placeholder-count="4">
+                  <button onClick="{{ l.onPick }}" class="ob-card" style="display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; text-align: left; border: 1px solid {{ l.border }}; background: {{ l.bg }}; padding: 15px 16px; cursor: pointer; font-family: inherit;">
+                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1.5px solid {{ l.color }}; color: {{ l.color }}; font-weight: 800; font-size: 17px;">{{ l.code }}</span>
+                    <span style="min-width: 0;"><span style="display: block; font-size: 13px; font-weight: 700; color: #f2f1ea;">{{ l.name }}</span><span style="display: block; font-size: 12px; color: {{ l.color }}; margin-top: 3px;">{{ l.motto }}</span></span>
+                    <span style="font-size: 16px; color: {{ l.tick }};">{{ l.mark }}</span>
+                  </button>
+                </sc-for>
+              </div>
+              <div style="border: 1px solid #20222b; background: #0b0c10; padding: 10px;">
+                <dc-import name="NetworkMap" selected="{{ mapSel }}" live-line="{{ mapLive }}" labels="{{ noLabels }}" hint-size="100%,230px"></dc-import>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px; margin-top: 28px;">
+              <button onClick="{{ onBack }}" style="font-family: inherit; font-size: 12px; letter-spacing: 0.06em; color: #a7ada3; background: transparent; border: 1px solid #2c2f3a; padding: 13px 18px; cursor: pointer;">← Back</button>
+              <button onClick="{{ onNext }}" style="font-family: inherit; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; padding: 14px 24px; background: {{ nextBg }}; color: #0b0c10; border: none; cursor: {{ nextCursor }}; opacity: {{ nextOp }};">{{ nextLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- STEP 3 — READY -->
+        <sc-if value="{{ isReady }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.2em; color: #39ff14; margin-bottom: 22px;">// INTAKE COMPLETE · YOU'RE IN THE NETWORK</div>
+            <h2 style="font-family: 'Martian Mono', monospace; font-weight: 800; font-size: clamp(30px, 5vw, 56px); line-height: 0.98; letter-spacing: -0.04em; margin: 0;">YOUR FIRST<br>STOP: <span style="color: #3df07a;">G1</span></h2>
+            <div style="display: grid; gap: 12px; margin: 28px 0 30px;">
+              <div style="border: 1px solid #20222b; border-left: 3px solid #ffd23f; background: #0e0f14; padding: 16px 18px;">
+                <div style="font-size: 10px; letter-spacing: 0.14em; color: #6b7280; margin-bottom: 7px;">YOUR QUESTION</div>
+                <div style="font-size: 15px; line-height: 1.5; color: #f2f1ea;">{{ qDisplay }}</div>
+              </div>
+              <div style="border: 1px solid #20222b; border-left: 3px solid {{ chosenColor }}; background: #0e0f14; padding: 16px 18px;">
+                <div style="font-size: 10px; letter-spacing: 0.14em; color: #6b7280; margin-bottom: 7px;">YOUR PATH</div>
+                <div style="font-size: 15px; color: #f2f1ea;"><span style="color: #3df07a;">G · Foundation</span> <span style="color: #565c66;">→</span> <span style="color: {{ chosenColor }};">{{ chosenName }}</span></div>
+              </div>
+            </div>
+            <p style="font-size: 14px; line-height: 1.6; color: #a7ada3; margin: 0 0 28px; max-width: 52ch;">G1 · THE FOLDER turns your suspicion into a testable question — and your first Case File. Bring the question. The network teaches the method.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 14px;">
+              <a href="Station - G1 The Folder.dc.html" style="display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; text-decoration: none; padding: 15px 26px; background: #3df07a; color: #06120a;">Enter G1 · The Folder →</a>
+              <a href="Progress Map.dc.html" class="ob-link" style="display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; padding: 15px 26px; border: 1px solid #2c2f3a; color: #f2f1ea;">See my map</a>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#39ff14&quot;,&quot;options&quot;:[&quot;#39ff14&quot;,&quot;#ffd23f&quot;,&quot;#f5b700&quot;,&quot;#ff4d4d&quot;,&quot;#4d8dff&quot;,&quot;#b48cff&quot;]}}">
+class Component extends DCLogic {
+  state = { step: 0, question: '', line: null };
+  _q = '';
+
+  LINESMETA = {
+    k: { name: 'KEY / Tracking & OSINT', motto: 'Trace the watchers.', color: '#f5b700', first: 'k1' },
+    r: { name: 'ROOK / Economy & Power', motto: 'Follow the value.', color: '#ff4d4d', first: 'r1' },
+    b: { name: 'BITE / Feeds & Behavior', motto: 'Decode the feed.', color: '#4d8dff', first: 'b1' },
+    v: { name: 'VESPER / Climate & Future', motto: 'Read the long signal.', color: '#b48cff', first: 'v1' },
+  };
+
+  next() {
+    const s = this.state.step;
+    if (s === 2 && !this.state.line) return;
+    this.setState({ step: Math.min(3, s + 1) });
+  }
+  back() { this.setState({ step: Math.max(0, this.state.step - 1) }); }
+  pickLine(id) { this.setState({ line: id }); }
+  setQ(e) { this.setState({ question: e.target.value }); }
+  useExample(txt) { this.setState({ question: txt }); }
+
+  renderVals() {
+    const step = this.state.step;
+    const line = this.state.line;
+    const chosen = line ? this.LINESMETA[line] : null;
+    const labels = ['WELCOME', 'QUESTION', 'LINE', 'READY'];
+
+    const lineCards = ['k', 'r', 'b', 'v'].map((id) => {
+      const m = this.LINESMETA[id];
+      const sel = line === id;
+      return {
+        code: id.toUpperCase(), name: m.name, motto: m.motto, color: m.color,
+        onPick: () => this.pickLine(id),
+        border: sel ? m.color : '#20222b',
+        bg: sel ? '#11121a' : '#0e0f14',
+        tick: sel ? m.color : '#2c2f3a',
+        mark: sel ? '●' : '○',
+      };
+    });
+
+    return {
+      stepDots: labels.map((_, i) => ({ bg: i <= step ? '#39ff14' : '#20222b' })),
+      stepLabel: 'STEP ' + (step + 1) + ' / 4 · ' + labels[step],
+      isWelcome: step === 0,
+      isQuestion: step === 1,
+      isLine: step === 2,
+      isReady: step === 3,
+      onNext: () => this.next(),
+      onBack: () => this.back(),
+      onQ: (e) => this.setQ(e),
+      qValue: this.state.question,
+      examples: [
+        { label: 'My weather app feels like an ad.', onPick: () => this.useExample('My weather app feels like an ad. What is it actually collecting and who gets it?') },
+        { label: 'This brand seems to own everything.', onPick: () => this.useExample('This brand seems to own everything. Who actually owns it, and who profits?') },
+        { label: "I can't stop scrolling at 2am.", onPick: () => this.useExample("I can't stop scrolling at 2am. What is the feed optimizing for?") },
+        { label: 'The numbers in this report feel off.', onPick: () => this.useExample('The numbers in this report feel off. Do the claims survive their sources?') },
+      ],
+      lineCards,
+      mapSel: chosen ? chosen.first : 'g1',
+      mapLive: line || 'g',
+      noLabels: false,
+      nextLabel: line ? 'Confirm path →' : 'Pick a line first',
+      nextBg: line ? '#ffd23f' : '#2c2f3a',
+      nextCursor: line ? 'pointer' : 'not-allowed',
+      nextOp: line ? '1' : '0.6',
+      qDisplay: (this.state.question || '').trim() || 'A system that bothers you — to be sharpened at G1.',
+      chosenName: chosen ? chosen.name : 'Choose your line',
+      chosenColor: chosen ? chosen.color : '#6b7280',
+    };
+  }
+}
+</script>
+</body>
+</html>

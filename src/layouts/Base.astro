@@ -1,8 +1,44 @@
 ---
-// src/layouts/Base.astro
+// src/layouts/Base.astro — global shell for the Evidence Engine site.
+// Provides: self-hosted fonts, design tokens, fixed crop-marks + top-glow,
+// the utility ticker, the site header (with active nav), and the marketing
+// footer. Pages render their own inner max-width inside the full-width slot.
 import '../styles/global.css'
+// Self-hosted type — no Google Fonts CDN (keeps the no-tracking promise).
+import '@fontsource/martian-mono/latin-500.css'
+import '@fontsource/martian-mono/latin-600.css'
+import '@fontsource/martian-mono/latin-700.css'
+import '@fontsource/martian-mono/latin-800.css'
+import '@fontsource/spline-sans-mono/latin-400.css'
+import '@fontsource/spline-sans-mono/latin-500.css'
+import '@fontsource/spline-sans-mono/latin-600.css'
+import '@fontsource/spline-sans-mono/latin-700.css'
+import '@fontsource/spline-sans-mono/latin-400-italic.css'
+import '@fontsource/spline-sans-mono/latin-500-italic.css'
+
 import { COPY } from '../lib/copy/en'
-const { title = COPY.meta.title, description = COPY.meta.description } = Astro.props
+import Ticker from '../components/site/Ticker.astro'
+import SiteHeader from '../components/site/SiteHeader.astro'
+import SiteFooter from '../components/site/SiteFooter.astro'
+
+interface Props {
+  title?: string
+  description?: string
+  image?: string
+  active?: 'network' | 'lines' | 'method' | 'manifesto'
+  footer?: boolean
+  chrome?: boolean // ticker + header; off for focused funnels (onboarding)
+}
+const {
+  title = COPY.meta.title,
+  description = COPY.meta.description,
+  image = '/og/datavism.png',
+  active,
+  footer = true,
+  chrome = true,
+} = Astro.props
+const canonical = new URL(Astro.url.pathname, Astro.site).href
+const ogImage = new URL(image, Astro.site).href
 ---
 <!doctype html>
 <html lang="en">
@@ -10,19 +46,47 @@ const { title = COPY.meta.title, description = COPY.meta.description } = Astro.p
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#060608" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:site_name" content="DATAVISM" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
   </head>
-  <body class="min-h-screen flex flex-col">
-    <main class="flex-1 w-full max-w-2xl mx-auto px-5 py-12">
-      <slot />
-    </main>
-    <footer class="w-full max-w-2xl mx-auto px-5 pb-10 text-xs text-phosphor-dim leading-relaxed">
-      <p>{COPY.footer.org}<br />{COPY.footer.tracking}</p>
-      <p class="mt-2"><a class="text-phosphor-dim underline decoration-dashed underline-offset-2 hover:text-signal" href="/legal">{COPY.footer.legal}</a></p>
-    </footer>
+  <body>
+    <div class="topglow" aria-hidden="true"></div>
+    <div class="crop crop-tl" aria-hidden="true"></div>
+    <div class="crop crop-tr" aria-hidden="true"></div>
+    <div class="crop crop-bl" aria-hidden="true"></div>
+    <div class="crop crop-br" aria-hidden="true"></div>
+
+    <div class="shell">
+      {chrome && <Ticker />}
+      {chrome && <SiteHeader active={active} />}
+      <main id="top"><slot /></main>
+      {footer && <SiteFooter />}
+    </div>
+
+    <style>
+      .topglow {
+        position: fixed; inset: 0; pointer-events: none; z-index: 0;
+        background: radial-gradient(58% 40% at 50% 4%, rgba(57, 255, 20, 0.05), transparent 70%);
+      }
+      .crop { position: fixed; width: 18px; height: 18px; pointer-events: none; z-index: 30; }
+      .crop-tl { top: 14px; left: 14px; border-left: 1px solid var(--color-edge-3); border-top: 1px solid var(--color-edge-3); }
+      .crop-tr { top: 14px; right: 14px; border-right: 1px solid var(--color-edge-3); border-top: 1px solid var(--color-edge-3); }
+      .crop-bl { bottom: 14px; left: 14px; border-left: 1px solid var(--color-edge-3); border-bottom: 1px solid var(--color-edge-3); }
+      .crop-br { bottom: 14px; right: 14px; border-right: 1px solid var(--color-edge-3); border-bottom: 1px solid var(--color-edge-3); }
+      .shell { position: relative; z-index: 5; min-height: 100vh; display: flex; flex-direction: column; }
+      main { flex: 1; }
+    </style>
   </body>
 </html>

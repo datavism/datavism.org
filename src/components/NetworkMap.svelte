@@ -39,7 +39,7 @@
     g: [[150, 290], [540, 290], [720, 470]], k: [[900, 120], [720, 120], [720, 470]], r: [[1290, 300], [1290, 470], [720, 470]], b: [[1110, 650], [900, 650], [720, 470]], v: [[150, 650], [540, 650], [720, 470]],
   }
 
-  const LC = { g: '#3df07a', k: '#f5b700', r: '#ff4d4d', b: '#4d8dff', v: '#b48cff' }
+  const LC = { g: '#00ff88', k: '#00ffff', r: '#ffff00', b: '#ff00ff', v: '#aa44ff' }
   const ORDER = { g: 0, k: 1, r: 2, b: 3, v: 4 }
 
   const LINES = [
@@ -120,6 +120,59 @@
   )
 
   const GH = 'M64,0 a64,64 0 0 1 64,64 v64 c0,0 -16,-12 -32,-12 s-32,12 -32,12 s-16,-12 -32,-12 s-32,12 -32,12 v-64 a64,64 0 0 1 64,-64 z'
+
+  // — Signal trains —————————————————————————————————————————————
+  // The Ghost sporadically launches a coloured dot ("train") that rides a line
+  // out to its terminus; on arrival the whole line flashes. Auto / random, and
+  // skipped under prefers-reduced-motion. Uses the rendered path geometry
+  // (getPointAtLength) so the dot follows the real curved route.
+  let trains = $state([])
+  let flashes = $state([])
+  let nextId = 0
+
+  $effect(() => {
+    if (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const ids = Object.keys(LC)
+    const lenCache = {}
+    const pathOf = (id) => document.getElementById(`route-${id}`)
+    let raf = 0, last = 0, spawnTimer = 0, alive = true
+
+    const spawn = () => {
+      if (!alive) return
+      if (trains.length < 4) {
+        const lineId = ids[(Math.random() * ids.length) | 0]
+        trains.push({ id: ++nextId, lineId, color: LC[lineId], p: 0, x: 720, y: 470 })
+      }
+      spawnTimer = setTimeout(spawn, 900 + Math.random() * 2800)
+    }
+
+    const flash = (lineId) => {
+      const id = ++nextId
+      flashes.push({ id, lineId })
+      setTimeout(() => { flashes = flashes.filter((f) => f.id !== id) }, 650)
+    }
+
+    const tick = (ts) => {
+      if (!alive) return
+      const dt = last ? Math.min(0.05, (ts - last) / 1000) : 0
+      last = ts
+      for (let i = trains.length - 1; i >= 0; i--) {
+        const t = trains[i]
+        const path = pathOf(t.lineId)
+        if (!path) { trains.splice(i, 1); continue }
+        const total = lenCache[t.lineId] ?? (lenCache[t.lineId] = path.getTotalLength())
+        t.p += dt / 2.2 // ~2.2s ghost → terminus
+        if (t.p >= 1) { flash(t.lineId); trains.splice(i, 1); continue }
+        const pt = path.getPointAtLength(total * (1 - t.p)) // ghost(total) → terminus(0)
+        t.x = pt.x; t.y = pt.y
+      }
+      raf = requestAnimationFrame(tick)
+    }
+
+    raf = requestAnimationFrame(tick)
+    spawnTimer = setTimeout(spawn, 700)
+    return () => { alive = false; cancelAnimationFrame(raf); clearTimeout(spawnTimer) }
+  })
 </script>
 
 <svg viewBox="0 0 1440 760" role="img" aria-label="DATAVISM underground network map: five lines and 25 stations meeting at the Ghost interchange" style="display:block;width:100%;height:auto;">
@@ -147,6 +200,7 @@
   <!-- coloured lines + packets -->
   {#each routes as r (r.id + 'ln')}
     <path
+      id={`route-${r.id}`}
       d={r.d}
       class="dv-line"
       fill="none"
@@ -163,6 +217,20 @@
     {/if}
   {/each}
 
+  <!-- signal-train route flashes (brief line-up on arrival) -->
+  {#each flashes as f (f.id)}
+    {@const fr = routes.find((r) => r.id === f.lineId)}
+    {#if fr}
+      <path d={fr.d} class="dv-flash" fill="none" stroke={LC[f.lineId]} stroke-width="11" stroke-linecap="round" stroke-linejoin="round" filter="url(#dvg)" style="pointer-events:none;" />
+    {/if}
+  {/each}
+
+  <!-- signal trains (coloured dots riding the lines out from the Ghost) -->
+  {#each trains as t (t.id)}
+    <circle cx={t.x} cy={t.y} r="6" fill={t.color} opacity="0.9" filter="url(#dvg)" style="pointer-events:none;" />
+    <circle cx={t.x} cy={t.y} r="2.4" fill="#ffffff" style="pointer-events:none;" />
+  {/each}
+
   <!-- stations -->
   {#each nodes as n (n.id)}
     <circle cx={n.x} cy={n.y} r="19" fill="transparent" style="cursor:pointer;" role="button" tabindex="-1" aria-label={n.code + ' ' + n.title}
@@ -174,8 +242,8 @@
     {/if}
     <g style="pointer-events:none;">
       {#if n.status === 'completed'}
-        <circle cx={n.x} cy={n.y} r={n.baseR} fill="#0b0c10" stroke="#3df07a" stroke-width="2.6" />
-        <path d={'M ' + (n.x - 3.4) + ' ' + (n.y + 0.3) + ' L ' + (n.x - 1) + ' ' + (n.y + 2.7) + ' L ' + (n.x + 3.9) + ' ' + (n.y - 2.9)} fill="none" stroke="#3df07a" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx={n.x} cy={n.y} r={n.baseR} fill="#0b0c10" stroke="#00ff88" stroke-width="2.6" />
+        <path d={'M ' + (n.x - 3.4) + ' ' + (n.y + 0.3) + ' L ' + (n.x - 1) + ' ' + (n.y + 2.7) + ' L ' + (n.x + 3.9) + ' ' + (n.y - 2.9)} fill="none" stroke="#00ff88" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" />
       {:else if n.status === 'current'}
         <circle cx={n.x} cy={n.y} r="13" fill="none" stroke={n.color} stroke-width="1.3" opacity="0.5" class="dv-pulse" />
         <circle cx={n.x} cy={n.y} r="8" fill="#0b0c10" stroke={n.color} stroke-width="3" filter="url(#dvg)" />
@@ -225,5 +293,8 @@
     0%, 100% { opacity: 0.5; transform: scale(0.82); }
     50%      { opacity: 0.95; transform: scale(1.12); }
   }
-  @media (prefers-reduced-motion: reduce) { .gh-eyes, .dv-core { animation: none; } }
+  /* signal-train arrival: the line flares then fades */
+  .dv-flash { animation: dv-flash 0.65s ease-out forwards; }
+  @keyframes dv-flash { from { opacity: 0.85; } to { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .gh-eyes, .dv-core, .dv-flash { animation: none; } }
 </style>

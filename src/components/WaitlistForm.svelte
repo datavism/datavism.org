@@ -96,7 +96,7 @@
   .btn:disabled { opacity: 0.6; cursor: wait; }
   .msg { font-family: var(--font-mono); font-size: 12px; margin-top: 10px; }
   .msg.center { text-align: center; }
-  .err { color: var(--color-line-r); }
+  .err { color: var(--color-danger); }
   .muted { color: var(--color-ink-4); }
   .ok {
     display: flex; align-items: center; gap: 10px; border: 1px solid var(--color-edge-2);

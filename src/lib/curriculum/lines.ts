@@ -88,7 +88,7 @@ export const LINES = [
     mapDescription: "G teaches the method.",
     color: {
       name: "ghost green",
-      hex: "#3df07a",
+      hex: "#00ff88",
     },
     stations: [
       {
@@ -168,8 +168,8 @@ export const LINES = [
     finalArtifact: "Panopticon Case File",
     mapDescription: "K traces surveillance.",
     color: {
-      name: "key gold",
-      hex: "#f5b700",
+      name: "key cyan",
+      hex: "#00ffff",
     },
     stations: [
       {
@@ -249,8 +249,8 @@ export const LINES = [
     finalArtifact: "Mammon Case File",
     mapDescription: "R follows power.",
     color: {
-      name: "rook red",
-      hex: "#ff4d4d",
+      name: "rook yellow",
+      hex: "#ffff00",
     },
     stations: [
       {
@@ -330,8 +330,8 @@ export const LINES = [
     finalArtifact: "Feed Autopsy Case File",
     mapDescription: "B decodes behavior.",
     color: {
-      name: "feed blue",
-      hex: "#4d8dff",
+      name: "feed magenta",
+      hex: "#ff00ff",
     },
     stations: [
       {
@@ -411,8 +411,8 @@ export const LINES = [
     finalArtifact: "Cumulus Case File",
     mapDescription: "V reads the future.",
     color: {
-      name: "vesper violet",
-      hex: "#b48cff",
+      name: "vesper purple",
+      hex: "#aa44ff",
     },
     stations: [
       {

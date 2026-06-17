@@ -29,21 +29,6 @@
   })
 
   function pick(id) { selected = id }
-
-  // cursor "signal-lock" glow over the board (cheap: just moves a blend layer)
-  let glowOn = $state(false)
-  let glowRaf = 0
-  function onBoardMove(e) {
-    const el = e.currentTarget
-    const r = el.getBoundingClientRect()
-    const x = e.clientX - r.left, y = e.clientY - r.top
-    if (glowRaf) return
-    glowRaf = requestAnimationFrame(() => {
-      glowRaf = 0
-      el.style.setProperty('--mx', `${x}px`)
-      el.style.setProperty('--my', `${y}px`)
-    })
-  }
 </script>
 
 <!-- ——— 01 · THE NETWORK ——— -->
@@ -54,12 +39,7 @@
   </div>
 
   <div class="maprail">
-    <div
-      class="board"
-      onpointermove={onBoardMove}
-      onpointerenter={() => (glowOn = true)}
-      onpointerleave={() => (glowOn = false)}
-    >
+    <div class="board">
       <div class="noise"></div>
       <div class="scanlines"></div>
       <div class="sweep"></div>
@@ -68,7 +48,6 @@
       <div class="board-map">
         <NetworkMap selected={selected} onSelect={pick} {accent} dimInactive={true} liveLine="g" />
       </div>
-      <div class="cursorglow" class:on={glowOn}></div>
     </div>
 
     <div class="rail">
@@ -165,11 +144,6 @@
   /* Monochrome board: neutral near-black, rounded corners — the background is
      pure 80s analog-TV snow. (The map's own line colours sit on top, z-1.) */
   .board { position: relative; border: 1px solid var(--color-edge); border-radius: 44px; background: radial-gradient(130% 100% at 50% 45%, #141416, #08080a 72%); overflow: hidden; min-height: 420px; container-type: inline-size; }
-  /* cursor signal-lock: brightens lines + static near the pointer (screen blend) */
-  .cursorglow { position: absolute; inset: 0; z-index: 3; pointer-events: none; mix-blend-mode: screen; opacity: 0; transition: opacity .35s ease;
-    background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(57, 255, 20, 0.16), rgba(57, 255, 20, 0.05) 36%, transparent 62%); }
-  .cursorglow.on { opacity: 1; }
-  @media (prefers-reduced-motion: reduce) { .cursorglow { display: none; } }
   /* Animated 80s analog-TV snow. Uses a REAL grayscale noise PNG tile
      (public/tv-noise.png) instead of an SVG filter, so it renders identically
      in EVERY browser. Performant: the tile is decoded once and the animation

@@ -149,11 +149,10 @@
      in EVERY browser. Performant: the tile is decoded once and the animation
      only steps background-position to uncorrelated crops (compositor-only). */
   .noise {
-    position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.3;
-    background-image: url('/tv-noise.png?v=3');
-    /* 64px tile upscaled 4× with nearest-neighbour → chunky ~4px grain */
-    background-size: 256px 256px;
-    image-rendering: pixelated;
+    position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.32;
+    background-image: url('/tv-noise.png?v=4');
+    /* fine 1:1 grain (no upscaling) */
+    background-size: 240px 240px;
     animation: dv-noise 1.05s steps(1, end) infinite;
   }
   @keyframes dv-noise {

@@ -6,35 +6,35 @@
   import NetworkMap from './NetworkMap.svelte'
 
   const LINES = [
-    { id: 'g', code: 'G', name: 'GHOST / FOUNDATION', color: '#3df07a', progress: 80, stations: [
+    { id: 'g', code: 'G', name: 'GHOST / FOUNDATION', color: '#00ff88', progress: 80, stations: [
       ['G1', 'THE FOLDER', 'completed', 'Turn discomfort into a testable question.'],
       ['G2', 'COMMAND', 'completed', 'Command AI. Prompts are specs.'],
       ['G3', 'INTAKE', 'completed', 'Collect and structure the raw.'],
       ['G4', 'THE CONFIDENT LIE', 'completed', 'Catch the confident lie.'],
       ['G5', 'MASCHINENRAUM', 'unlocked', 'Run the whole machine.'],
     ] },
-    { id: 'k', code: 'K', name: 'KEY / TRACKING & OSINT', color: '#f5b700', progress: 60, stations: [
+    { id: 'k', code: 'K', name: 'KEY / TRACKING & OSINT', color: '#00ffff', progress: 60, stations: [
       ['K1', 'FOOTPRINTS', 'completed', 'Map the traces you leave.'],
       ['K2', 'SIGNALS', 'current', 'Trace the noise. Find the pattern.'],
       ['K3', 'IDENTITY GRAPH', 'unlocked', 'Scattered traces become a profile.'],
       ['K4', 'WATCHTOWER', 'locked', 'Watch what changes in the dark.'],
       ['K5', 'PANOPTICON FILE', 'locked', 'Package the surveillance file.'],
     ] },
-    { id: 'r', code: 'R', name: 'ROOK / ECONOMY & POWER', color: '#ff4d4d', progress: 40, stations: [
+    { id: 'r', code: 'R', name: 'ROOK / ECONOMY & POWER', color: '#ffff00', progress: 40, stations: [
       ['R1', 'LEDGER', 'completed', 'Who pays, who profits?'],
       ['R2', 'ACTORS', 'unlocked', 'Map the actors.'],
       ['R3', 'FLOWS', 'locked', 'Follow where value moves.'],
       ['R4', 'LEVERAGE', 'locked', 'Find the pressure points.'],
       ['R5', 'MAMMON FILE', 'locked', 'Make economic power legible.'],
     ] },
-    { id: 'b', code: 'B', name: 'BITE / FEEDS & BEHAVIOR', color: '#4d8dff', progress: 33, stations: [
+    { id: 'b', code: 'B', name: 'BITE / FEEDS & BEHAVIOR', color: '#ff00ff', progress: 33, stations: [
       ['B1', 'SOURCE', 'completed', 'Pick the feed that matters.'],
       ['B2', 'CAPTURE', 'unlocked', 'Capture without distortion.'],
       ['B3', 'NORMALIZE', 'locked', 'Clean the stream.'],
       ['B4', 'DETECT', 'locked', 'Find the loop.'],
       ['B5', 'FEED AUTOPSY', 'locked', 'Autopsy the feed.'],
     ] },
-    { id: 'v', code: 'V', name: 'VESPER / CLIMATE & FUTURE', color: '#b48cff', progress: 20, stations: [
+    { id: 'v', code: 'V', name: 'VESPER / CLIMATE & FUTURE', color: '#aa44ff', progress: 20, stations: [
       ['V1', 'ARCHIVE', 'locked', 'Find the long signal.'],
       ['V2', 'PATTERNS', 'locked', 'Read the long trend.'],
       ['V3', 'SCENARIOS', 'locked', 'Map plausible futures.'],
@@ -52,7 +52,7 @@
   ]
 
   const CF_META = {
-    completed: { label: '✓ COMPLETED', color: '#3df07a', title: '#f2f1ea' },
+    completed: { label: '✓ COMPLETED', color: '#00ff88', title: '#f2f1ea' },
     progress: { label: 'IN PROGRESS', color: '#f5b700', title: '#f5b700' },
     locked: { label: 'LOCKED', color: '#565c66', title: '#6b7280' },
   }
@@ -135,7 +135,7 @@
     <div class="card">
       <div class="ck">LEGEND</div>
       <div class="legend">
-        <span class="lg"><span class="lgi"><svg width="18" height="18" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="none" stroke="#3df07a" stroke-width="2" /><path d="M6.5 11.3 L9.4 14 L15 7.6" fill="none" stroke="#3df07a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span>COMPLETED</span>
+        <span class="lg"><span class="lgi"><svg width="18" height="18" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="none" stroke="#00ff88" stroke-width="2" /><path d="M6.5 11.3 L9.4 14 L15 7.6" fill="none" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></span>COMPLETED</span>
         <span class="lg"><span class="lgi"><svg width="18" height="18" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#0b0c10" stroke="#ffd23f" stroke-width="2.6" /><circle cx="11" cy="11" r="4" fill="#ffd23f" /></svg></span>CURRENT STATION</span>
         <span class="lg"><span class="lgi"><svg width="18" height="18" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="none" stroke="#4d8dff" stroke-width="2" /><circle cx="11" cy="11" r="3" fill="#4d8dff" /></svg></span>UNLOCKED</span>
         <span class="lg"><span class="lgi"><svg width="18" height="18" viewBox="0 0 22 22"><rect x="6" y="10" width="10" height="7.5" rx="1" fill="none" stroke="#565c66" stroke-width="1.5" /><path d="M8 10 V8 a3 3 0 0 1 6 0 V10" fill="none" stroke="#565c66" stroke-width="1.5" /></svg></span>LOCKED</span>
@@ -172,7 +172,7 @@
       <div class="here-line" style={`color:${here.color};`}>{here.lineName}</div>
       <div class="here-foot">
         <p class="here-note">{here.note}</p>
-        <svg width="60" height="40" viewBox="0 0 60 40" style="flex:none;"><rect x="2" y="22" width="8" height="16" fill="#2c2f3a" /><rect x="15" y="14" width="8" height="24" fill="#2c2f3a" /><rect x="28" y="8" width="8" height="30" fill="#f5b700" /><rect x="41" y="18" width="8" height="20" fill="#2c2f3a" /></svg>
+        <svg width="60" height="40" viewBox="0 0 60 40" style="flex:none;"><rect x="2" y="22" width="8" height="16" fill="#2c2f3a" /><rect x="15" y="14" width="8" height="24" fill="#2c2f3a" /><rect x="28" y="8" width="8" height="30" fill="#00ffff" /><rect x="41" y="18" width="8" height="20" fill="#2c2f3a" /></svg>
       </div>
     </div>
 

@@ -7,7 +7,7 @@ import { getLineById } from '../../lib/curriculum/lines'
 
 const line = getLineById('g')
 const STATUS = {
-  open: { label: 'LIVE NOW', color: '#3df07a' },
+  open: { label: 'LIVE NOW', color: '#00ff88' },
   announced: { label: 'ANNOUNCED', color: '#f5b700' },
   locked: { label: 'LOCKED', color: '#6b7280' },
 }
@@ -17,13 +17,13 @@ const rows = line.stations.map((s) => {
   return {
     ...s,
     href: live ? `/line-g/${s.slug}` : '#',
-    edge: live ? '#3df07a' : '#20222b',
-    codeBg: live ? '#3df07a' : 'transparent',
-    codeFg: live ? '#06120a' : '#3df07a',
+    edge: live ? '#00ff88' : '#20222b',
+    codeBg: live ? '#00ff88' : 'transparent',
+    codeFg: live ? '#06120a' : '#00ff88',
     titleColor: s.status === 'locked' ? '#a7ada3' : '#f2f1ea',
     statusLabel: m.label,
     statusColor: m.color,
-    artifactColor: live ? '#3df07a' : '#6b7280',
+    artifactColor: live ? '#00ff88' : '#6b7280',
   }
 })
 ---
@@ -73,7 +73,7 @@ const rows = line.stations.map((s) => {
       <aside class="rail">
         <div class="rail-map">
           <div class="rail-kicker">// G ON THE NETWORK</div>
-          <NetworkMap client:visible selected="g1" liveLine="g" labels={false} accent="#3df07a" />
+          <NetworkMap client:visible selected="g1" liveLine="g" labels={false} accent="#00ff88" />
         </div>
         <div class="rail-why">
           <div class="why-h">WHY START HERE</div>

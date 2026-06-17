@@ -29,13 +29,16 @@
   --color-signal-hi: #ffdd66; /* button hover */
   --color-ghost: #39ff14;     /* neon ghost · live/online/terminal · > prompts */
   --color-magenta: #ff2a6d;   /* secondary pop / logo drop-shadow */
+  /* semantic status colours (decoupled from line palette) */
+  --color-cooking: #f5b700;   /* gold — "still cooking" / booting / in-progress */
+  --color-danger: #ff4d4d;    /* red — errors, warnings, rules */
 
-  /* — the five lines (canonical, do not change meaning) — */
-  --color-line-g: #3df07a;    /* GHOST / Foundation */
-  --color-line-k: #f5b700;    /* KEY / Tracking & OSINT */
-  --color-line-r: #ff4d4d;    /* ROOK / Economy & Power */
-  --color-line-b: #4d8dff;    /* BITE / Feeds & Behavior */
-  --color-line-v: #b48cff;    /* VESPER / Climate & Future */
+  /* — the five lines (data-snack neon palette) — */
+  --color-line-g: #00ff88;    /* GHOST / Foundation — green */
+  --color-line-k: #00ffff;    /* KEY / Tracking & OSINT — cyan */
+  --color-line-r: #ffff00;    /* ROOK / Economy & Power — yellow */
+  --color-line-b: #ff00ff;    /* BITE / Feeds & Behavior — magenta */
+  --color-line-v: #aa44ff;    /* VESPER / Climate & Future — purple */
 
   /* — type — */
   --font-display: "Martian Mono", ui-monospace, SFMono-Regular, Menlo, monospace;

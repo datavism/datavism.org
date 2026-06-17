@@ -5,11 +5,11 @@ import Base from '../layouts/Base.astro'
 
 const trackList = ['Your clicks.', 'Your pauses.', 'Your location.', 'Your face.', 'Your purchases.', 'Your fears.', 'Your habits.', 'Your future value.']
 const lines = [
-  { code: 'G', title: 'GHOST / Foundation', tagline: 'G teaches the method.', stations: 'Question · Command · Intake · Verification · Evaluation', question: 'Before you investigate the world, you learn how not to fool yourself.', color: '#3df07a' },
-  { code: 'K', title: 'KEY / Tracking & OSINT', tagline: 'K traces surveillance.', stations: 'Footprints · Signals · Identity graphs · Watchtowers · Panopticon files', question: 'Who watches us, and how?', color: '#f5b700' },
-  { code: 'R', title: 'ROOK / Economy & Power', tagline: 'R follows power.', stations: 'Ledgers · Actors · Flows · Leverage · Mammon files', question: 'Who benefits?', color: '#ff4d4d' },
-  { code: 'B', title: 'BITE / Feeds & Behavior', tagline: 'B decodes behavior.', stations: 'Sources · Capture · Normalization · Detection · Feed autopsies', question: 'Why do we keep watching, clicking, scrolling and returning?', color: '#4d8dff' },
-  { code: 'V', title: 'VESPER / Climate & Future', tagline: 'V reads the future.', stations: 'Archives · Patterns · Scenarios · Impact · Cumulus files', question: 'What changes over time, and what remains when the feed has moved on?', color: '#b48cff' },
+  { code: 'G', title: 'GHOST / Foundation', tagline: 'G teaches the method.', stations: 'Question · Command · Intake · Verification · Evaluation', question: 'Before you investigate the world, you learn how not to fool yourself.', color: '#00ff88' },
+  { code: 'K', title: 'KEY / Tracking & OSINT', tagline: 'K traces surveillance.', stations: 'Footprints · Signals · Identity graphs · Watchtowers · Panopticon files', question: 'Who watches us, and how?', color: '#00ffff' },
+  { code: 'R', title: 'ROOK / Economy & Power', tagline: 'R follows power.', stations: 'Ledgers · Actors · Flows · Leverage · Mammon files', question: 'Who benefits?', color: '#ffff00' },
+  { code: 'B', title: 'BITE / Feeds & Behavior', tagline: 'B decodes behavior.', stations: 'Sources · Capture · Normalization · Detection · Feed autopsies', question: 'Why do we keep watching, clicking, scrolling and returning?', color: '#ff00ff' },
+  { code: 'V', title: 'VESPER / Climate & Future', tagline: 'V reads the future.', stations: 'Archives · Patterns · Scenarios · Impact · Cumulus files', question: 'What changes over time, and what remains when the feed has moved on?', color: '#aa44ff' },
 ]
 const rules = [
   'No claim without evidence.',
@@ -189,7 +189,7 @@ const signal = [
   .mf { max-width: 780px; margin: 0 auto; padding: 0 28px 60px; }
   .eb { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--color-ink-4); margin-bottom: 16px; }
   .eb.green { color: var(--color-ghost); letter-spacing: 0.22em; }
-  .eb.red { color: var(--color-line-r); }
+  .eb.red { color: var(--color-danger); }
   .green { color: var(--color-ghost); }
   .sig { color: var(--color-signal); }
   .ink { color: var(--color-ink); }
@@ -225,7 +225,7 @@ const signal = [
 
   .rules { display: grid; gap: 10px; }
   .rule { display: flex; gap: 12px; align-items: baseline; font-size: 15px; line-height: 1.5; color: var(--color-ink); }
-  .rule .x { color: var(--color-line-r); }
+  .rule .x { color: var(--color-danger); }
   .rules-foot { border-top: 1px solid var(--color-edge); margin-top: 24px; padding-top: 22px; display: grid; gap: 8px; }
   .rules-foot p { margin: 0; font-size: 16px; color: var(--color-ink-2); }
   .rules-foot p.sig { color: var(--color-signal); }

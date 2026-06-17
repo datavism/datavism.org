@@ -12,13 +12,13 @@ describe('curriculum canon', () => {
   it('uses the canonical line colours (UI accent #ffd23f stays decoupled)', () => {
     const colours = Object.fromEntries(LINES.map((l) => [l.id, l.color.hex]))
     expect(colours).toEqual({
-      g: '#3df07a',
-      k: '#f5b700',
-      r: '#ff4d4d',
-      b: '#4d8dff',
-      v: '#b48cff',
+      g: '#00ff88',
+      k: '#00ffff',
+      r: '#ffff00',
+      b: '#ff00ff',
+      v: '#aa44ff',
     })
-    // signal-yellow must NOT be reused as a line colour
+    // signal-yellow (UI accent) must NOT be reused as a line colour
     expect(Object.values(colours)).not.toContain('#ffd23f')
   })
 

@@ -22,10 +22,10 @@ const next = line.stations[line.stations.indexOf(cur) + 1]
 // line strip: dot/line opacity per status
 const STRIP = line.stations.map((s) => ({
   code: s.code,
-  dot: s.status === 'open' ? '#3df07a' : '#0b0c10',
+  dot: s.status === 'open' ? '#00ff88' : '#0b0c10',
   op: s.status === 'locked' ? 0.4 : 1,
   lineOp: s.status === 'open' ? 0.85 : 0.3,
-  codeColor: s.status === 'open' ? '#3df07a' : '#6b7280',
+  codeColor: s.status === 'open' ? '#00ff88' : '#6b7280',
 }))
 
 // THE FOLDER narrative beats (handoff copy).

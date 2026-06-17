@@ -141,8 +141,21 @@
   .maprail { display: grid; grid-template-columns: 1fr 360px; gap: 22px; align-items: stretch; }
   .board { position: relative; border: 1px solid var(--color-edge); background: var(--color-panel-2); overflow: hidden; min-height: 420px; }
   .glow { position: absolute; inset: -25%; pointer-events: none; z-index: 0; background: radial-gradient(38% 38% at 50% 48%, rgba(57, 255, 20, 0.07), transparent 72%); }
-  .word-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 0; }
-  .word { font-weight: 800; font-size: 24vw; letter-spacing: -0.03em; color: var(--color-ink); opacity: 0.025; white-space: nowrap; }
+  .word-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 0; overflow: hidden; }
+  /* Cinematic backdrop: slowly zoom out to reveal the whole DATAVISM wordmark,
+     then back in (with a gentle pan + opacity lift). */
+  .word {
+    font-weight: 800; font-size: 24vw; letter-spacing: -0.03em; color: var(--color-ink);
+    white-space: nowrap; transform-origin: center; opacity: 0.04; will-change: transform, opacity;
+    animation: dv-cine 30s ease-in-out infinite;
+  }
+  @keyframes dv-cine {
+    0%, 100% { transform: scale(1.12) translateX(4%); opacity: 0.03; }
+    48%, 56% { transform: scale(0.42) translateX(-4%); opacity: 0.075; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .word { animation: none; transform: scale(0.5); opacity: 0.05; }
+  }
   .board-label { position: absolute; top: 14px; left: 16px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--color-ink-5); z-index: 2; }
   .board-map { position: relative; z-index: 1; padding: 10px; }
 

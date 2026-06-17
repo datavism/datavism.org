@@ -228,8 +228,8 @@ const threeQs = [
     )
     reveal('.band-inner > *', { y: 36, duration: 0.6 })
 
-    // parallax backdrop word
-    gsap.to('.word', { yPercent: -16, ease: 'none', scrollTrigger: { trigger: '#network', start: 'top bottom', end: 'bottom top', scrub: 0.6 } })
+    // (the backdrop DATAVISM word does its own cinematic zoom in CSS — see
+    // NetworkExplorer .word — so no GSAP transform here, to avoid a conflict.)
 
     setTimeout(() => ScrollTrigger.refresh(), 500)
   }

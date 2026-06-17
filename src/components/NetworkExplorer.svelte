@@ -149,9 +149,10 @@
      in EVERY browser. Performant: the tile is decoded once and the animation
      only steps background-position to uncorrelated crops (compositor-only). */
   .noise {
-    position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.5;
-    background-image: url('/tv-noise.png');
-    background-size: 160px 160px;
+    position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.3;
+    background-image: url('/tv-noise.png?v=3');
+    /* 64px tile upscaled 4× with nearest-neighbour → chunky ~4px grain */
+    background-size: 256px 256px;
     image-rendering: pixelated;
     animation: dv-noise 1.05s steps(1, end) infinite;
   }
@@ -180,15 +181,15 @@
      width and a little smaller — barely readable, just texture. */
   .word {
     font-weight: 800; font-size: 17.5cqw; letter-spacing: -0.03em; color: var(--color-ink);
-    white-space: nowrap; transform-origin: center; opacity: 0.045; will-change: transform, opacity;
+    white-space: nowrap; transform-origin: center; opacity: 0.02; will-change: transform, opacity;
     animation: dv-cine 26s ease-in-out infinite;
   }
   @keyframes dv-cine {
-    0%, 100% { transform: scale(0.68); opacity: 0.026; }
-    50%      { transform: scale(1);    opacity: 0.052; }
+    0%, 100% { transform: scale(0.68); opacity: 0.012; }
+    50%      { transform: scale(1);    opacity: 0.028; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .word { animation: none; transform: scale(1); opacity: 0.045; }
+    .word { animation: none; transform: scale(1); opacity: 0.02; }
   }
   .board-label { position: absolute; top: 14px; left: 16px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--color-ink-5); z-index: 2; }
   .board-map { position: relative; z-index: 1; padding: 10px; }

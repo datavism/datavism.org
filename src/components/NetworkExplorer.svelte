@@ -141,21 +141,18 @@
   .sec-desc { font-family: var(--font-mono); font-size: 11.5px; line-height: 1.7; color: var(--color-ink-4); max-width: 44ch; text-align: right; margin: 0; }
 
   .maprail { display: grid; grid-template-columns: 1fr 360px; gap: 22px; align-items: stretch; }
-  /* Monochrome board: neutral near-black, no colour tints — the background is
+  /* Monochrome board: neutral near-black, rounded corners — the background is
      pure 80s analog-TV snow. (The map's own line colours sit on top, z-1.) */
-  .board { position: relative; border: 1px solid var(--color-edge); background: radial-gradient(130% 100% at 50% 45%, #141416, #08080a 72%); overflow: hidden; min-height: 420px; container-type: inline-size; }
-  /* Animated 80s analog-TV snow. Performant by design: a single high-contrast
-     grayscale fractal-noise tile is baked ONCE into the data URI; the animation
-     only steps background-position to uncorrelated crops each frame, so the
-     compositor reuses the same rasterized image — no per-frame filter recompute
-     (animating feTurbulence's seed/baseFrequency would be the expensive way). */
+  .board { position: relative; border: 1px solid var(--color-edge); border-radius: 44px; background: radial-gradient(130% 100% at 50% 45%, #141416, #08080a 72%); overflow: hidden; min-height: 420px; container-type: inline-size; }
+  /* Animated 80s analog-TV snow. Uses a REAL grayscale noise PNG tile
+     (public/tv-noise.png) instead of an SVG filter, so it renders identically
+     in EVERY browser. Performant: the tile is decoded once and the animation
+     only steps background-position to uncorrelated crops (compositor-only). */
   .noise {
-    position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.4;
-    /* feColorMatrix flattens the turbulence to OPAQUE grayscale (alpha=1) so the
-       speckles aren't lost to the noise's own alpha; feComponentTransfer pushes
-       it to high-contrast black/white = real snow. */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 0 1'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='4' intercept='-1.4'/%3E%3CfeFuncG type='linear' slope='4' intercept='-1.4'/%3E%3CfeFuncB type='linear' slope='4' intercept='-1.4'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23s)'/%3E%3C/svg%3E");
-    background-size: 256px 256px;
+    position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.5;
+    background-image: url('/tv-noise.png');
+    background-size: 160px 160px;
+    image-rendering: pixelated;
     animation: dv-noise 0.6s steps(1, end) infinite;
   }
   @keyframes dv-noise {
@@ -183,15 +180,15 @@
      width and a little smaller — barely readable, just texture. */
   .word {
     font-weight: 800; font-size: 17.5cqw; letter-spacing: -0.03em; color: var(--color-ink);
-    white-space: nowrap; transform-origin: center; opacity: 0.026; will-change: transform, opacity;
+    white-space: nowrap; transform-origin: center; opacity: 0.045; will-change: transform, opacity;
     animation: dv-cine 26s ease-in-out infinite;
   }
   @keyframes dv-cine {
-    0%, 100% { transform: scale(0.68); opacity: 0.014; }
-    50%      { transform: scale(1);    opacity: 0.03; }
+    0%, 100% { transform: scale(0.68); opacity: 0.026; }
+    50%      { transform: scale(1);    opacity: 0.052; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .word { animation: none; transform: scale(1); opacity: 0.026; }
+    .word { animation: none; transform: scale(1); opacity: 0.045; }
   }
   .board-label { position: absolute; top: 14px; left: 16px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--color-ink-5); z-index: 2; }
   .board-map { position: relative; z-index: 1; padding: 10px; }

@@ -61,7 +61,7 @@
       oninput={() => { if (status !== 'idle' && status !== 'busy') status = 'idle' }}
     />
     <input type="text" name="phone" bind:value={phone} tabindex="-1" autocomplete="off" aria-hidden="true" class="hp" />
-    <button type="submit" class="btn" disabled={status === 'busy'}>
+    <button type="submit" class="btn" data-magnetic="0.2" disabled={status === 'busy'}>
       {status === 'busy' ? 'Joining…' : 'Join the waitlist →'}
     </button>
   </form>

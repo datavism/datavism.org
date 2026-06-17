@@ -54,6 +54,25 @@ function countUp(el: HTMLElement) {
   requestAnimationFrame(tick)
 }
 
+// Magnetic hover — the element drifts toward the pointer, springs back on leave.
+function magnetic(el: HTMLElement) {
+  const strength = Number(el.dataset.magnetic) || 0.3
+  let raf = 0
+  el.addEventListener('pointermove', (e) => {
+    const r = el.getBoundingClientRect()
+    const x = e.clientX - (r.left + r.width / 2)
+    const y = e.clientY - (r.top + r.height / 2)
+    if (raf) return
+    raf = requestAnimationFrame(() => {
+      raf = 0
+      el.style.transform = `translate(${(x * strength).toFixed(1)}px, ${(y * strength).toFixed(1)}px)`
+    })
+  })
+  el.addEventListener('pointerleave', () => {
+    el.style.transform = ''
+  })
+}
+
 // Initialise (idempotent) — safe to call on every astro:page-load.
 export function initFx() {
   const targets = document.querySelectorAll<HTMLElement>('[data-decode],[data-count],[data-glitch]')
@@ -82,5 +101,12 @@ export function initFx() {
     el.dataset.fxDone = '1'
     if (reduce) return // leave the real text/number in place
     io.observe(el)
+  })
+
+  // magnetic buttons (transform springs back to spec layout on leave)
+  document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
+    if (el.dataset.magDone) return
+    el.dataset.magDone = '1'
+    if (!reduce) magnetic(el)
   })
 }

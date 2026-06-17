@@ -35,12 +35,12 @@ const sev = severityDots(cf.severity)
       <p class="dek">{cf.dek}</p>
       <div class="hook">
         <div class="hook-stat">
-          <div class="hook-num font-display" style={`color:${color};`}>{cf.hookStat.value}</div>
+          <div class="hook-num font-display" style={`color:${color};`} data-count>{cf.hookStat.value}</div>
           <div class="hook-label">{cf.hookStat.label}</div>
         </div>
         <div class="substats">
           {cf.subStats.map((s) => (
-            <div class="substat"><div class="sn font-display">{s.n}</div><div class="sl" set:html={s.label.replace(' ', '<br />')}></div></div>
+            <div class="substat"><div class="sn font-display" data-count>{s.n}</div><div class="sl" set:html={s.label.replace(' ', '<br />')}></div></div>
           ))}
         </div>
       </div>

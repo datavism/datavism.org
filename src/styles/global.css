@@ -20,7 +20,7 @@
   --color-ink: #f2f1ea;       /* primary text (warm off-white) */
   --color-ink-2: #cfd2c9;     /* body text */
   --color-ink-3: #a7ada3;     /* secondary text */
-  --color-ink-4: #6b7280;     /* muted / mono captions */
+  --color-ink-4: #7a818d;     /* muted / mono captions — ~5:1 on bg (WCAG AA) */
   --color-ink-5: #565c66;     /* disabled / separators */
   --color-eyebrow: #6f8f76;   /* dim green mono eyebrows */
 

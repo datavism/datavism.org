@@ -27,7 +27,7 @@ const nav = [
     {nav.map((n) => (
       <a href={n.href} aria-current={active === n.key ? 'page' : undefined} class:list={["nav-link", { current: active === n.key }]}>{n.label}</a>
     ))}
-    <a class="join" href="/#waitlist">Join waitlist →</a>
+    <a class="join" href="/#waitlist" data-magnetic="0.25">Join waitlist →</a>
   </nav>
 </header>
 

@@ -6,6 +6,7 @@
 import Base from '../layouts/Base.astro'
 import NetworkExplorer from '../components/NetworkExplorer.svelte'
 import WaitlistForm from '../components/WaitlistForm.svelte'
+import ShaderField from '../components/ShaderField.svelte'
 import { LINES, CURRICULUM_CANON } from '../lib/curriculum/lines'
 
 const oldWay = ['Python', 'SQL', 'Statistics', 'Machine Learning', 'Dashboard']
@@ -19,9 +20,10 @@ const threeQs = [
 <Base active="network">
   <!-- HERO -->
   <section class="hero">
+    <div class="hero-bg"><ShaderField client:idle /></div>
     <div class="hero-main">
       <div class="eyebrow hero-eyebrow">THE DATA UNDERGROUND</div>
-      <h1 class="font-display hero-title">DATAVISM</h1>
+      <h1 class="font-display hero-title fx-aberration">DATAVISM</h1>
       <p class="hero-tag">They track you. <span class="sig">Learn to track back.</span></p>
       <p class="hero-term">&gt; The revolution will be computed.<span class="dv-cursor cur">▋</span></p>
       <p class="hero-sub">You won't learn to code here. You'll learn to <strong>command</strong> — AI, data, and the right questions — and turn what's hidden into public evidence.</p>
@@ -49,12 +51,12 @@ const threeQs = [
   </section>
 
   <!-- NETWORK + FIVE LINES (interactive island) -->
-  <NetworkExplorer client:load lines={LINES} accent="#ffd23f" />
+  <NetworkExplorer client:visible lines={LINES} accent="#ffd23f" />
 
   <!-- METHOD -->
   <section id="method" class="method">
     <div class="sec-head">
-      <div class="sec-title"><span class="num">03</span><h2 class="font-display h2">The Method</h2></div>
+      <div class="sec-title"><span class="num">03</span><h2 class="font-display h2" data-decode>The Method</h2></div>
       <span class="kicker-green">// Weapons of Mass Instruction</span>
     </div>
     <div class="method-grid">
@@ -114,7 +116,9 @@ const threeQs = [
 
 <style>
   /* HERO */
-  .hero { max-width: 1560px; margin: 0 auto; padding: 64px 30px 30px; display: grid; grid-template-columns: 1.7fr 1fr; gap: 48px; align-items: end; }
+  .hero { position: relative; max-width: 1560px; margin: 0 auto; padding: 64px 30px 30px; display: grid; grid-template-columns: 1.7fr 1fr; gap: 48px; align-items: end; }
+  .hero-bg { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; height: 100%; z-index: 0; overflow: hidden; pointer-events: none; mask-image: linear-gradient(to bottom, #000 72%, transparent); -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent); }
+  .hero-main, .status { position: relative; z-index: 1; }
   .hero-eyebrow { font-size: 13px; letter-spacing: 0.34em; color: var(--color-eyebrow); margin-bottom: 26px; }
   .hero-title { font-weight: 800; font-size: clamp(52px, 10.5vw, 156px); line-height: 0.92; letter-spacing: -0.06em; margin: 0; color: var(--color-signal); white-space: nowrap; text-shadow: 0.045em 0.045em 0 var(--color-magenta); }
   .hero-tag { font-size: clamp(16px, 2.1vw, 22px); line-height: 1.4; color: var(--color-ink); margin: 26px 0 12px; }
@@ -205,8 +209,12 @@ const threeQs = [
   import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
   function run() {
+    // landing-only: this listener persists across View Transitions, so bail on
+    // other routes (avoids GSAP "target not found" noise).
+    if (!document.querySelector('.hero-main')) return
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
     gsap.registerPlugin(ScrollTrigger)
+    ScrollTrigger.getAll().forEach((t) => t.kill()) // clean up before re-init (View Transitions)
     const ease = 'power3.out'
 
     gsap.from('.hero-main > *', { y: 36, opacity: 0, duration: 0.75, ease, stagger: 0.09, delay: 0.1 })
@@ -234,7 +242,8 @@ const threeQs = [
     setTimeout(() => ScrollTrigger.refresh(), 500)
   }
 
-  // wait for islands to hydrate so .lcard / .maprail exist
-  if (document.readyState === 'complete') requestAnimationFrame(run)
-  else window.addEventListener('load', () => requestAnimationFrame(run))
+  // Run on first load and after every View Transition (astro:page-load covers
+  // both). The island SSR markup (.lcard / .maprail) is in the swapped-in DOM
+  // by then, so GSAP can target it.
+  document.addEventListener('astro:page-load', () => requestAnimationFrame(run))
 </script>

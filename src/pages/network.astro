@@ -1,24 +1,10 @@
 ---
-// src/pages/network.astro — the full interactive bootcamp map.
-import { getCollection } from 'astro:content'
+// /network — a standalone view of the signature network explorer (map + the
+// five lines), reusing the same interactive island as the landing section.
 import Base from '../layouts/Base.astro'
-import { COPY } from '../lib/copy/en'
-import NetworkMap from '../components/NetworkMap.astro'
-const N = COPY.network
-const stations = (await getCollection('stations')).map((s) => ({
-  id: s.id, status: s.data.status, title: s.data.title, line: s.data.line, index: s.data.index,
-}))
+import NetworkExplorer from '../components/NetworkExplorer.svelte'
+import { LINES } from '../lib/curriculum/lines'
 ---
-<Base title="THE NETWORK — DATAVISM" description={N.sub}>
-  <a class="text-phosphor-dim text-xs hover:text-signal" href="/">&lt; back</a>
-  <h1 class="text-signal text-4xl font-bold mt-6">{N.heading}</h1>
-  <p class="text-phosphor-dim text-sm mt-1">{N.sub}</p>
-  <div class="netbleed mt-6">
-    <NetworkMap variant="full" stations={stations} />
-  </div>
-  <p class="text-phosphor-dim text-xs mt-3">{N.hint}</p>
+<Base title="The Network — DATAVISM" description="The octolinear map of the Data Underground: five lines, 25 stations, all converging at the Ghost interchange. Every line ends in a public Case File." active="network">
+  <NetworkExplorer client:load lines={LINES} accent="#ffd23f" />
 </Base>
-
-<style>
-  .netbleed { width: 100vw; margin-left: calc(50% - 50vw); }
-</style>

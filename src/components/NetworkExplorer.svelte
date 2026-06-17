@@ -153,7 +153,7 @@
     background-image: url('/tv-noise.png');
     background-size: 160px 160px;
     image-rendering: pixelated;
-    animation: dv-noise 0.6s steps(1, end) infinite;
+    animation: dv-noise 1.05s steps(1, end) infinite;
   }
   @keyframes dv-noise {
     0%   { background-position: 0 0; }

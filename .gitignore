@@ -46,3 +46,11 @@ next-env.d.ts
 
 # supabase etc.
 .env.local
+
+# local QA artifacts
+.playwright-mcp/
+verify-*.png
+hero-*.png
+ghost-core.png
+landing-full*.png
+final-landing.png

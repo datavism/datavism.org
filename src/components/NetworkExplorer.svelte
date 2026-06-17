@@ -34,7 +34,7 @@
 <!-- ——— 01 · THE NETWORK ——— -->
 <section id="network" class="sec">
   <div class="sec-head">
-    <div class="sec-title"><span class="num">01</span><h2 class="font-display h2">The Network</h2></div>
+    <div class="sec-title"><span class="num">01</span><h2 class="font-display h2" data-decode>The Network</h2></div>
     <p class="sec-desc">Octolinear diagram · click any station to read its brief · every line terminates in a public Case File at the Ghost interchange.</p>
   </div>
 
@@ -92,7 +92,7 @@
 <!-- ——— 02 · THE FIVE LINES ——— -->
 <section id="lines" class="sec sec-top">
   <div class="sec-head">
-    <div class="sec-title"><span class="num">02</span><h2 class="font-display h2">The Five Lines</h2></div>
+    <div class="sec-title"><span class="num">02</span><h2 class="font-display h2" data-decode>The Five Lines</h2></div>
     <p class="sec-desc">LINE G + one thematic line = your first full investigation. Learn the method, then choose a system to ride.</p>
   </div>
 

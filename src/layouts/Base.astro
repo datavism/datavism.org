@@ -16,6 +16,7 @@ import '@fontsource/spline-sans-mono/latin-700.css'
 import '@fontsource/spline-sans-mono/latin-400-italic.css'
 import '@fontsource/spline-sans-mono/latin-500-italic.css'
 
+import { ClientRouter } from 'astro:transitions'
 import { COPY } from '../lib/copy/en'
 import Ticker from '../components/site/Ticker.astro'
 import SiteHeader from '../components/site/SiteHeader.astro'
@@ -60,6 +61,7 @@ const ogImage = new URL(image, Astro.site).href
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <ClientRouter />
   </head>
   <body>
     <div class="topglow" aria-hidden="true"></div>
@@ -87,6 +89,47 @@ const ogImage = new URL(image, Astro.site).href
       .crop-br { bottom: 14px; right: 14px; border-right: 1px solid var(--color-edge-3); border-bottom: 1px solid var(--color-edge-3); }
       .shell { position: relative; z-index: 5; min-height: 100vh; display: flex; flex-direction: column; }
       main { flex: 1; }
+    </style>
+
+    <script>
+      // Drive the data-attribute FX (decode / count-up / glitch). Runs on first
+      // load and after every View Transition (astro:page-load fires for both).
+      import { initFx } from '../scripts/fx'
+      document.addEventListener('astro:page-load', initFx)
+    </script>
+
+    <style is:global>
+      /* ② "channel change" — a snappy, slightly glitchy view-transition cut */
+      @keyframes fx-vt-out { to { opacity: 0; filter: brightness(2.4) contrast(0.5); } }
+      @keyframes fx-vt-in  { from { opacity: 0; filter: brightness(0.25) contrast(3); } }
+      ::view-transition-old(root) { animation: fx-vt-out 0.16s steps(2, end) both; }
+      ::view-transition-new(root) { animation: fx-vt-in 0.24s steps(3, end) both; }
+
+      /* brief signal-glitch (clip + jitter) for [data-glitch] on first view */
+      @keyframes fx-glitch-anim {
+        0%   { clip-path: inset(0 0 0 0); transform: none; }
+        20%  { clip-path: inset(18% 0 52% 0); transform: translateX(-3px); }
+        40%  { clip-path: inset(64% 0 8% 0); transform: translateX(3px); }
+        60%  { clip-path: inset(34% 0 38% 0); transform: translateX(-2px); }
+        80%  { clip-path: inset(8% 0 70% 0); transform: translateX(2px); }
+        100% { clip-path: inset(0 0 0 0); transform: none; }
+      }
+      .fx-glitch { animation: fx-glitch-anim 0.6s steps(2, end) both; }
+
+      /* ② occasional chromatic-aberration flicker (RGB split) on the wordmark */
+      @keyframes fx-aberration {
+        0%, 90%, 100% { text-shadow: 0.045em 0.045em 0 #ff2a6d; }
+        93% { text-shadow: -0.025em 0 0 #4dd2ff, 0.02em 0 0 #ff2a6d; }
+        96% { text-shadow: 0.03em 0 0 #4dd2ff, -0.025em 0 0 #ff2a6d; }
+        98% { text-shadow: -0.018em 0 0 #4dd2ff, 0.015em 0 0 #ff2a6d; }
+      }
+      .fx-aberration { animation: fx-aberration 7s infinite; }
+
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
+        .fx-glitch { animation: none !important; }
+        .fx-aberration { animation: none !important; }
+      }
     </style>
   </body>
 </html>

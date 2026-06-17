@@ -182,7 +182,11 @@
       <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
     </filter>
     <pattern id="dvgrid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M40 0 H0 V40" fill="none" stroke="#111922" stroke-width="1" />
+      <path d="M40 0 H0 V40" fill="none" stroke="#19232f" stroke-width="1" />
+    </pattern>
+    <!-- major gridlines every 200px for a transit-map / blueprint surface -->
+    <pattern id="dvgrid2" width="200" height="200" patternUnits="userSpaceOnUse">
+      <path d="M200 0 H0 V200" fill="none" stroke="#22303f" stroke-width="1" />
     </pattern>
     <radialGradient id="coreglow">
       <stop offset="0%" stop-color="#39ff14" stop-opacity="0.5" />
@@ -191,6 +195,7 @@
     </radialGradient>
   </defs>
   <rect x="0" y="0" width="1440" height="760" fill="url(#dvgrid)" />
+  <rect x="0" y="0" width="1440" height="760" fill="url(#dvgrid2)" />
 
   <!-- casings -->
   {#each routes as r (r.id + 'cas')}

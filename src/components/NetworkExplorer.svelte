@@ -34,17 +34,14 @@
 <!-- ——— 01 · THE NETWORK ——— -->
 <section id="network" class="sec">
   <div class="sec-head">
-    <div class="sec-title"><span class="num">01</span><h2 class="font-display h2" data-decode>The Network</h2></div>
+    <div class="sec-title"><span class="num">01</span><h2 class="font-display h2" data-decode>The Map</h2></div>
     <p class="sec-desc">Octolinear diagram · click any station to read its brief · every line terminates in a public Case File at the Ghost interchange.</p>
   </div>
 
   <div class="maprail">
     <div class="board">
-      <div class="noise"></div>
-      <div class="scanlines"></div>
-      <div class="sweep"></div>
       <div class="word-wrap"><span class="word font-display">DATAVISM</span></div>
-      <div class="board-label">// DATAVISM · NETWORK DIAGRAM · NOT TO SCALE</div>
+      <div class="board-label">// DATAVISM · TRANSIT MAP · NOT TO SCALE</div>
       <div class="board-map">
         <NetworkMap selected={selected} onSelect={pick} {accent} dimInactive={true} liveLine="g" />
       </div>
@@ -144,36 +141,6 @@
   /* Monochrome board: neutral near-black, rounded corners — the background is
      pure 80s analog-TV snow. (The map's own line colours sit on top, z-1.) */
   .board { position: relative; border: 1px solid var(--color-edge); border-radius: 44px; background: radial-gradient(130% 100% at 50% 45%, #141416, #08080a 72%); overflow: hidden; min-height: 420px; container-type: inline-size; }
-  /* Animated 80s analog-TV snow. Uses a REAL grayscale noise PNG tile
-     (public/tv-noise.png) instead of an SVG filter, so it renders identically
-     in EVERY browser. Performant: the tile is decoded once and the animation
-     only steps background-position to uncorrelated crops (compositor-only). */
-  .noise {
-    position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.32;
-    background-image: url('/tv-noise.png?v=4');
-    /* fine 1:1 grain (no upscaling) */
-    background-size: 240px 240px;
-    animation: dv-noise 1.05s steps(1, end) infinite;
-  }
-  @keyframes dv-noise {
-    0%   { background-position: 0 0; }
-    10%  { background-position: -120px 60px; }
-    20%  { background-position: 90px -130px; }
-    30%  { background-position: -180px -40px; }
-    40%  { background-position: 60px 150px; }
-    50%  { background-position: -90px 110px; }
-    60%  { background-position: 170px 40px; }
-    70%  { background-position: -150px -120px; }
-    80%  { background-position: 110px -170px; }
-    90%  { background-position: -60px 90px; }
-    100% { background-position: 0 0; }
-  }
-  /* faint CRT scanlines */
-  .scanlines { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.5; background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3px); }
-  /* slow white roll bar (analog vertical-hold feel), monochrome */
-  .sweep { position: absolute; left: 0; right: 0; top: 0; height: 22%; pointer-events: none; z-index: 0; background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.04) 55%, transparent); animation: dv-sweep 11s linear infinite; }
-  @keyframes dv-sweep { 0% { transform: translateY(-130%); } 100% { transform: translateY(420%); } }
-  @media (prefers-reduced-motion: reduce) { .noise { animation: none; } .sweep { display: none; } }
   .word-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 0; overflow: hidden; }
   /* Cinematic backdrop: the whole DATAVISM wordmark, sized to the board width
      (cqw) so it never zooms past 100% of the board. It breathes between full

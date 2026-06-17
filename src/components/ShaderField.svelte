@@ -15,7 +15,7 @@
   `
   const FRAG = `
     precision highp float;
-    uniform vec2 u_res; uniform float u_time; uniform vec2 u_mouse; uniform float u_amp;
+    uniform vec2 u_res; uniform float u_time; uniform vec2 u_focus; uniform float u_amp;
     float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
     float noise(vec2 p){
       vec2 i = floor(p), f = fract(p); f = f*f*(3.0 - 2.0*f);
@@ -33,8 +33,8 @@
       vec2 g = abs(fract((p*7.0 + q*0.7)) - 0.5);
       float grid = smoothstep(0.49, 0.5, max(0.5 - g.x, 0.5 - g.y)) * 0.025;
       float lum = pow(f, 2.4) * 0.14 * u_amp + grid;       // dark base
-      float md = distance(uv, u_mouse);
-      float glow = smoothstep(0.34, 0.0, md);              // cursor signal source
+      float md = distance(uv, u_focus);
+      float glow = smoothstep(0.38, 0.0, md);              // signal source behind the wordmark
       vec3 col = vec3(lum);
       col += vec3(0.11, 0.55, 0.18) * (f*f * 0.10 + glow * 0.45) * u_amp;  // ghost-green energy
       col += vec3(0.9, 0.6, 0.12) * glow * glow * 0.10 * u_amp;           // signal-yellow core
@@ -71,8 +71,21 @@
 
     const uRes = gl.getUniformLocation(prog, 'u_res')
     const uTime = gl.getUniformLocation(prog, 'u_time')
-    const uMouse = gl.getUniformLocation(prog, 'u_mouse')
+    const uFocus = gl.getUniformLocation(prog, 'u_focus')
     const uAmp = gl.getUniformLocation(prog, 'u_amp')
+
+    // The glow anchors BEHIND the DATAVISM wordmark (computed from its real box)
+    // and drifts gently — no cursor-follow. Canvas + wordmark share the hero's
+    // scroll context, so the anchor only needs recomputing on resize.
+    const anchor = [0.3, 0.55]
+    const computeAnchor = () => {
+      const title = document.querySelector('.hero-title')
+      if (!title) return
+      const cr = canvas.getBoundingClientRect(), tr = title.getBoundingClientRect()
+      if (!cr.width || !cr.height) return
+      anchor[0] = (tr.left + tr.width / 2 - cr.left) / cr.width
+      anchor[1] = 1 - (tr.top + tr.height / 2 - cr.top) / cr.height
+    }
 
     let w = 0, h = 0
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5)
@@ -81,28 +94,22 @@
       w = Math.max(1, Math.round(r.width * dpr)); h = Math.max(1, Math.round(r.height * dpr))
       canvas.width = w; canvas.height = h
       gl.viewport(0, 0, w, h)
+      computeAnchor()
     }
     resize()
     const ro = new ResizeObserver(resize)
     ro.observe(canvas)
 
-    const mouse = [0.5, 0.55], target = [0.5, 0.55]
-    const onMove = (e) => {
-      const r = canvas.getBoundingClientRect()
-      target[0] = (e.clientX - r.left) / r.width
-      target[1] = 1 - (e.clientY - r.top) / r.height
-    }
-    window.addEventListener('pointermove', onMove, { passive: true })
-
     let raf = 0, running = true, t0 = 0
     const frame = (ts) => {
       if (!running) return
       if (!t0) t0 = ts
-      mouse[0] += (target[0] - mouse[0]) * 0.06
-      mouse[1] += (target[1] - mouse[1]) * 0.06
+      const tt = (ts - t0) / 1000
+      const fx = anchor[0] + Math.sin(tt * 0.16) * 0.045  // gentle side sway
+      const fy = anchor[1] + Math.cos(tt * 0.12) * 0.06   // gentle up/down drift
       gl.uniform2f(uRes, w, h)
-      gl.uniform1f(uTime, (ts - t0) / 1000)
-      gl.uniform2f(uMouse, mouse[0], mouse[1])
+      gl.uniform1f(uTime, tt)
+      gl.uniform2f(uFocus, fx, fy)
       gl.uniform1f(uAmp, 1.0)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
       raf = requestAnimationFrame(frame)
@@ -121,7 +128,6 @@
     return () => {
       stop()
       ro.disconnect(); io.disconnect()
-      window.removeEventListener('pointermove', onMove)
       document.removeEventListener('visibilitychange', onVis)
       const ext = gl.getExtension('WEBGL_lose_context'); if (ext) ext.loseContext()
     }

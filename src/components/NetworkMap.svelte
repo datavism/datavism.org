@@ -131,6 +131,11 @@
     <pattern id="dvgrid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0 H0 V40" fill="none" stroke="#111922" stroke-width="1" />
     </pattern>
+    <radialGradient id="coreglow">
+      <stop offset="0%" stop-color="#39ff14" stop-opacity="0.5" />
+      <stop offset="45%" stop-color="#39ff14" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#39ff14" stop-opacity="0" />
+    </radialGradient>
   </defs>
   <rect x="0" y="0" width="1440" height="760" fill="url(#dvgrid)" />
 
@@ -195,6 +200,7 @@
   {/each}
 
   <!-- GHOST interchange -->
+  <circle cx="720" cy="470" r="105" fill="url(#coreglow)" class="dv-core" style="transform-box: fill-box; transform-origin: center;" />
   <circle cx="720" cy="470" r="62" fill="none" stroke="#39ff14" stroke-width="1.4" opacity="0.45" class="dv-pulse" />
   <circle cx="720" cy="470" r="58" fill="none" stroke="#39ff14" stroke-width="1" stroke-dasharray="2 9" opacity="0.45" class="dv-spin" />
   <circle cx="720" cy="470" r="54" fill="#0b0c10" stroke="#343843" stroke-width="1.5" />
@@ -213,5 +219,11 @@
 <style>
   /* interchange ghost blinks, gently (shares the global dv-eyeblink keyframe) */
   .gh-eyes { transform-box: fill-box; transform-origin: center; animation: dv-eyeblink 7.5s infinite; animation-delay: 2.4s; }
-  @media (prefers-reduced-motion: reduce) { .gh-eyes { animation: none; } }
+  /* living energy core — slow breathing pulse behind the ghost (auto, no cursor) */
+  .dv-core { animation: dv-core 4.6s ease-in-out infinite; }
+  @keyframes dv-core {
+    0%, 100% { opacity: 0.5; transform: scale(0.82); }
+    50%      { opacity: 0.95; transform: scale(1.12); }
+  }
+  @media (prefers-reduced-motion: reduce) { .gh-eyes, .dv-core { animation: none; } }
 </style>

@@ -42,6 +42,7 @@
     <div class="board">
       <div class="dv-drift glow"></div>
       <div class="glow2"></div>
+      <div class="noise"></div>
       <div class="scanlines"></div>
       <div class="sweep"></div>
       <div class="word-wrap"><span class="word font-display">DATAVISM</span></div>
@@ -142,30 +143,52 @@
   .sec-desc { font-family: var(--font-mono); font-size: 11.5px; line-height: 1.7; color: var(--color-ink-4); max-width: 44ch; text-align: right; margin: 0; }
 
   .maprail { display: grid; grid-template-columns: 1fr 360px; gap: 22px; align-items: stretch; }
-  .board { position: relative; border: 1px solid var(--color-edge); background: radial-gradient(120% 90% at 50% 0%, #0d1016, var(--color-panel-2) 60%); overflow: hidden; min-height: 420px; }
+  .board { position: relative; border: 1px solid var(--color-edge); background: radial-gradient(120% 90% at 50% 0%, #0d1016, var(--color-panel-2) 60%); overflow: hidden; min-height: 420px; container-type: inline-size; }
   .glow { position: absolute; inset: -25%; pointer-events: none; z-index: 0; background: radial-gradient(38% 38% at 50% 48%, rgba(57, 255, 20, 0.09), transparent 72%); }
   /* second, counter-drifting tint for a slow shifting wash */
   .glow2 { position: absolute; inset: -25%; pointer-events: none; z-index: 0; background: radial-gradient(30% 30% at 64% 38%, rgba(255, 210, 63, 0.05), transparent 70%); animation: dv-drift 23s ease-in-out infinite reverse; }
+  /* animated TV static — an SVG fractal-noise tile whose position steps each
+     frame to read as flickering Bildrauschen. Sits behind the map (z-0). */
+  .noise {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.13;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 220px 220px;
+    animation: dv-noise 0.8s steps(1, end) infinite;
+  }
+  @keyframes dv-noise {
+    0%   { background-position: 0 0; }
+    10%  { background-position: -25px 15px; }
+    20%  { background-position: 35px -20px; }
+    30%  { background-position: -40px -10px; }
+    40%  { background-position: 15px 35px; }
+    50%  { background-position: -20px 25px; }
+    60%  { background-position: 40px 10px; }
+    70%  { background-position: -35px -30px; }
+    80%  { background-position: 20px -35px; }
+    90%  { background-position: -15px 20px; }
+    100% { background-position: 0 0; }
+  }
   /* faint CRT scanlines */
   .scanlines { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.5; background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3px); }
   /* slow scanning beam (surveillance/radar feel) */
   .sweep { position: absolute; left: 0; right: 0; top: 0; height: 26%; pointer-events: none; z-index: 0; background: linear-gradient(to bottom, transparent, rgba(57, 255, 20, 0.055) 55%, transparent); animation: dv-sweep 9s linear infinite; }
   @keyframes dv-sweep { 0% { transform: translateY(-130%); } 100% { transform: translateY(420%); } }
-  @media (prefers-reduced-motion: reduce) { .glow2 { animation: none; } .sweep { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .glow2, .noise { animation: none; } .sweep { display: none; } }
   .word-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 0; overflow: hidden; }
-  /* Cinematic backdrop: slowly zoom out to reveal the whole DATAVISM wordmark,
-     then back in (with a gentle pan + opacity lift). */
+  /* Cinematic backdrop: the whole DATAVISM wordmark, sized to the board width
+     (cqw) so it never zooms past 100% of the board. It breathes between full
+     width and a little smaller — barely readable, just texture. */
   .word {
-    font-weight: 800; font-size: 24vw; letter-spacing: -0.03em; color: var(--color-ink);
-    white-space: nowrap; transform-origin: center; opacity: 0.04; will-change: transform, opacity;
-    animation: dv-cine 30s ease-in-out infinite;
+    font-weight: 800; font-size: 17.5cqw; letter-spacing: -0.03em; color: var(--color-ink);
+    white-space: nowrap; transform-origin: center; opacity: 0.026; will-change: transform, opacity;
+    animation: dv-cine 26s ease-in-out infinite;
   }
   @keyframes dv-cine {
-    0%, 100% { transform: scale(1.12) translateX(4%); opacity: 0.03; }
-    48%, 56% { transform: scale(0.42) translateX(-4%); opacity: 0.075; }
+    0%, 100% { transform: scale(0.68); opacity: 0.014; }
+    50%      { transform: scale(1);    opacity: 0.03; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .word { animation: none; transform: scale(0.5); opacity: 0.05; }
+    .word { animation: none; transform: scale(1); opacity: 0.026; }
   }
   .board-label { position: absolute; top: 14px; left: 16px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--color-ink-5); z-index: 2; }
   .board-map { position: relative; z-index: 1; padding: 10px; }

@@ -90,10 +90,6 @@ a { color: inherit; }
 @keyframes dv-packets { to { stroke-dashoffset: -480; } }
 .dv-packets { animation: dv-packets 7s linear infinite; }
 
-/* parallax glow drift on the map board */
-@keyframes dv-drift { 0%, 100% { transform: translate(-5%,-3%); } 50% { transform: translate(5%,3%); } }
-.dv-drift { animation: dv-drift 16s ease-in-out infinite; }
-
 /* ghost eye-blink (logo + interchange) — gentle, infrequent */
 @keyframes dv-eyeblink { 0%, 95%, 100% { transform: scaleY(1); } 97.5% { transform: scaleY(0.18); } }
 
@@ -106,7 +102,7 @@ a { color: inherit; }
 .dv-nav a:hover::after { width: 100%; }
 
 @media (prefers-reduced-motion: reduce) {
-  .dv-cursor, .dv-pulse, .dv-spin, .dv-track, .dv-drift { animation: none !important; }
+  .dv-cursor, .dv-pulse, .dv-spin, .dv-track { animation: none !important; }
   .dv-line { animation: none !important; stroke-dashoffset: 0 !important; }
   .dv-packets { display: none !important; }
 }

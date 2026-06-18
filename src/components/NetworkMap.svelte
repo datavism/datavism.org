@@ -130,6 +130,19 @@
   let flashes = $state([])
   let nextId = 0
 
+  // — Ghost radar —————————————————————————————————————————————
+  // The Ghost sweeps a radar beam around the map; a few hidden "objects" light
+  // up briefly when the beam crosses them. Angles precomputed from the centre.
+  let sweepAngle = $state(0)
+  let blips = $state(
+    [
+      { x: 1140, y: 200 },
+      { x: 250, y: 360 },
+      { x: 1080, y: 580 },
+      { x: 430, y: 560 },
+    ].map((b) => ({ ...b, angle: ((Math.atan2(b.y - 470, b.x - 720) * 180) / Math.PI + 360) % 360, intensity: 0 })),
+  )
+
   $effect(() => {
     if (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const ids = Object.keys(LC)
@@ -193,6 +206,14 @@
         }
         const pt = path.getPointAtLength(total * (1 - t.p)) // ghost(total) → terminus(0)
         t.x = pt.x; t.y = pt.y
+      }
+      // radar sweep + hidden-object detection
+      const prev = sweepAngle
+      sweepAngle = (sweepAngle + dt * 55) % 360 // ~6.5s / revolution
+      for (let bi = 0; bi < blips.length; bi++) {
+        const b = blips[bi]
+        const crossed = sweepAngle >= prev ? b.angle > prev && b.angle <= sweepAngle : b.angle > prev || b.angle <= sweepAngle
+        b.intensity = crossed ? 1 : Math.max(0, b.intensity - dt / 1.1)
       }
       raf = requestAnimationFrame(tick)
     }
@@ -264,6 +285,23 @@
     <circle cx={t.x} cy={t.y} r="2.4" fill="#ffffff" style="pointer-events:none;" />
   {/each}
 
+  <!-- ghost radar: expanding signal rings + rotating sweep + detected objects -->
+  <g style="pointer-events:none;">
+    <circle class="radar-ring" cx="720" cy="470" r="40" fill="none" stroke="#39ff14" stroke-width="1.3" />
+    <circle class="radar-ring r2" cx="720" cy="470" r="40" fill="none" stroke="#39ff14" stroke-width="1.3" />
+    <circle class="radar-ring r3" cx="720" cy="470" r="40" fill="none" stroke="#39ff14" stroke-width="1.3" />
+    <g class="radar-sweep" transform={`rotate(${sweepAngle} 720 470)`}>
+      <path d="M720 470 L1060 470 A340 340 0 0 0 938.6 209.6 Z" fill="#39ff14" opacity="0.06" />
+      <line x1="720" y1="470" x2="1060" y2="470" stroke="#39ff14" stroke-width="2" opacity="0.5" filter="url(#dvg)" />
+    </g>
+    {#each blips as b (b.x + ',' + b.y)}
+      <g opacity={b.intensity}>
+        <circle cx={b.x} cy={b.y} r="9.5" fill="none" stroke="#39ff14" stroke-width="1.2" opacity="0.6" />
+        <circle cx={b.x} cy={b.y} r="3.4" fill="#39ff14" filter="url(#dvg)" />
+      </g>
+    {/each}
+  </g>
+
   <!-- stations -->
   {#each nodes as n (n.id)}
     <circle cx={n.x} cy={n.y} r="19" fill="transparent" style="cursor:pointer;" role="button" tabindex="-1" aria-label={n.code + ' ' + n.title}
@@ -302,7 +340,6 @@
 
   <!-- GHOST interchange -->
   <circle cx="720" cy="470" r="105" fill="url(#coreglow)" class="dv-core" style="transform-box: fill-box; transform-origin: center;" />
-  <circle cx="720" cy="470" r="62" fill="none" stroke="#39ff14" stroke-width="1.4" opacity="0.45" class="dv-pulse" />
   <circle cx="720" cy="470" r="58" fill="none" stroke="#39ff14" stroke-width="1" stroke-dasharray="2 9" opacity="0.45" class="dv-spin" />
   <circle cx="720" cy="470" r="54" fill="#0b0c10" stroke="#343843" stroke-width="1.5" />
   <g transform="translate(680,420) scale(0.62)">
@@ -329,5 +366,10 @@
   /* signal-train arrival: the line flares then fades */
   .dv-flash { animation: dv-flash 0.65s ease-out forwards; }
   @keyframes dv-flash { from { opacity: 0.85; } to { opacity: 0; } }
-  @media (prefers-reduced-motion: reduce) { .gh-eyes, .dv-core, .dv-flash { animation: none; } }
+  /* radar: expanding range rings (signals reach across the map) */
+  .radar-ring { animation: radar-ping 4.4s ease-out infinite; }
+  .radar-ring.r2 { animation-delay: 1.45s; }
+  .radar-ring.r3 { animation-delay: 2.9s; }
+  @keyframes radar-ping { 0% { r: 44px; opacity: 0.4; } 100% { r: 348px; opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .gh-eyes, .dv-core, .dv-flash, .dv-spin, .radar-ring, .radar-sweep { animation: none; } .radar-ring, .radar-sweep { display: none; } }
 </style>

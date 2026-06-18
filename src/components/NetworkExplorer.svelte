@@ -45,6 +45,25 @@
       <div class="board-map">
         <NetworkMap selected={selected} onSelect={pick} {accent} dimInactive={true} liveLine="g" />
       </div>
+
+      <!-- map key (lives in the map, like a transit poster) -->
+      <div class="key map-key">
+        <div class="key-h">KEY</div>
+        <div class="key-lines">
+          {#each lines as L (L.id)}
+            <button class="key-line" onclick={() => pick(L.stations[0].id)}>
+              <span class="sw" style={`background:${L.color.hex};`}></span>
+              <span class="key-label">{L.code} · {L.shortName}</span>
+            </button>
+          {/each}
+        </div>
+        <div class="legend">
+          <span class="lg"><span class="lg-dot ring"></span>STATION</span>
+          <span class="lg"><span class="lg-inter"><span></span></span>GHOST · INTERCHANGE</span>
+          <span class="lg"><span class="lg-dot open"></span>OPEN · STARTS HERE</span>
+          <span class="lg"><span class="lg-dot locked"></span>LOCKED</span>
+        </div>
+      </div>
     </div>
 
     <div class="rail">
@@ -64,24 +83,6 @@
           <div><div class="k">ARTIFACT</div><div class="v art" style={`color:${sel.lineColor};`}>{sel.artifact}</div></div>
         </div>
       </aside>
-
-      <div class="key">
-        <div class="key-h">NETWORK KEY</div>
-        <div class="key-lines">
-          {#each lines as L (L.id)}
-            <button class="key-line" onclick={() => pick(L.stations[0].id)}>
-              <span class="sw" style={`background:${L.color.hex};`}></span>
-              <span class="key-label">{L.code} · {L.shortName}</span>
-            </button>
-          {/each}
-        </div>
-        <div class="legend">
-          <span class="lg"><span class="lg-dot ring"></span>STATION · A CAPABILITY</span>
-          <span class="lg"><span class="lg-inter"><span></span></span>GHOST · INTERCHANGE</span>
-          <span class="lg"><span class="lg-dot open"></span>OPEN · STARTS HERE</span>
-          <span class="lg"><span class="lg-dot locked"></span>LOCKED · NOT YET RUNNING</span>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -177,6 +178,10 @@
   .detail-grid .art { font-family: var(--font-mono); line-height: 1.4; }
 
   .key { border: 1px solid var(--color-edge); background: var(--color-panel-3); padding: 18px 20px; }
+  /* key placed inside the map, bottom-left, like a transit-poster key */
+  .map-key { position: absolute; left: 24px; bottom: 24px; z-index: 3; width: 208px; padding: 13px 15px; background: rgba(8, 9, 13, 0.86); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); border-radius: 4px; }
+  .map-key .legend { gap: 7px; margin-top: 12px; padding-top: 11px; }
+  @media (max-width: 560px) { .map-key { position: static; width: auto; margin-top: 14px; background: var(--color-panel-3); backdrop-filter: none; } }
   .key-h { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--color-ink-5); margin-bottom: 14px; }
   .key-lines { display: grid; gap: 11px; }
   .key-line { display: flex; align-items: center; gap: 12px; background: transparent; border: none; padding: 0; cursor: pointer; text-align: left; font-family: inherit; }

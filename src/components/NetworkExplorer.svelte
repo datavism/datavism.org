@@ -141,6 +141,8 @@
   /* Monochrome board: neutral near-black, rounded corners — the background is
      pure 80s analog-TV snow. (The map's own line colours sit on top, z-1.) */
   .board { position: relative; border: 1px solid var(--color-edge); border-radius: 44px; background: radial-gradient(130% 100% at 50% 45%, #141416, #08080a 72%); overflow: hidden; min-height: 420px; container-type: inline-size; }
+  /* subtle inner frame — map-poster feel */
+  .board::after { content: ''; position: absolute; inset: 12px; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 32px; pointer-events: none; z-index: 2; }
   .word-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 0; overflow: hidden; }
   /* Cinematic backdrop: the whole DATAVISM wordmark, sized to the board width
      (cqw) so it never zooms past 100% of the board. It breathes between full

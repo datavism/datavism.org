@@ -101,7 +101,7 @@
       const op = dimInactive ? (on ? 1 : 0.32) : (on ? 1 : 0.85)
       return {
         id, d, len, color: LC[id], isLive, isSel, on, op,
-        width: isSel ? 9 : isLive ? 8 : 7,
+        width: isSel ? 10.5 : isLive ? 9.5 : 8.5,
         delay: ORDER[id] * 0.13,
         packet: isLive || isSel,
         packetOp: isLive ? 1 : 0.7,
@@ -199,7 +199,7 @@
 
   <!-- casings -->
   {#each routes as r (r.id + 'cas')}
-    <path d={r.d} fill="none" stroke="#0b0c10" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+    <path d={r.d} fill="none" stroke="#0b0c10" stroke-width="19" stroke-linecap="round" stroke-linejoin="round" />
   {/each}
 
   <!-- coloured lines + packets -->

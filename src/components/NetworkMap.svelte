@@ -27,12 +27,14 @@
   let hovered = $state(null)
   let internalSel = $state(null)
 
+  // Stations run INNER (1, boards at the Ghost) → OUTER (5, the adversary
+  // terminus / final "…FILE"). Positions reversed vs the original handoff.
   const GEO = {
-    g1: { x: 150, y: 290, anchor: 'above', terminus: true }, g2: { x: 320, y: 290, anchor: 'above' }, g3: { x: 490, y: 290, anchor: 'above' }, g4: { x: 600, y: 350, anchor: 'left' }, g5: { x: 660, y: 410, anchor: 'left' },
-    k1: { x: 900, y: 120, anchor: 'above', terminus: true }, k2: { x: 810, y: 120, anchor: 'above' }, k3: { x: 720, y: 210, anchor: 'right' }, k4: { x: 720, y: 300, anchor: 'right' }, k5: { x: 720, y: 400, anchor: 'right' },
-    r1: { x: 1290, y: 300, anchor: 'left', terminus: true }, r2: { x: 1290, y: 400, anchor: 'left' }, r3: { x: 1130, y: 470, anchor: 'above' }, r4: { x: 990, y: 470, anchor: 'above' }, r5: { x: 850, y: 470, anchor: 'above' },
-    b1: { x: 1110, y: 650, anchor: 'below', terminus: true }, b2: { x: 985, y: 650, anchor: 'below' }, b3: { x: 850, y: 600, anchor: 'right' }, b4: { x: 800, y: 550, anchor: 'right' }, b5: { x: 760, y: 510, anchor: 'right' },
-    v1: { x: 150, y: 650, anchor: 'below', terminus: true }, v2: { x: 320, y: 650, anchor: 'below' }, v3: { x: 490, y: 650, anchor: 'below' }, v4: { x: 600, y: 590, anchor: 'left' }, v5: { x: 660, y: 530, anchor: 'left' },
+    g1: { x: 660, y: 410, anchor: 'bl' }, g2: { x: 600, y: 350, anchor: 'bl' }, g3: { x: 490, y: 290, anchor: 'above' }, g4: { x: 320, y: 290, anchor: 'above' }, g5: { x: 150, y: 290, anchor: 'above', terminus: true },
+    k1: { x: 720, y: 370, anchor: 'right' }, k2: { x: 720, y: 300, anchor: 'right' }, k3: { x: 720, y: 210, anchor: 'right' }, k4: { x: 775, y: 120, anchor: 'above' }, k5: { x: 900, y: 120, anchor: 'above', terminus: true },
+    r1: { x: 850, y: 470, anchor: 'above' }, r2: { x: 990, y: 470, anchor: 'above' }, r3: { x: 1130, y: 470, anchor: 'above' }, r4: { x: 1290, y: 400, anchor: 'left' }, r5: { x: 1290, y: 300, anchor: 'left', terminus: true },
+    b1: { x: 787, y: 537, anchor: 'ar' }, b2: { x: 826, y: 576, anchor: 'ar' }, b3: { x: 865, y: 615, anchor: 'ar' }, b4: { x: 985, y: 650, anchor: 'below' }, b5: { x: 1110, y: 650, anchor: 'below', terminus: true },
+    v1: { x: 660, y: 530, anchor: 'al' }, v2: { x: 600, y: 590, anchor: 'al' }, v3: { x: 490, y: 650, anchor: 'below' }, v4: { x: 320, y: 650, anchor: 'below' }, v5: { x: 150, y: 650, anchor: 'below', terminus: true },
   }
 
   const ROUTEPTS = {
@@ -75,10 +77,16 @@
   }
 
   function labelPos(x, y, a) {
-    if (a === 'above') return { cx: x, cy: y - 17, tx: x, ty: y - 28, ta: 'middle' }
-    if (a === 'below') return { cx: x, cy: y + 19, tx: x, ty: y + 30, ta: 'middle' }
-    if (a === 'left') return { cx: x - 13, cy: y - 2, tx: x - 13, ty: y + 9, ta: 'end' }
-    return { cx: x + 13, cy: y - 2, tx: x + 13, ty: y + 9, ta: 'start' }
+    if (a === 'above') return { cx: x, cy: y - 20, tx: x, ty: y - 36, ta: 'middle' }
+    if (a === 'below') return { cx: x, cy: y + 24, tx: x, ty: y + 40, ta: 'middle' }
+    if (a === 'left') return { cx: x - 16, cy: y - 5, tx: x - 16, ty: y + 13, ta: 'end' }
+    // Diagonal anchors: push the label perpendicular to a 45° line and anchor it
+    // to the far side so its nearest corner sits at the node (clears the line).
+    if (a === 'bl') return { cx: x - 14, cy: y + 20, tx: x - 14, ty: y + 36, ta: 'end' }   // below-left
+    if (a === 'br') return { cx: x + 14, cy: y + 20, tx: x + 14, ty: y + 36, ta: 'start' } // below-right
+    if (a === 'al') return { cx: x - 14, cy: y - 14, tx: x - 14, ty: y - 30, ta: 'end' }   // above-left
+    if (a === 'ar') return { cx: x + 14, cy: y - 14, tx: x + 14, ty: y - 30, ta: 'start' } // above-right
+    return { cx: x + 16, cy: y - 5, tx: x + 16, ty: y + 13, ta: 'start' }                  // right
   }
 
   const selId = $derived(selected != null ? selected : internalSel)
@@ -129,6 +137,33 @@
   let trains = $state([])
   let flashes = $state([])
   let nextId = 0
+
+  // — Ghost radar —————————————————————————————————————————————
+  // The Ghost sweeps a radar beam around the map; a few hidden "objects" light
+  // up briefly when the beam crosses them. Angles precomputed from the centre.
+  let sweepAngle = $state(0)
+  let blips = $state(
+    [
+      { x: 1140, y: 200 },
+      { x: 250, y: 360 },
+      { x: 1080, y: 580 },
+      { x: 430, y: 560 },
+    ].map((b) => ({ ...b, angle: ((Math.atan2(b.y - 470, b.x - 720) * 180) / Math.PI + 360) % 360, intensity: 0 })),
+  )
+  // sweep tail built from thin wedge slices fanning back from the leading edge,
+  // opacity fading out → a smooth conic radar sweep (centred on the Ghost).
+  const SWEEP = (() => {
+    const cx = 720, cy = 470, R = 900, n = 16, span = 80 // reaches every corner (~860)
+    const pt = (deg) => [cx + R * Math.cos((deg * Math.PI) / 180), cy + R * Math.sin((deg * Math.PI) / 180)]
+    const out = []
+    for (let i = 0; i < n; i++) {
+      const [x0, y0] = pt(-(i * span) / n)
+      const [x1, y1] = pt(-((i + 1) * span) / n)
+      out.push({ d: `M${cx} ${cy} L${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 0 0 ${x1.toFixed(1)} ${y1.toFixed(1)} Z`, op: (0.1 * Math.pow(1 - i / n, 1.5)).toFixed(3) })
+    }
+    return out
+  })()
+  const RANGE_RINGS = [150, 330, 540, 760]
 
   $effect(() => {
     if (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -193,6 +228,14 @@
         }
         const pt = path.getPointAtLength(total * (1 - t.p)) // ghost(total) → terminus(0)
         t.x = pt.x; t.y = pt.y
+      }
+      // radar sweep + hidden-object detection
+      const prev = sweepAngle
+      sweepAngle = (sweepAngle + dt * 55) % 360 // ~6.5s / revolution
+      for (let bi = 0; bi < blips.length; bi++) {
+        const b = blips[bi]
+        const crossed = sweepAngle >= prev ? b.angle > prev && b.angle <= sweepAngle : b.angle > prev || b.angle <= sweepAngle
+        b.intensity = crossed ? 1 : Math.max(0, b.intensity - dt / 2.6) // phosphor afterglow
       }
       raf = requestAnimationFrame(tick)
     }
@@ -264,6 +307,28 @@
     <circle cx={t.x} cy={t.y} r="2.4" fill="#ffffff" style="pointer-events:none;" />
   {/each}
 
+  <!-- ghost radar: static range rings + rotating conic sweep + detected objects -->
+  <g class="radar" style="pointer-events:none;">
+    {#each RANGE_RINGS as r}
+      <circle cx="720" cy="470" {r} fill="none" stroke="#39ff14" stroke-width="1" opacity="0.035" />
+    {/each}
+    <g class="radar-sweep" transform={`rotate(${sweepAngle} 720 470)`}>
+      {#each SWEEP as s}
+        <path d={s.d} fill="#39ff14" opacity={s.op} />
+      {/each}
+      <line x1="720" y1="470" x2="1620" y2="470" stroke="#39ff14" stroke-width="1.4" opacity="0.2" filter="url(#dvg)" />
+    </g>
+    {#each blips as b (b.x + ',' + b.y)}
+      {#if b.intensity > 0.01}
+        <g style={`opacity:${b.intensity};`}>
+          <circle cx={b.x} cy={b.y} r={4 + (1 - b.intensity) * 16} fill="none" stroke="#39ff14" stroke-width="1.4" opacity={0.55 * b.intensity} />
+          <circle cx={b.x} cy={b.y} r="9.5" fill="none" stroke="#39ff14" stroke-width="1" opacity="0.4" />
+          <circle cx={b.x} cy={b.y} r="3.4" fill="#39ff14" filter="url(#dvg)" />
+        </g>
+      {/if}
+    {/each}
+  </g>
+
   <!-- stations -->
   {#each nodes as n (n.id)}
     <circle cx={n.x} cy={n.y} r="19" fill="transparent" style="cursor:pointer;" role="button" tabindex="-1" aria-label={n.code + ' ' + n.title}
@@ -295,14 +360,13 @@
     </g>
     {#if labels}
       {@const dim = n.status === 'locked' && !n.isSel && !n.isHov}
-      <text x={n.lp.cx} y={n.lp.cy} text-anchor={n.lp.ta} font-family="'Spline Sans Mono', monospace" font-size="11.5" font-weight="700" fill={n.color} opacity={dim ? 0.72 : 1} style="pointer-events:none;letter-spacing:0.03em;">{n.code}</text>
-      <text x={n.lp.tx} y={n.lp.ty} text-anchor={n.lp.ta} font-family="'Spline Sans Mono', monospace" font-size="8.8" font-weight="500" fill={n.isSel ? '#f2f1ea' : '#7c8276'} opacity={dim ? 0.72 : 1} style="pointer-events:none;letter-spacing:0.02em;">{n.title}</text>
+      <text x={n.lp.cx} y={n.lp.cy} text-anchor={n.lp.ta} font-family="'Spline Sans Mono', monospace" font-size="16" font-weight="700" fill={n.color} opacity={dim ? 0.75 : 1} style="pointer-events:none;letter-spacing:0.03em;">{n.code}</text>
+      <text x={n.lp.tx} y={n.lp.ty} text-anchor={n.lp.ta} font-family="'Spline Sans Mono', monospace" font-size="12" font-weight="600" fill={n.isSel ? '#f2f1ea' : '#9aa192'} opacity={dim ? 0.75 : 1} style="pointer-events:none;letter-spacing:0.02em;">{n.title}</text>
     {/if}
   {/each}
 
   <!-- GHOST interchange -->
   <circle cx="720" cy="470" r="105" fill="url(#coreglow)" class="dv-core" style="transform-box: fill-box; transform-origin: center;" />
-  <circle cx="720" cy="470" r="62" fill="none" stroke="#39ff14" stroke-width="1.4" opacity="0.45" class="dv-pulse" />
   <circle cx="720" cy="470" r="58" fill="none" stroke="#39ff14" stroke-width="1" stroke-dasharray="2 9" opacity="0.45" class="dv-spin" />
   <circle cx="720" cy="470" r="54" fill="#0b0c10" stroke="#343843" stroke-width="1.5" />
   <g transform="translate(680,420) scale(0.62)">
@@ -329,5 +393,5 @@
   /* signal-train arrival: the line flares then fades */
   .dv-flash { animation: dv-flash 0.65s ease-out forwards; }
   @keyframes dv-flash { from { opacity: 0.85; } to { opacity: 0; } }
-  @media (prefers-reduced-motion: reduce) { .gh-eyes, .dv-core, .dv-flash { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .gh-eyes, .dv-core, .dv-flash, .dv-spin { animation: none; } .radar-sweep { display: none; } }
 </style>

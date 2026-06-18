@@ -133,15 +133,37 @@
   $effect(() => {
     if (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const ids = Object.keys(LC)
-    const lenCache = {}
+    const lenCache = {}, stopCache = {}
     const pathOf = (id) => document.getElementById(`route-${id}`)
     let raf = 0, last = 0, spawnTimer = 0, alive = true
+
+    // station progress values along a line (in train terms: 0 = Ghost → 1 =
+    // terminus), found by sampling the rendered path and snapping each station.
+    const computeStops = (lineId, path, total) => {
+      if (stopCache[lineId]) return stopCache[lineId]
+      const N = 220, samples = []
+      for (let i = 0; i <= N; i++) { const L = (total * i) / N; const p = path.getPointAtLength(L); samples.push([L, p.x, p.y]) }
+      const line = LINES.find((l) => l.id === lineId)
+      const ps = []
+      for (const st of line.st) {
+        const g = GEO[st[0]]; let best = Infinity, bestL = 0
+        for (const s of samples) { const dx = s[1] - g.x, dy = s[2] - g.y, d = dx * dx + dy * dy; if (d < best) { best = d; bestL = s[0] } }
+        ps.push(1 - bestL / total)
+      }
+      // drop the Ghost-adjacent stop (train starts there) and the terminus (it flashes)
+      stopCache[lineId] = ps.filter((p) => p > 0.06 && p < 0.94).sort((a, b) => a - b)
+      return stopCache[lineId]
+    }
 
     const spawn = () => {
       if (!alive) return
       if (trains.length < 4) {
         const lineId = ids[(Math.random() * ids.length) | 0]
-        trains.push({ id: ++nextId, lineId, color: LC[lineId], p: 0, x: 720, y: 470 })
+        const path = pathOf(lineId)
+        if (path) {
+          const total = lenCache[lineId] ?? (lenCache[lineId] = path.getTotalLength())
+          trains.push({ id: ++nextId, lineId, color: LC[lineId], p: 0, x: 720, y: 470, stops: computeStops(lineId, path, total), si: 0, pauseUntil: 0 })
+        }
       }
       spawnTimer = setTimeout(spawn, 900 + Math.random() * 2800)
     }
@@ -161,8 +183,14 @@
         const path = pathOf(t.lineId)
         if (!path) { trains.splice(i, 1); continue }
         const total = lenCache[t.lineId] ?? (lenCache[t.lineId] = path.getTotalLength())
-        t.p += dt / 2.2 // ~2.2s ghost → terminus
-        if (t.p >= 1) { flash(t.lineId); trains.splice(i, 1); continue }
+        if (ts >= t.pauseUntil) { // not dwelling at a station
+          t.p += dt / 2.4 // ~2.4s ghost → terminus (plus dwell time)
+          if (t.si < t.stops.length && t.p >= t.stops[t.si]) { // arrive at a station → brief stop
+            t.p = t.stops[t.si]
+            t.pauseUntil = ts + 280
+            t.si++
+          } else if (t.p >= 1) { flash(t.lineId); trains.splice(i, 1); continue }
+        }
         const pt = path.getPointAtLength(total * (1 - t.p)) // ghost(total) → terminus(0)
         t.x = pt.x; t.y = pt.y
       }

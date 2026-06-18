@@ -101,7 +101,7 @@
       const op = dimInactive ? (on ? 1 : 0.32) : (on ? 1 : 0.85)
       return {
         id, d, len, color: LC[id], isLive, isSel, on, op,
-        width: isSel ? 9 : isLive ? 8 : 7,
+        width: isSel ? 10.5 : isLive ? 9.5 : 8.5,
         delay: ORDER[id] * 0.13,
         packet: isLive || isSel,
         packetOp: isLive ? 1 : 0.7,
@@ -182,7 +182,11 @@
       <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
     </filter>
     <pattern id="dvgrid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M40 0 H0 V40" fill="none" stroke="#111922" stroke-width="1" />
+      <path d="M40 0 H0 V40" fill="none" stroke="#19232f" stroke-width="1" />
+    </pattern>
+    <!-- major gridlines every 200px for a transit-map / blueprint surface -->
+    <pattern id="dvgrid2" width="200" height="200" patternUnits="userSpaceOnUse">
+      <path d="M200 0 H0 V200" fill="none" stroke="#22303f" stroke-width="1" />
     </pattern>
     <radialGradient id="coreglow">
       <stop offset="0%" stop-color="#39ff14" stop-opacity="0.5" />
@@ -191,10 +195,11 @@
     </radialGradient>
   </defs>
   <rect x="0" y="0" width="1440" height="760" fill="url(#dvgrid)" />
+  <rect x="0" y="0" width="1440" height="760" fill="url(#dvgrid2)" />
 
   <!-- casings -->
   {#each routes as r (r.id + 'cas')}
-    <path d={r.d} fill="none" stroke="#0b0c10" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+    <path d={r.d} fill="none" stroke="#0b0c10" stroke-width="19" stroke-linecap="round" stroke-linejoin="round" />
   {/each}
 
   <!-- coloured lines + packets -->

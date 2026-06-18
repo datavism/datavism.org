@@ -31,9 +31,9 @@
   // terminus / final "…FILE"). Positions reversed vs the original handoff.
   const GEO = {
     g1: { x: 660, y: 410, anchor: 'bl' }, g2: { x: 600, y: 350, anchor: 'bl' }, g3: { x: 490, y: 290, anchor: 'above' }, g4: { x: 320, y: 290, anchor: 'above' }, g5: { x: 150, y: 290, anchor: 'above', terminus: true },
-    k1: { x: 720, y: 400, anchor: 'right' }, k2: { x: 720, y: 300, anchor: 'right' }, k3: { x: 720, y: 210, anchor: 'right' }, k4: { x: 775, y: 120, anchor: 'above' }, k5: { x: 900, y: 120, anchor: 'above', terminus: true },
+    k1: { x: 720, y: 370, anchor: 'right' }, k2: { x: 720, y: 300, anchor: 'right' }, k3: { x: 720, y: 210, anchor: 'right' }, k4: { x: 775, y: 120, anchor: 'above' }, k5: { x: 900, y: 120, anchor: 'above', terminus: true },
     r1: { x: 850, y: 470, anchor: 'above' }, r2: { x: 990, y: 470, anchor: 'above' }, r3: { x: 1130, y: 470, anchor: 'above' }, r4: { x: 1290, y: 400, anchor: 'left' }, r5: { x: 1290, y: 300, anchor: 'left', terminus: true },
-    b1: { x: 772, y: 522, anchor: 'ar' }, b2: { x: 800, y: 550, anchor: 'ar' }, b3: { x: 850, y: 600, anchor: 'ar' }, b4: { x: 985, y: 650, anchor: 'below' }, b5: { x: 1110, y: 650, anchor: 'below', terminus: true },
+    b1: { x: 787, y: 537, anchor: 'ar' }, b2: { x: 826, y: 576, anchor: 'ar' }, b3: { x: 865, y: 615, anchor: 'ar' }, b4: { x: 985, y: 650, anchor: 'below' }, b5: { x: 1110, y: 650, anchor: 'below', terminus: true },
     v1: { x: 660, y: 530, anchor: 'al' }, v2: { x: 600, y: 590, anchor: 'al' }, v3: { x: 490, y: 650, anchor: 'below' }, v4: { x: 320, y: 650, anchor: 'below' }, v5: { x: 150, y: 650, anchor: 'below', terminus: true },
   }
 

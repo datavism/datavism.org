@@ -77,10 +77,10 @@
   }
 
   function labelPos(x, y, a) {
-    if (a === 'above') return { cx: x, cy: y - 17, tx: x, ty: y - 28, ta: 'middle' }
-    if (a === 'below') return { cx: x, cy: y + 19, tx: x, ty: y + 30, ta: 'middle' }
-    if (a === 'left') return { cx: x - 13, cy: y - 2, tx: x - 13, ty: y + 9, ta: 'end' }
-    return { cx: x + 13, cy: y - 2, tx: x + 13, ty: y + 9, ta: 'start' }
+    if (a === 'above') return { cx: x, cy: y - 20, tx: x, ty: y - 36, ta: 'middle' }
+    if (a === 'below') return { cx: x, cy: y + 24, tx: x, ty: y + 40, ta: 'middle' }
+    if (a === 'left') return { cx: x - 16, cy: y - 5, tx: x - 16, ty: y + 13, ta: 'end' }
+    return { cx: x + 16, cy: y - 5, tx: x + 16, ty: y + 13, ta: 'start' }
   }
 
   const selId = $derived(selected != null ? selected : internalSel)
@@ -354,8 +354,8 @@
     </g>
     {#if labels}
       {@const dim = n.status === 'locked' && !n.isSel && !n.isHov}
-      <text x={n.lp.cx} y={n.lp.cy} text-anchor={n.lp.ta} font-family="'Spline Sans Mono', monospace" font-size="11.5" font-weight="700" fill={n.color} opacity={dim ? 0.72 : 1} style="pointer-events:none;letter-spacing:0.03em;">{n.code}</text>
-      <text x={n.lp.tx} y={n.lp.ty} text-anchor={n.lp.ta} font-family="'Spline Sans Mono', monospace" font-size="8.8" font-weight="500" fill={n.isSel ? '#f2f1ea' : '#7c8276'} opacity={dim ? 0.72 : 1} style="pointer-events:none;letter-spacing:0.02em;">{n.title}</text>
+      <text x={n.lp.cx} y={n.lp.cy} text-anchor={n.lp.ta} font-family="'Spline Sans Mono', monospace" font-size="16" font-weight="700" fill={n.color} opacity={dim ? 0.75 : 1} style="pointer-events:none;letter-spacing:0.03em;">{n.code}</text>
+      <text x={n.lp.tx} y={n.lp.ty} text-anchor={n.lp.ta} font-family="'Spline Sans Mono', monospace" font-size="12" font-weight="600" fill={n.isSel ? '#f2f1ea' : '#9aa192'} opacity={dim ? 0.75 : 1} style="pointer-events:none;letter-spacing:0.02em;">{n.title}</text>
     {/if}
   {/each}
 

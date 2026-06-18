@@ -30,11 +30,11 @@
   // Stations run INNER (1, boards at the Ghost) → OUTER (5, the adversary
   // terminus / final "…FILE"). Positions reversed vs the original handoff.
   const GEO = {
-    g1: { x: 660, y: 410, anchor: 'below' }, g2: { x: 600, y: 350, anchor: 'below' }, g3: { x: 490, y: 290, anchor: 'above' }, g4: { x: 320, y: 290, anchor: 'above' }, g5: { x: 150, y: 290, anchor: 'above', terminus: true },
+    g1: { x: 660, y: 410, anchor: 'bl' }, g2: { x: 600, y: 350, anchor: 'bl' }, g3: { x: 490, y: 290, anchor: 'above' }, g4: { x: 320, y: 290, anchor: 'above' }, g5: { x: 150, y: 290, anchor: 'above', terminus: true },
     k1: { x: 720, y: 400, anchor: 'right' }, k2: { x: 720, y: 300, anchor: 'right' }, k3: { x: 720, y: 210, anchor: 'right' }, k4: { x: 775, y: 120, anchor: 'above' }, k5: { x: 900, y: 120, anchor: 'above', terminus: true },
     r1: { x: 850, y: 470, anchor: 'above' }, r2: { x: 990, y: 470, anchor: 'above' }, r3: { x: 1130, y: 470, anchor: 'above' }, r4: { x: 1290, y: 400, anchor: 'left' }, r5: { x: 1290, y: 300, anchor: 'left', terminus: true },
-    b1: { x: 760, y: 510, anchor: 'right' }, b2: { x: 800, y: 550, anchor: 'right' }, b3: { x: 850, y: 600, anchor: 'right' }, b4: { x: 985, y: 650, anchor: 'below' }, b5: { x: 1110, y: 650, anchor: 'below', terminus: true },
-    v1: { x: 660, y: 530, anchor: 'left' }, v2: { x: 600, y: 590, anchor: 'left' }, v3: { x: 490, y: 650, anchor: 'below' }, v4: { x: 320, y: 650, anchor: 'below' }, v5: { x: 150, y: 650, anchor: 'below', terminus: true },
+    b1: { x: 772, y: 522, anchor: 'ar' }, b2: { x: 800, y: 550, anchor: 'ar' }, b3: { x: 850, y: 600, anchor: 'ar' }, b4: { x: 985, y: 650, anchor: 'below' }, b5: { x: 1110, y: 650, anchor: 'below', terminus: true },
+    v1: { x: 660, y: 530, anchor: 'al' }, v2: { x: 600, y: 590, anchor: 'al' }, v3: { x: 490, y: 650, anchor: 'below' }, v4: { x: 320, y: 650, anchor: 'below' }, v5: { x: 150, y: 650, anchor: 'below', terminus: true },
   }
 
   const ROUTEPTS = {
@@ -80,7 +80,13 @@
     if (a === 'above') return { cx: x, cy: y - 20, tx: x, ty: y - 36, ta: 'middle' }
     if (a === 'below') return { cx: x, cy: y + 24, tx: x, ty: y + 40, ta: 'middle' }
     if (a === 'left') return { cx: x - 16, cy: y - 5, tx: x - 16, ty: y + 13, ta: 'end' }
-    return { cx: x + 16, cy: y - 5, tx: x + 16, ty: y + 13, ta: 'start' }
+    // Diagonal anchors: push the label perpendicular to a 45° line and anchor it
+    // to the far side so its nearest corner sits at the node (clears the line).
+    if (a === 'bl') return { cx: x - 14, cy: y + 20, tx: x - 14, ty: y + 36, ta: 'end' }   // below-left
+    if (a === 'br') return { cx: x + 14, cy: y + 20, tx: x + 14, ty: y + 36, ta: 'start' } // below-right
+    if (a === 'al') return { cx: x - 14, cy: y - 14, tx: x - 14, ty: y - 30, ta: 'end' }   // above-left
+    if (a === 'ar') return { cx: x + 14, cy: y - 14, tx: x + 14, ty: y - 30, ta: 'start' } // above-right
+    return { cx: x + 16, cy: y - 5, tx: x + 16, ty: y + 13, ta: 'start' }                  // right
   }
 
   const selId = $derived(selected != null ? selected : internalSel)

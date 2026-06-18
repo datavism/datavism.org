@@ -142,6 +142,20 @@
       { x: 430, y: 560 },
     ].map((b) => ({ ...b, angle: ((Math.atan2(b.y - 470, b.x - 720) * 180) / Math.PI + 360) % 360, intensity: 0 })),
   )
+  // sweep tail built from thin wedge slices fanning back from the leading edge,
+  // opacity fading out → a smooth conic radar sweep (centred on the Ghost).
+  const SWEEP = (() => {
+    const cx = 720, cy = 470, R = 900, n = 16, span = 80 // reaches every corner (~860)
+    const pt = (deg) => [cx + R * Math.cos((deg * Math.PI) / 180), cy + R * Math.sin((deg * Math.PI) / 180)]
+    const out = []
+    for (let i = 0; i < n; i++) {
+      const [x0, y0] = pt(-(i * span) / n)
+      const [x1, y1] = pt(-((i + 1) * span) / n)
+      out.push({ d: `M${cx} ${cy} L${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 0 0 ${x1.toFixed(1)} ${y1.toFixed(1)} Z`, op: (0.16 * Math.pow(1 - i / n, 1.5)).toFixed(3) })
+    }
+    return out
+  })()
+  const RANGE_RINGS = [150, 330, 540, 760]
 
   $effect(() => {
     if (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -213,7 +227,7 @@
       for (let bi = 0; bi < blips.length; bi++) {
         const b = blips[bi]
         const crossed = sweepAngle >= prev ? b.angle > prev && b.angle <= sweepAngle : b.angle > prev || b.angle <= sweepAngle
-        b.intensity = crossed ? 1 : Math.max(0, b.intensity - dt / 1.1)
+        b.intensity = crossed ? 1 : Math.max(0, b.intensity - dt / 2.6) // phosphor afterglow
       }
       raf = requestAnimationFrame(tick)
     }
@@ -285,20 +299,25 @@
     <circle cx={t.x} cy={t.y} r="2.4" fill="#ffffff" style="pointer-events:none;" />
   {/each}
 
-  <!-- ghost radar: expanding signal rings + rotating sweep + detected objects -->
-  <g style="pointer-events:none;">
-    <circle class="radar-ring" cx="720" cy="470" r="40" fill="none" stroke="#39ff14" stroke-width="1.3" />
-    <circle class="radar-ring r2" cx="720" cy="470" r="40" fill="none" stroke="#39ff14" stroke-width="1.3" />
-    <circle class="radar-ring r3" cx="720" cy="470" r="40" fill="none" stroke="#39ff14" stroke-width="1.3" />
+  <!-- ghost radar: static range rings + rotating conic sweep + detected objects -->
+  <g class="radar" style="pointer-events:none;">
+    {#each RANGE_RINGS as r}
+      <circle cx="720" cy="470" {r} fill="none" stroke="#39ff14" stroke-width="1" opacity="0.05" />
+    {/each}
     <g class="radar-sweep" transform={`rotate(${sweepAngle} 720 470)`}>
-      <path d="M720 470 L1060 470 A340 340 0 0 0 938.6 209.6 Z" fill="#39ff14" opacity="0.06" />
-      <line x1="720" y1="470" x2="1060" y2="470" stroke="#39ff14" stroke-width="2" opacity="0.5" filter="url(#dvg)" />
+      {#each SWEEP as s}
+        <path d={s.d} fill="#39ff14" opacity={s.op} />
+      {/each}
+      <line x1="720" y1="470" x2="1620" y2="470" stroke="#39ff14" stroke-width="1.6" opacity="0.32" filter="url(#dvg)" />
     </g>
     {#each blips as b (b.x + ',' + b.y)}
-      <g opacity={b.intensity}>
-        <circle cx={b.x} cy={b.y} r="9.5" fill="none" stroke="#39ff14" stroke-width="1.2" opacity="0.6" />
-        <circle cx={b.x} cy={b.y} r="3.4" fill="#39ff14" filter="url(#dvg)" />
-      </g>
+      {#if b.intensity > 0.01}
+        <g style={`opacity:${b.intensity};`}>
+          <circle cx={b.x} cy={b.y} r={4 + (1 - b.intensity) * 16} fill="none" stroke="#39ff14" stroke-width="1.4" opacity={0.55 * b.intensity} />
+          <circle cx={b.x} cy={b.y} r="9.5" fill="none" stroke="#39ff14" stroke-width="1" opacity="0.4" />
+          <circle cx={b.x} cy={b.y} r="3.4" fill="#39ff14" filter="url(#dvg)" />
+        </g>
+      {/if}
     {/each}
   </g>
 
@@ -366,10 +385,5 @@
   /* signal-train arrival: the line flares then fades */
   .dv-flash { animation: dv-flash 0.65s ease-out forwards; }
   @keyframes dv-flash { from { opacity: 0.85; } to { opacity: 0; } }
-  /* radar: expanding range rings (signals reach across the map) */
-  .radar-ring { animation: radar-ping 4.4s ease-out infinite; }
-  .radar-ring.r2 { animation-delay: 1.45s; }
-  .radar-ring.r3 { animation-delay: 2.9s; }
-  @keyframes radar-ping { 0% { r: 44px; opacity: 0.4; } 100% { r: 348px; opacity: 0; } }
-  @media (prefers-reduced-motion: reduce) { .gh-eyes, .dv-core, .dv-flash, .dv-spin, .radar-ring, .radar-sweep { animation: none; } .radar-ring, .radar-sweep { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .gh-eyes, .dv-core, .dv-flash, .dv-spin { animation: none; } .radar-sweep { display: none; } }
 </style>

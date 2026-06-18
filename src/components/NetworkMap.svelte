@@ -27,12 +27,14 @@
   let hovered = $state(null)
   let internalSel = $state(null)
 
+  // Stations run INNER (1, boards at the Ghost) → OUTER (5, the adversary
+  // terminus / final "…FILE"). Positions reversed vs the original handoff.
   const GEO = {
-    g1: { x: 150, y: 290, anchor: 'above', terminus: true }, g2: { x: 320, y: 290, anchor: 'above' }, g3: { x: 490, y: 290, anchor: 'above' }, g4: { x: 600, y: 350, anchor: 'left' }, g5: { x: 660, y: 410, anchor: 'left' },
-    k1: { x: 900, y: 120, anchor: 'above', terminus: true }, k2: { x: 810, y: 120, anchor: 'above' }, k3: { x: 720, y: 210, anchor: 'right' }, k4: { x: 720, y: 300, anchor: 'right' }, k5: { x: 720, y: 400, anchor: 'right' },
-    r1: { x: 1290, y: 300, anchor: 'left', terminus: true }, r2: { x: 1290, y: 400, anchor: 'left' }, r3: { x: 1130, y: 470, anchor: 'above' }, r4: { x: 990, y: 470, anchor: 'above' }, r5: { x: 850, y: 470, anchor: 'above' },
-    b1: { x: 1110, y: 650, anchor: 'below', terminus: true }, b2: { x: 985, y: 650, anchor: 'below' }, b3: { x: 850, y: 600, anchor: 'right' }, b4: { x: 800, y: 550, anchor: 'right' }, b5: { x: 760, y: 510, anchor: 'right' },
-    v1: { x: 150, y: 650, anchor: 'below', terminus: true }, v2: { x: 320, y: 650, anchor: 'below' }, v3: { x: 490, y: 650, anchor: 'below' }, v4: { x: 600, y: 590, anchor: 'left' }, v5: { x: 660, y: 530, anchor: 'left' },
+    g1: { x: 660, y: 410, anchor: 'left' }, g2: { x: 600, y: 350, anchor: 'left' }, g3: { x: 490, y: 290, anchor: 'above' }, g4: { x: 320, y: 290, anchor: 'above' }, g5: { x: 150, y: 290, anchor: 'above', terminus: true },
+    k1: { x: 720, y: 400, anchor: 'right' }, k2: { x: 720, y: 300, anchor: 'right' }, k3: { x: 720, y: 210, anchor: 'right' }, k4: { x: 810, y: 120, anchor: 'above' }, k5: { x: 900, y: 120, anchor: 'above', terminus: true },
+    r1: { x: 850, y: 470, anchor: 'above' }, r2: { x: 990, y: 470, anchor: 'above' }, r3: { x: 1130, y: 470, anchor: 'above' }, r4: { x: 1290, y: 400, anchor: 'left' }, r5: { x: 1290, y: 300, anchor: 'left', terminus: true },
+    b1: { x: 760, y: 510, anchor: 'right' }, b2: { x: 800, y: 550, anchor: 'right' }, b3: { x: 850, y: 600, anchor: 'right' }, b4: { x: 985, y: 650, anchor: 'below' }, b5: { x: 1110, y: 650, anchor: 'below', terminus: true },
+    v1: { x: 660, y: 530, anchor: 'left' }, v2: { x: 600, y: 590, anchor: 'left' }, v3: { x: 490, y: 650, anchor: 'below' }, v4: { x: 320, y: 650, anchor: 'below' }, v5: { x: 150, y: 650, anchor: 'below', terminus: true },
   }
 
   const ROUTEPTS = {
@@ -151,7 +153,7 @@
     for (let i = 0; i < n; i++) {
       const [x0, y0] = pt(-(i * span) / n)
       const [x1, y1] = pt(-((i + 1) * span) / n)
-      out.push({ d: `M${cx} ${cy} L${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 0 0 ${x1.toFixed(1)} ${y1.toFixed(1)} Z`, op: (0.16 * Math.pow(1 - i / n, 1.5)).toFixed(3) })
+      out.push({ d: `M${cx} ${cy} L${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 0 0 ${x1.toFixed(1)} ${y1.toFixed(1)} Z`, op: (0.1 * Math.pow(1 - i / n, 1.5)).toFixed(3) })
     }
     return out
   })()
@@ -302,13 +304,13 @@
   <!-- ghost radar: static range rings + rotating conic sweep + detected objects -->
   <g class="radar" style="pointer-events:none;">
     {#each RANGE_RINGS as r}
-      <circle cx="720" cy="470" {r} fill="none" stroke="#39ff14" stroke-width="1" opacity="0.05" />
+      <circle cx="720" cy="470" {r} fill="none" stroke="#39ff14" stroke-width="1" opacity="0.035" />
     {/each}
     <g class="radar-sweep" transform={`rotate(${sweepAngle} 720 470)`}>
       {#each SWEEP as s}
         <path d={s.d} fill="#39ff14" opacity={s.op} />
       {/each}
-      <line x1="720" y1="470" x2="1620" y2="470" stroke="#39ff14" stroke-width="1.6" opacity="0.32" filter="url(#dvg)" />
+      <line x1="720" y1="470" x2="1620" y2="470" stroke="#39ff14" stroke-width="1.4" opacity="0.2" filter="url(#dvg)" />
     </g>
     {#each blips as b (b.x + ',' + b.y)}
       {#if b.intensity > 0.01}

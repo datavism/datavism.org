@@ -1,4 +1,6 @@
 <script>
+  import { LINES as CANON } from '../lib/curriculum/lines'
+
   // THE NETWORK — the reusable octolinear transit diagram (signature asset).
   // Ported 1:1 from docs/design_handoff_datavism/NetworkMap.dc.html: five lines
   // route from a terminus, bend once, and converge at the GHOST interchange
@@ -41,16 +43,14 @@
     g: [[150, 290], [540, 290], [720, 470]], k: [[900, 120], [720, 120], [720, 470]], r: [[1290, 300], [1290, 470], [720, 470]], b: [[1110, 650], [900, 650], [720, 470]], v: [[150, 650], [540, 650], [720, 470]],
   }
 
-  const LC = { g: '#00ff88', k: '#00ffff', r: '#ffff00', b: '#ff00ff', v: '#aa44ff' }
+  // Station content (id/code/title/status) + line colours come from the single
+  // curriculum canon (src/lib/curriculum/lines.ts) — the map only adds geometry
+  // (GEO) and routing (ROUTEPTS) below. The legacy `LINES`/`allStations` shape
+  // is kept verbatim so the render + train code further down is untouched.
+  const LC = Object.fromEntries(CANON.map((l) => [l.id, l.color.hex]))
   const ORDER = { g: 0, k: 1, r: 2, b: 3, v: 4 }
 
-  const LINES = [
-    { id: 'g', st: [['g1', 'G1', 'THE FOLDER', 'open'], ['g2', 'G2', 'COMMAND', 'announced'], ['g3', 'G3', 'INTAKE', 'locked'], ['g4', 'G4', 'THE CONFIDENT LIE', 'locked'], ['g5', 'G5', 'MASCHINENRAUM', 'locked']] },
-    { id: 'k', st: [['k1', 'K1', 'FOOTPRINTS', 'locked'], ['k2', 'K2', 'SIGNALS', 'locked'], ['k3', 'K3', 'IDENTITY GRAPH', 'locked'], ['k4', 'K4', 'WATCHTOWER', 'locked'], ['k5', 'K5', 'PANOPTICON FILE', 'locked']] },
-    { id: 'r', st: [['r1', 'R1', 'LEDGER', 'locked'], ['r2', 'R2', 'ACTORS', 'locked'], ['r3', 'R3', 'FLOWS', 'locked'], ['r4', 'R4', 'LEVERAGE', 'locked'], ['r5', 'R5', 'MAMMON FILE', 'locked']] },
-    { id: 'b', st: [['b1', 'B1', 'SOURCE', 'locked'], ['b2', 'B2', 'CAPTURE', 'locked'], ['b3', 'B3', 'NORMALIZE', 'locked'], ['b4', 'B4', 'DETECT', 'locked'], ['b5', 'B5', 'FEED AUTOPSY', 'locked']] },
-    { id: 'v', st: [['v1', 'V1', 'ARCHIVE', 'locked'], ['v2', 'V2', 'PATTERNS', 'locked'], ['v3', 'V3', 'SCENARIOS', 'locked'], ['v4', 'V4', 'IMPACT', 'locked'], ['v5', 'V5', 'CUMULUS FILE', 'locked']] },
-  ]
+  const LINES = CANON.map((l) => ({ id: l.id, st: l.stations.map((s) => [s.id, s.code, s.title, s.status]) }))
 
   const allStations = LINES.flatMap((L) =>
     L.st.map((s) => ({ id: s[0], code: s[1], title: s[2], def: s[3], lineId: L.id, color: LC[L.id] })),

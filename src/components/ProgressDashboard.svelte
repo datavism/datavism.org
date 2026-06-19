@@ -4,42 +4,49 @@
   // interaction: clicking a map node updates the "You are here" panel. This
   // route is intentionally unlinked from the rest of the site.
   import NetworkMap from './NetworkMap.svelte'
+  import { LINES as CANON } from '../lib/curriculum/lines'
+
+  // Demo progress fixture: the per-station `status` + `note` are illustrative
+  // (there is no progress backend yet). Station titles come from the curriculum
+  // canon (CANON_TITLE) so this demo can't drift from lines.ts. Tuple shape per
+  // station: [code, status, note].
+  const CANON_TITLE = Object.fromEntries(CANON.flatMap((l) => l.stations.map((s) => [s.code, s.title])))
 
   const LINES = [
     { id: 'g', code: 'G', name: 'GHOST / FOUNDATION', color: '#00ff88', progress: 80, stations: [
-      ['G1', 'THE FOLDER', 'completed', 'Turn discomfort into a testable question.'],
-      ['G2', 'COMMAND', 'completed', 'Command AI. Prompts are specs.'],
-      ['G3', 'INTAKE', 'completed', 'Collect and structure the raw.'],
-      ['G4', 'THE CONFIDENT LIE', 'completed', 'Catch the confident lie.'],
-      ['G5', 'MASCHINENRAUM', 'unlocked', 'Run the whole machine.'],
+      ['G1', 'completed', 'Turn discomfort into a testable question.'],
+      ['G2', 'completed', 'Command AI. Prompts are specs.'],
+      ['G3', 'completed', 'Collect and structure the raw.'],
+      ['G4', 'completed', 'Catch the confident lie.'],
+      ['G5', 'unlocked', 'Run the whole machine.'],
     ] },
     { id: 'k', code: 'K', name: 'KEY / TRACKING & OSINT', color: '#00ffff', progress: 60, stations: [
-      ['K1', 'FOOTPRINTS', 'completed', 'Map the traces you leave.'],
-      ['K2', 'SIGNALS', 'current', 'Trace the noise. Find the pattern.'],
-      ['K3', 'IDENTITY GRAPH', 'unlocked', 'Scattered traces become a profile.'],
-      ['K4', 'WATCHTOWER', 'locked', 'Watch what changes in the dark.'],
-      ['K5', 'PANOPTICON FILE', 'locked', 'Package the surveillance file.'],
+      ['K1', 'completed', 'Map the traces you leave.'],
+      ['K2', 'current', 'Trace the noise. Find the pattern.'],
+      ['K3', 'unlocked', 'Scattered traces become a profile.'],
+      ['K4', 'locked', 'Watch what changes in the dark.'],
+      ['K5', 'locked', 'Package the surveillance file.'],
     ] },
     { id: 'r', code: 'R', name: 'ROOK / ECONOMY & POWER', color: '#ffff00', progress: 40, stations: [
-      ['R1', 'LEDGER', 'completed', 'Who pays, who profits?'],
-      ['R2', 'ACTORS', 'unlocked', 'Map the actors.'],
-      ['R3', 'FLOWS', 'locked', 'Follow where value moves.'],
-      ['R4', 'LEVERAGE', 'locked', 'Find the pressure points.'],
-      ['R5', 'MAMMON FILE', 'locked', 'Make economic power legible.'],
+      ['R1', 'completed', 'Who pays, who profits?'],
+      ['R2', 'unlocked', 'Map the actors.'],
+      ['R3', 'locked', 'Follow where value moves.'],
+      ['R4', 'locked', 'Find the pressure points.'],
+      ['R5', 'locked', 'Make economic power legible.'],
     ] },
     { id: 'b', code: 'B', name: 'BITE / FEEDS & BEHAVIOR', color: '#ff00ff', progress: 33, stations: [
-      ['B1', 'SOURCE', 'completed', 'Pick the feed that matters.'],
-      ['B2', 'CAPTURE', 'unlocked', 'Capture without distortion.'],
-      ['B3', 'NORMALIZE', 'locked', 'Clean the stream.'],
-      ['B4', 'DETECT', 'locked', 'Find the loop.'],
-      ['B5', 'FEED AUTOPSY', 'locked', 'Autopsy the feed.'],
+      ['B1', 'completed', 'Pick the feed that matters.'],
+      ['B2', 'unlocked', 'Capture without distortion.'],
+      ['B3', 'locked', 'Clean the stream.'],
+      ['B4', 'locked', 'Find the loop.'],
+      ['B5', 'locked', 'Autopsy the feed.'],
     ] },
     { id: 'v', code: 'V', name: 'VESPER / CLIMATE & FUTURE', color: '#aa44ff', progress: 20, stations: [
-      ['V1', 'ARCHIVE', 'locked', 'Find the long signal.'],
-      ['V2', 'PATTERNS', 'locked', 'Read the long trend.'],
-      ['V3', 'SCENARIOS', 'locked', 'Map plausible futures.'],
-      ['V4', 'IMPACT', 'locked', 'Who is affected, when?'],
-      ['V5', 'CUMULUS FILE', 'locked', 'Make the slow system impossible to ignore.'],
+      ['V1', 'locked', 'Find the long signal.'],
+      ['V2', 'locked', 'Read the long trend.'],
+      ['V3', 'locked', 'Map plausible futures.'],
+      ['V4', 'locked', 'Who is affected, when?'],
+      ['V5', 'locked', 'Make the slow system impossible to ignore.'],
     ] },
   ]
 
@@ -57,7 +64,7 @@
     locked: { label: 'LOCKED', color: '#565c66', title: '#6b7280' },
   }
 
-  const ALL = LINES.flatMap((L) => L.stations.map((s) => ({ id: s[0].toLowerCase(), code: s[0], title: s[1], status: s[2], note: s[3], lineName: L.name, color: L.color })))
+  const ALL = LINES.flatMap((L) => L.stations.map((s) => ({ id: s[0].toLowerCase(), code: s[0], title: CANON_TITLE[s[0]], status: s[1], note: s[2], lineName: L.name, color: L.color })))
   const progressStatuses = Object.fromEntries(ALL.map((s) => [s.id, s.status]))
 
   let focused = $state('k2')

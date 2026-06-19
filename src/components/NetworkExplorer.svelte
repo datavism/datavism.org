@@ -5,6 +5,7 @@
   // detail panel. Data comes from src/lib/curriculum/lines.ts (prop, not hardcoded).
   import NetworkMap from './NetworkMap.svelte'
 
+  /** @type {{ lines?: readonly import('../lib/curriculum/lines').CurriculumLine[]; accent?: string }} */
   let { lines = [], accent = '#ffd23f' } = $props()
 
   let selected = $state('g1')

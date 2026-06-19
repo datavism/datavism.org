@@ -51,7 +51,7 @@ const threeQs = [
   </section>
 
   <!-- NETWORK + FIVE LINES (interactive island) -->
-  <NetworkExplorer client:visible lines={LINES} accent="#ffd23f" />
+  <NetworkExplorer client:visible lines={[...LINES]} accent="#ffd23f" />
 
   <!-- METHOD -->
   <section id="method" class="method">
@@ -220,8 +220,8 @@ const threeQs = [
     gsap.from('.hero-main > *', { y: 36, opacity: 0, duration: 0.75, ease, stagger: 0.09, delay: 0.1 })
     gsap.from('.status', { y: 36, opacity: 0, duration: 0.75, ease, delay: 0.5 })
 
-    const reveal = (sel, vars = {}) =>
-      gsap.utils.toArray(sel).forEach((el) =>
+    const reveal = (sel: string, vars: gsap.TweenVars = {}) =>
+      gsap.utils.toArray<HTMLElement>(sel).forEach((el) =>
         gsap.from(el, { opacity: 0, y: 44, duration: 0.7, ease, scrollTrigger: { trigger: el, start: 'top 86%' }, ...vars }),
       )
 
@@ -231,7 +231,7 @@ const threeQs = [
     reveal('.lcard', { y: 48 })
     reveal('.method-grid > *', { y: 46 })
     reveal('.manifesto-line')
-    gsap.utils.toArray('.manifesto-cells > .cell').forEach((el, i) =>
+    gsap.utils.toArray<HTMLElement>('.manifesto-cells > .cell').forEach((el, i) =>
       gsap.from(el, { opacity: 0, y: 42, duration: 0.65, ease, delay: i * 0.08, scrollTrigger: { trigger: '.manifesto-cells', start: 'top 85%' } }),
     )
     reveal('.band-inner > *', { y: 36, duration: 0.6 })

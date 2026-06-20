@@ -22,11 +22,11 @@ describe('curriculum canon', () => {
     expect(Object.values(colours)).not.toContain('#ffd23f')
   })
 
-  it('is pre-launch: g1 open, g2 announced, everything else locked', () => {
+  it('LINE G is fully open; the four specialization lines stay locked', () => {
     const byStatus = (s: string) => STATIONS.filter((x) => x.status === s).map((x) => x.id)
-    expect(byStatus('open')).toEqual(['g1'])
-    expect(byStatus('announced')).toEqual(['g2'])
-    expect(byStatus('locked')).toHaveLength(23)
+    expect(byStatus('open')).toEqual(['g1', 'g2', 'g3', 'g4', 'g5'])
+    expect(byStatus('announced')).toEqual([])
+    expect(byStatus('locked')).toHaveLength(20)
   })
 
   it('resolves the open station by slug and lines by id', () => {

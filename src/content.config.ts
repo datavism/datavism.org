@@ -26,6 +26,15 @@ const stations = defineCollection({
     selfChecks: z.array(z.string()).min(1).max(5).optional(),
     artifactName: z.string().optional(), // e.g. "Case File #1"
     nextTeaser: z.string().optional(),
+    // Stufe-A station body — frontmatter-driven beats (open stations populate these).
+    outcome: z.string().optional(), // hero outcome line
+    signal: z.object({ lead: z.string(), body: z.string() }).optional(),
+    method: z.object({ intro: z.string(), steps: z.array(z.string()) }).optional(),
+    tooling: z.object({ intro: z.string().optional(), items: z.array(z.string()) }).optional(),
+    verification: z.object({ intro: z.string(), checks: z.array(z.string()) }).optional(),
+    bridge: z.string().optional(),
+    artifactDesc: z.string().optional(),
+    artifactTemplate: z.string().optional(), // copyable markdown the learner fills in
   }),
 })
 

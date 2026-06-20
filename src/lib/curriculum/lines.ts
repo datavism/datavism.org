@@ -108,7 +108,7 @@ export const LINES = [
         code: "G2",
         slug: "command",
         title: "COMMAND",
-        status: "announced",
+        status: "open",
         role: "Access: command AI with specs, constraints and iteration.",
         skill: "AI orchestration and prompt-as-spec discipline.",
         artifact: "Command Log",

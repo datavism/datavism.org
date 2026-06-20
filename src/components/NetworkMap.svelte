@@ -310,20 +310,20 @@
   <!-- ghost radar: static range rings + rotating conic sweep + detected objects -->
   <g class="radar" style="pointer-events:none;">
     {#each RANGE_RINGS as r}
-      <circle cx="720" cy="470" {r} fill="none" stroke="#39ff14" stroke-width="1" opacity="0.035" />
+      <circle cx="720" cy="470" {r} fill="none" stroke="#8a8f99" stroke-width="1" opacity="0.045" />
     {/each}
     <g class="radar-sweep" transform={`rotate(${sweepAngle} 720 470)`}>
       {#each SWEEP as s}
-        <path d={s.d} fill="#39ff14" opacity={s.op} />
+        <path d={s.d} fill="#8a8f99" opacity={s.op * 0.7} />
       {/each}
-      <line x1="720" y1="470" x2="1620" y2="470" stroke="#39ff14" stroke-width="1.4" opacity="0.2" filter="url(#dvg)" />
+      <line x1="720" y1="470" x2="1620" y2="470" stroke="#8a8f99" stroke-width="1.2" opacity="0.14" />
     </g>
     {#each blips as b (b.x + ',' + b.y)}
       {#if b.intensity > 0.01}
         <g style={`opacity:${b.intensity};`}>
-          <circle cx={b.x} cy={b.y} r={4 + (1 - b.intensity) * 16} fill="none" stroke="#39ff14" stroke-width="1.4" opacity={0.55 * b.intensity} />
-          <circle cx={b.x} cy={b.y} r="9.5" fill="none" stroke="#39ff14" stroke-width="1" opacity="0.4" />
-          <circle cx={b.x} cy={b.y} r="3.4" fill="#39ff14" filter="url(#dvg)" />
+          <circle cx={b.x} cy={b.y} r={4 + (1 - b.intensity) * 16} fill="none" stroke="#8a8f99" stroke-width="1.2" opacity={0.4 * b.intensity} />
+          <circle cx={b.x} cy={b.y} r="9.5" fill="none" stroke="#8a8f99" stroke-width="1" opacity="0.28" />
+          <circle cx={b.x} cy={b.y} r="3.4" fill="#c0c4cc" opacity="0.85" />
         </g>
       {/if}
     {/each}

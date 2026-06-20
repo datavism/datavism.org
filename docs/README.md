@@ -10,6 +10,7 @@
 |---|---|
 | [`VISION.md`](VISION.md) | **Leit-Dokument** — Positionierung, Netzplan-Curriculum, Narrative, Viral/Launch, Community, Finanzierung, Roadmap |
 | [`STORY.md`](STORY.md) | **Storyworld-Bible** — Data Underground, GHOST, Maschinenraum, Linien, Slogans, Ton-Regeln |
+| [`Easter-Eggs-and-ARG-Spec.md`](Easter-Eggs-and-ARG-Spec.md) | **Real-World / Transmedia-Spec** — Easter-Egg-Prinzipien (echt-oder-gar-nicht, kein Tracking), Layer-Modell digital→physisch, Stationszeichen-ARG, erste schippbare Eggs |
 | [`MANIFESTO.md`](MANIFESTO.md) | Das Manifest (v2, EN, site-ready) |
 | [`ghost-brain.md`](ghost-brain.md) | GHOST-Brain Architektur-Spec (GCP: Gateway, Vertex AI, Quota, Eval, Transparenz) |
 | [`adr/001-rebuild-stack.md`](adr/001-rebuild-stack.md) | **ADR 001** — Rebuild-Stack: data-snack-Engine (Astro 5 + Svelte 5 + Firebase), Hosting, Engine-Konsum |

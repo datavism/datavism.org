@@ -6,7 +6,7 @@ skill: Ask the right question (spec-thinking begins)
 status: open
 teaser: "There is a folder. Your name is on it. You've never opened it."
 missionMinutes: "45–90 min"
-artifactName: "Case File #1"
+artifactName: "Your First Case File"
 ogImage: /og/line-g-the-folder.png
 sources:
   - label: "The Markup — 650,000 ways advertisers label you (2023)"

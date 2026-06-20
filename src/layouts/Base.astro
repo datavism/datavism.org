@@ -64,6 +64,21 @@ const ogImage = new URL(image, Astro.site).href
     <ClientRouter />
   </head>
   <body>
+    <!--
+       .-"""""""-.
+     .'           '.
+    /   .-.   .-.   \         D A T A V I S M
+   |   ( o ) ( o )   |        the data underground
+   |    '-'   '-'    |
+   |                 |        you read the source.
+    \     \___/     /         most don't. good.
+     '.           .'
+       ) ) ) ) ) )            data is infrastructure ·
+      ( ( ( ( ( ( (            awareness is power
+
+                              > the revolution will be computed
+                                                      — GHOST
+    -->
     <div class="topglow" aria-hidden="true"></div>
     <div class="crop crop-tl" aria-hidden="true"></div>
     <div class="crop crop-tr" aria-hidden="true"></div>
@@ -96,6 +111,18 @@ const ogImage = new URL(image, Astro.site).href
       // load and after every View Transition (astro:page-load fires for both).
       import { initFx } from '../scripts/fx'
       document.addEventListener('astro:page-load', initFx)
+
+      // GHOST console greeting — diegetic easter egg. No tracking, no network.
+      // Module scripts run once and aren't re-executed across View Transitions,
+      // so this greets a curious visitor once and never spams the console.
+      console.log(
+        "%c .-.\n(o o)   DATAVISM\n| O |   the data underground\n `-'",
+        'color:#39ff14;font-family:monospace;font-weight:bold',
+      )
+      console.log(
+        "%cyou opened the console. most don't look. good.\n> data is infrastructure · awareness is power\n> the walls have writing — view the source.",
+        'color:#9aa192;font-family:monospace',
+      )
     </script>
 
     <style is:global>

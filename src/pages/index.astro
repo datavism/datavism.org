@@ -202,48 +202,92 @@ const threeQs = [
   }
 </style>
 
+<!-- Landing reveals (native; replaces GSAP). `.is-pre` is added by JS only, so
+  content is fully visible without JS. Some targets (.maprail / .lcard) render
+  inside the Svelte island, so these rules must be global. -->
+<style is:global>
+  .is-pre {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .is-pre.is-in {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .is-pre {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
 <script>
-  // Progressive scroll reveals (GSAP, self-hosted via npm). Content is fully
-  // visible without JS — we only animate FROM a shifted state, never pre-hide.
-  import { gsap } from 'gsap'
-  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  // Progressive scroll/entrance reveals — native (IntersectionObserver + CSS),
+  // no animation library. Content is fully visible without JS: the hidden state
+  // (.is-pre) is only ever added here. Skipped under prefers-reduced-motion.
+  let io: IntersectionObserver | null = null
 
   function run() {
-    // landing-only: this listener persists across View Transitions, so bail on
-    // other routes (avoids GSAP "target not found" noise).
+    // landing-only: this listener persists across View Transitions.
     if (!document.querySelector('.hero-main')) return
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    gsap.registerPlugin(ScrollTrigger)
-    ScrollTrigger.getAll().forEach((t) => t.kill()) // clean up before re-init (View Transitions)
-    const ease = 'power3.out'
 
-    gsap.from('.hero-main > *', { y: 36, opacity: 0, duration: 0.75, ease, stagger: 0.09, delay: 0.1 })
-    gsap.from('.status', { y: 36, opacity: 0, duration: 0.75, ease, delay: 0.5 })
-
-    const reveal = (sel: string, vars: gsap.TweenVars = {}) =>
-      gsap.utils.toArray<HTMLElement>(sel).forEach((el) =>
-        gsap.from(el, { opacity: 0, y: 44, duration: 0.7, ease, scrollTrigger: { trigger: el, start: 'top 86%' }, ...vars }),
-      )
-
-    reveal('#network .sec-head')
-    reveal('.maprail > *', { y: 54 })
-    reveal('#lines .sec-head')
-    reveal('.lcard', { y: 48 })
-    reveal('.method-grid > *', { y: 46 })
-    reveal('.manifesto-line')
-    gsap.utils.toArray<HTMLElement>('.manifesto-cells > .cell').forEach((el, i) =>
-      gsap.from(el, { opacity: 0, y: 42, duration: 0.65, ease, delay: i * 0.08, scrollTrigger: { trigger: '.manifesto-cells', start: 'top 85%' } }),
+    io?.disconnect()
+    io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue
+          e.target.classList.add('is-in')
+          io!.unobserve(e.target)
+        }
+      },
+      { rootMargin: '0px 0px -12% 0px' }, // ≈ ScrollTrigger 'top 86%'
     )
-    reveal('.band-inner > *', { y: 36, duration: 0.6 })
+
+    const prep = (el: HTMLElement, delayMs: number) => {
+      el.classList.add('is-pre')
+      if (delayMs) el.style.transitionDelay = `${delayMs}ms`
+    }
+
+    // entrance: hide, then reveal on the next frame so the transition runs
+    const entering: HTMLElement[] = []
+    const enter = (sel: string, base = 0, stagger = 0) =>
+      document.querySelectorAll<HTMLElement>(sel).forEach((el, i) => {
+        prep(el, base + i * stagger)
+        entering.push(el)
+      })
+    enter('.hero-main > *', 100, 90)
+    enter('.status', 500)
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => entering.forEach((el) => el.classList.add('is-in'))),
+    )
+
+    // scroll reveals (observe; IO reveals each as it enters the viewport)
+    const onScroll = (sel: string, stagger = 0) =>
+      document.querySelectorAll<HTMLElement>(sel).forEach((el, i) => {
+        prep(el, i * stagger)
+        io!.observe(el)
+      })
+    onScroll('#network .sec-head')
+    onScroll('.maprail > *')
+    onScroll('#lines .sec-head')
+    onScroll('.lcard')
+    onScroll('.method-grid > *')
+    onScroll('.manifesto-line')
+    onScroll('.manifesto-cells > .cell', 80)
+    onScroll('.band-inner > *')
 
     // (the backdrop DATAVISM word does its own cinematic zoom in CSS — see
-    // NetworkExplorer .word — so no GSAP transform here, to avoid a conflict.)
-
-    setTimeout(() => ScrollTrigger.refresh(), 500)
+    // NetworkExplorer .word — so nothing to do here.)
   }
 
   // Run on first load and after every View Transition (astro:page-load covers
   // both). The island SSR markup (.lcard / .maprail) is in the swapped-in DOM
-  // by then, so GSAP can target it.
+  // by then, so the selectors resolve.
   document.addEventListener('astro:page-load', () => requestAnimationFrame(run))
 </script>

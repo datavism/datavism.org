@@ -33,17 +33,36 @@ const sev = severityDots(cf.severity)
       </div>
       <h1 class="font-display title" set:html={cf.titleLines.join('<br />')}></h1>
       <p class="dek">{cf.dek}</p>
-      <div class="hook">
-        <div class="hook-stat">
-          <div class="hook-num font-display" style={`color:${color};`} data-count>{cf.hookStat.value}</div>
-          <div class="hook-label">{cf.hookStat.label}</div>
+      {cf.hookStat && (
+        <div class="hook">
+          <div class="hook-stat">
+            <div class="hook-num font-display" style={`color:${color};`} data-count>{cf.hookStat.value}</div>
+            <div class="hook-label">{cf.hookStat.label}</div>
+          </div>
+          <div class="substats">
+            {cf.subStats?.map((s) => (
+              <div class="substat"><div class="sn font-display" data-count>{s.n}</div><div class="sl" set:html={s.label.replace(' ', '<br />')}></div></div>
+            ))}
+          </div>
         </div>
-        <div class="substats">
-          {cf.subStats.map((s) => (
-            <div class="substat"><div class="sn font-display" data-count>{s.n}</div><div class="sl" set:html={s.label.replace(' ', '<br />')}></div></div>
-          ))}
+      )}
+      {cf.scale && (
+        <div class="hook scale">
+          <div class="scale-official">
+            <div class="so-n font-display">{cf.scale.official.n}</div>
+            <div class="so-l">{cf.scale.official.label}</div>
+          </div>
+          <div class="scale-arrow" style={`color:${color};`}>→</div>
+          <div class="scale-actual">
+            <div class="hook-num font-display" style={`color:${color};`} data-count>{cf.scale.actual.n}</div>
+            <div class="hook-label">{cf.scale.actual.label}</div>
+          </div>
+          <div class="scale-freq">
+            <span class="sf-n font-display" style={`color:${color};`}>{cf.scale.frequency.n}</span>
+            <span class="sf-l">{cf.scale.frequency.label}</span>
+          </div>
         </div>
-      </div>
+      )}
     </section>
 
     <!-- BODY -->
@@ -78,25 +97,59 @@ const sev = severityDots(cf.severity)
             ))}
           </div>
         </div>
-        <div class="part top">
-          <div class="ph"><span class="pn font-display" style={`color:${color};`}>07</span><span class="pk">FINDINGS</span></div>
-          <p class="p mb">Before the consent banner is answered, the app already contacts the destinations below. Three of them receive coarse location.</p>
-          <div class="findings">
-            {cf.findings.map((f) => (
-              <div class="finding">
-                <div class="frow"><span>{f.name} <span style={`color:${f.tagColor};`}>{f.tag}</span></span><span class="fcount">{f.count}</span></div>
-                <div class="fbar"><div class="ffill" style={`width:${f.w};background:${color};`}></div></div>
-              </div>
-            ))}
+        {cf.findings && (
+          <div class="part top">
+            <div class="ph"><span class="pn font-display" style={`color:${color};`}>07</span><span class="pk">FINDINGS</span></div>
+            <p class="p mb">Before the consent banner is answered, the app already contacts the destinations below. Three of them receive coarse location.</p>
+            <div class="findings">
+              {cf.findings.map((f) => (
+                <div class="finding">
+                  <div class="frow"><span>{f.name} <span style={`color:${f.tagColor};`}>{f.tag}</span></span><span class="fcount">{f.count}</span></div>
+                  <div class="fbar"><div class="ffill" style={`width:${f.w};background:${color};`}></div></div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+        {cf.segments && (
+          <div class="part top">
+            <div class="ph"><span class="pn font-display" style={`color:${color};`}>07</span><span class="pk">WHAT'S IN THE FILE</span></div>
+            <p class="p mb">Real, verbatim categories from the leaked marketplace. The ⚠ groups are GDPR Art. 9 "special category" data — illegal to trade without consent.</p>
+            <div class="segs">
+              {cf.segments.map((g) => (
+                <div class="seg-group">
+                  <div class="seg-h">
+                    <span class="seg-name">{g.group}</span>
+                    {g.gdpr9 && <span class="seg-9">⚠ ART. 9</span>}
+                  </div>
+                  <div class="seg-items">
+                    {g.items.map((it) => (
+                      <div class="seg-item"><span class="seg-label">{it.name}</span><span class="seg-src">{it.src}</span></div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {cf.suppliers && (
+              <div class="suppliers">
+                <div class="sup-total">{cf.suppliers.total}</div>
+                <div class="sup-list">
+                  {cf.suppliers.named.map((s) => (
+                    <span class="sup">{s.name}{s.note && <span class="sup-note"> · {s.note}</span>}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {cf.legalNote && <div class="callout warn"><p>{cf.legalNote}</p></div>}
+          </div>
+        )}
         <div class="part top">
           <div class="ph"><span class="pn font-display red">08</span><span class="pk">LIMITS</span></div>
           <p class="p">{cf.limits}</p>
         </div>
         <div class="part top">
           <div class="ph"><span class="pn font-display" style={`color:${color};`}>09</span><span class="pk">PUBLIC OUTPUT</span></div>
-          <p class="p mb">This Case File, plus the raw request log and a one-page poster, are public and reproducible.</p>
+          <p class="p mb">{cf.findings ? 'This Case File, plus the raw request log and a one-page poster, are public and reproducible.' : 'No proprietary dataset here — the evidence is public. Every claim links to its primary source.'}</p>
           <div class="downloads">{cf.publicOutput.map((d) => <span class="dl">{d}</span>)}</div>
         </div>
         <div class="part top">
@@ -125,9 +178,20 @@ const sev = severityDots(cf.severity)
       </aside>
     </div>
 
+    {cf.cta && (
+      <a class="case-cta" href={cf.cta.href} style={`border-color:${color};`}>
+        <span class="cta-label">{cf.cta.label}</span>
+        <span class="cta-arrow" style={`color:${color};`}>→</span>
+      </a>
+    )}
+
     <!-- FOOTER -->
     <div class="cf-foot">
-      <span class="fnav"><span class="muted">← {cf.prev.id}</span> {cf.prev.title}</span>
+      {cf.prev ? (
+        <span class="fnav"><span class="muted">← {cf.prev.id}</span> {cf.prev.title}</span>
+      ) : (
+        <span class="fnav muted">CASE #001 · first file</span>
+      )}
       <span class="illustrative">Illustrative example · CC-BY · datavism.org</span>
       <span class="fnav">{cf.nextFile.title} <span class="muted">{cf.nextFile.id} →</span></span>
     </div>
@@ -209,8 +273,44 @@ const sev = severityDots(cf.severity)
   .fnav .muted { color: var(--color-ink-4); }
   .illustrative { font-size: 10.5px; color: var(--color-ink-5); letter-spacing: 0.06em; }
 
+  /* exposé hero — scale contrast (official → actual + frequency) */
+  .hook.scale { align-items: center; gap: 16px 26px; }
+  .scale-official { opacity: 0.65; }
+  .so-n { font-size: clamp(26px, 4vw, 42px); font-weight: 800; color: var(--color-ink-3); letter-spacing: -0.03em; line-height: 0.9; }
+  .so-l { font-size: 10.5px; color: var(--color-ink-4); margin-top: 6px; max-width: 20ch; }
+  .scale-arrow { font-size: 26px; }
+  .scale-actual { display: flex; flex-direction: column; }
+  .scale-freq { display: flex; flex-direction: column; gap: 2px; margin-left: auto; }
+  .sf-n { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+  .sf-l { font-size: 10px; color: var(--color-ink-4); letter-spacing: 0.04em; max-width: 22ch; }
+
+  /* exposé findings — verbatim segment groups */
+  .segs { display: grid; gap: 18px; }
+  .seg-h { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .seg-name { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-ink); }
+  .seg-9 { font-size: 9.5px; letter-spacing: 0.08em; color: var(--color-line-r); border: 1px solid var(--color-line-r); padding: 1px 6px; }
+  .seg-items { display: grid; gap: 1px; background: var(--color-edge); border: 1px solid var(--color-edge); }
+  .seg-item { display: flex; justify-content: space-between; gap: 12px; background: var(--color-bg); padding: 9px 12px; font-size: 13px; }
+  .seg-label { color: var(--color-ink); }
+  .seg-src { color: var(--color-ink-5); font-size: 11px; flex: none; }
+
+  .suppliers { margin-top: 20px; border-top: 1px solid var(--color-edge); padding-top: 16px; }
+  .sup-total { font-size: 11px; letter-spacing: 0.08em; color: var(--color-ink-4); margin-bottom: 10px; }
+  .sup-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sup { font-size: 12px; color: var(--color-ink); border: 1px solid var(--color-edge-2); padding: 6px 10px; }
+  .sup-note { color: var(--color-ink-4); }
+
+  .callout.warn { border-left-color: var(--color-line-r); margin-top: 18px; }
+
+  /* single funnel CTA (ADR 002: one action → LINE G) */
+  .case-cta { display: flex; align-items: center; justify-content: space-between; gap: 16px; border: 1px solid; background: var(--color-panel); padding: 22px 24px; text-decoration: none; }
+  .cta-label { font-family: var(--font-display); font-weight: 800; font-size: clamp(18px, 2.6vw, 26px); letter-spacing: -0.02em; color: var(--color-ink); }
+  .cta-arrow { font-size: 26px; flex: none; }
+
   @media (max-width: 940px) {
     .body { grid-template-columns: 1fr; }
     .rail { position: static; }
+    .hook.scale { align-items: flex-start; }
+    .scale-freq { margin-left: 0; }
   }
 </style>

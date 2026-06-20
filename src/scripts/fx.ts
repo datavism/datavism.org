@@ -39,17 +39,19 @@ function countUp(el: HTMLElement) {
   // data-count="N" can override. Note: a bare attribute reads as "" via dataset,
   // so check for a non-empty value rather than ?? (which only catches null).
   const attr = el.dataset.count
-  const raw = attr && attr.trim() !== '' ? attr : (el.textContent ?? '').replace(/[^0-9.]/g, '')
-  const target = Number(raw) || 0
+  const source = attr && attr.trim() !== '' ? attr : (el.textContent ?? '')
+  const grouped = source.includes(',') // author wrote a thousands separator → keep grouping (650,000) but leave years/IDs (2026) alone
+  const target = Number(source.replace(/[^0-9.]/g, '')) || 0
   const suffix = el.dataset.countSuffix ?? ''
   const dur = Number(el.dataset.countDur ?? 1100)
+  const fmt = (n: number) => (grouped ? Math.round(n).toLocaleString('en-US') : `${Math.round(n)}`)
   const start = performance.now()
   const tick = (now: number) => {
     const t = Math.min(1, (now - start) / dur)
     const eased = 1 - Math.pow(1 - t, 3)
-    el.textContent = `${Math.round(eased * target)}${suffix}`
+    el.textContent = `${fmt(eased * target)}${suffix}`
     if (t < 1) requestAnimationFrame(tick)
-    else el.textContent = `${target}${suffix}`
+    else el.textContent = `${fmt(target)}${suffix}`
   }
   requestAnimationFrame(tick)
 }

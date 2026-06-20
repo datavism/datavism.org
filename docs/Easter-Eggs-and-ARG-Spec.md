@@ -103,10 +103,15 @@ diegetisch, reduced-motion-/SSR-sicher:
 
 ## 6. Fall: Die Ticker-Koordinate
 
-- **Status quo:** `37.7749°N 122.4194°W` (San Francisco) in
-  `src/components/site/Ticker.astro` → zeigt auf nichts. Reines Deko-Flavor
-  ⇒ verstößt gegen Prinzip 1.
-- **Optionen:**
+- **Entschieden (2026-06-20): Option (c) — Koordinate entfernt.** Der Ticker
+  trägt jetzt gar keine Koordinate mehr. Die SF-Koordinate verstieß gegen
+  Prinzip 1 (zeigte auf nichts); ein Versuch mit *Null Island* (0,0) + einer
+  versteckten Tür `/underground/ghost` wurde verworfen (zu niche/cute, und 0,0
+  ist „nirgendwo" — das Gegenteil von „wirklich etwas in der realen Welt").
+- **Falls je wieder eine Koordinate:** dann ein **realer Ort** (Option a) —
+  ein echter Stationszeichen-Standort, sobald die Städte stehen. Kein
+  Karten-Gag, kein Fake-Geheimnis.
+- **Historische Optionen** (für den Fall der Fälle):
   - **(a) Echt machen** — Koordinate = realer (geplanter) Stationszeichen-
     Standort *oder* symbolischer Ort mit digitaler Tür dahinter, auffindbar.
   - **(b) Bewusst-symbolisch** — als erkennbares Bühnenbild belassen, aber im

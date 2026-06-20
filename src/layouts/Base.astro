@@ -125,16 +125,16 @@ const ogImage = new URL(image, Astro.site).href
       import { initFx } from '../scripts/fx'
       document.addEventListener('astro:page-load', initFx)
 
-      // GHOST console greeting — diegetic easter egg. No tracking, no network.
-      // Module scripts run once and aren't re-executed across View Transitions,
-      // so this greets a curious visitor once and never spams the console.
+      // Quiet console signature — understated, no instructions, no tracking.
+      // Runs once (module scripts aren't re-executed across View Transitions).
       console.log(
-        "%c .-.\n(o o)   DATAVISM\n| O |   the data underground\n `-'",
-        'color:#39ff14;font-family:monospace;font-weight:bold',
+        '%c DATAVISM %c the data underground',
+        'background:#39ff14;color:#07080a;font-weight:700;padding:2px 7px;font-family:ui-monospace,monospace',
+        'color:#39ff14;font-family:ui-monospace,monospace',
       )
       console.log(
-        "%cyou opened the console. most don't look. good.\n> data is infrastructure · awareness is power\n> the walls have writing — view the source.",
-        'color:#9aa192;font-family:monospace',
+        '%cdata is infrastructure · awareness is power',
+        'color:#8a8f99;font-family:ui-monospace,monospace',
       )
     </script>
 

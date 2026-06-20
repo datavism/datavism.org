@@ -1,15 +1,15 @@
 ---
-// Station / mission page (design: Station - G1 The Folder.dc.html). Only `open`
-// stations are built. The narrative beats are the handoff copy for THE FOLDER;
-// structured data (title, core question, sources, next stop) comes from the
-// curriculum + stations collection. Self-check is a browser-only island.
+// Station / mission page (design: docs/curriculum/line-g-concept.md). Fully
+// frontmatter-driven: every beat (signal, method, tooling, mission, verification,
+// GHOST fragment, bridge, artifact template) comes from the station markdown.
+// Only `open` LINE-G stations are built. Self-check is a browser-only island.
 import { getCollection } from 'astro:content'
 import Base from '../../layouts/Base.astro'
 import SelfCheck from '../../components/SelfCheck.svelte'
 import { getLineById } from '../../lib/curriculum/lines'
 
 export async function getStaticPaths() {
-  const open = (await getCollection('stations')).filter((s) => s.data.status === 'open')
+  const open = (await getCollection('stations')).filter((s) => s.data.line === 'g' && s.data.status === 'open')
   return open.map((s) => ({ params: { station: s.id }, props: { station: s } }))
 }
 
@@ -18,6 +18,7 @@ const d = station.data
 const line = getLineById(d.line)
 const cur = line.stations.find((s) => s.slug === station.id)!
 const next = line.stations[line.stations.indexOf(cur) + 1]
+const nextLabel = (st: string) => (st === 'open' ? 'OPEN · LIVE NOW' : st === 'announced' ? 'ANNOUNCED · LOCKED' : 'LOCKED')
 
 // line strip: dot/line opacity per status
 const STRIP = line.stations.map((s) => ({
@@ -27,26 +28,6 @@ const STRIP = line.stations.map((s) => ({
   lineOp: s.status === 'open' ? 0.85 : 0.3,
   codeColor: s.status === 'open' ? '#00ff88' : '#6b7280',
 }))
-
-// THE FOLDER narrative beats (handoff copy).
-const steps = [
-  'Name the discomfort in one plain sentence.',
-  'Find the hidden system that could be behind it.',
-  'Turn it into a single question that can be tested.',
-  'State what evidence would actually answer it.',
-]
-const tools = ['AI co-pilot', 'A plain doc', 'A spreadsheet', 'Public search']
-const verify = [
-  'Is it testable — could evidence ever settle it?',
-  'Is it sourced — could you actually get that evidence?',
-  'Is it falsifiable — could the answer be "no"?',
-]
-const checks = [
-  'I can name the hidden system behind my discomfort.',
-  'I can state one question that can actually be tested.',
-  'I can say what evidence would answer it.',
-  'I can explain why it matters to someone else.',
-]
 ---
 <Base title={`${d.title} — LINE G — DATAVISM`} description={cur.coreQuestion} image={d.ogImage} footer={false}>
   <main class="st">
@@ -60,7 +41,7 @@ const checks = [
       </div>
       <h1 class="font-display title" data-decode>{d.title}</h1>
       <p class="cq">{cur.coreQuestion}</p>
-      <p class="outcome">After this station you can turn a vague suspicion into a precise, testable data question — and document it as your <strong>first Case File</strong>. This is the move the whole network is built on.</p>
+      {d.outcome && <p class="outcome">{d.outcome}</p>}
       <div class="strip">
         {STRIP.map((s) => (
           <div class="strip-seg">
@@ -77,38 +58,67 @@ const checks = [
     <!-- BODY -->
     <div class="body">
       <div class="main">
-        <div class="beat">
-          <div class="bk magenta">// SIGNAL</div>
-          <p class="lead">A system may already have a <span class="sig">folder</span> on you — data, inferences, a profile you never saw. The instinct is to panic.</p>
-          <p class="p">The move is the opposite: make the discomfort <strong>testable</strong>. Not "they're spying on me" — but a question you can actually check against evidence.</p>
-        </div>
-
-        <div class="beat top">
-          <div class="bk green">// METHOD</div>
-          <p class="p mb">A good investigation begins with a question that can be tested. You turn vague unease into a claim you can verify — or fail to.</p>
-          <div class="steps">
-            {steps.map((t, i) => (
-              <div class="step"><span class="font-display sn">{i + 1}</span><span class="stext">{t}</span></div>
-            ))}
+        {d.signal && (
+          <div class="beat">
+            <div class="bk magenta">// SIGNAL</div>
+            <p class="lead">{d.signal.lead}</p>
+            <p class="p">{d.signal.body}</p>
           </div>
-        </div>
+        )}
 
-        <div class="beat top">
-          <div class="bk gold">// TOOLING</div>
-          <p class="p mb">No code required. You command tools, you don't worship them.</p>
-          <div class="chips">{tools.map((t) => <span class="chip">{t}</span>)}</div>
-        </div>
+        {d.method && (
+          <div class="beat top">
+            <div class="bk green">// METHOD</div>
+            <p class="p mb">{d.method.intro}</p>
+            <div class="steps">
+              {d.method.steps.map((t, i) => (
+                <div class="step"><span class="font-display sn">{i + 1}</span><span class="stext">{t}</span></div>
+              ))}
+            </div>
+          </div>
+        )}
 
-        <div class="beat top">
-          <div class="bk blue">// VERIFICATION</div>
-          <p class="p mb">Before you move on, the question has to survive three checks:</p>
-          <div class="vlist">{verify.map((v) => <div class="vrow"><span class="arr">→</span>{v}</div>)}</div>
-        </div>
+        {d.tooling && (
+          <div class="beat top">
+            <div class="bk gold">// TOOLING</div>
+            {d.tooling.intro && <p class="p mb">{d.tooling.intro}</p>}
+            <div class="chips">{d.tooling.items.map((t) => <span class="chip">{t}</span>)}</div>
+          </div>
+        )}
 
-        <div class="beat top">
-          <div class="bk violet">// BRIDGE</div>
-          <p class="p">G1 feeds every line. <span class="k">K</span> traces the watchers, <span class="r">R</span> follows the money, <span class="b">B</span> decodes the feed, <span class="v">V</span> reads the long signal — and each one starts with exactly this: a question that can be tested.</p>
-        </div>
+        {d.mission && (
+          <div class="beat top">
+            <div class="bk green">// MISSION</div>
+            <p class="p mb">{d.mission.goal}</p>
+            <div class="steps">
+              {d.mission.steps.map((t, i) => (
+                <div class="step"><span class="font-display sn">{i + 1}</span><span class="stext">{t}</span></div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {d.verification && (
+          <div class="beat top">
+            <div class="bk blue">// VERIFICATION</div>
+            <p class="p mb">{d.verification.intro}</p>
+            <div class="vlist">{d.verification.checks.map((v) => <div class="vrow"><span class="arr">→</span>{v}</div>)}</div>
+          </div>
+        )}
+
+        {d.ghostFragment && d.ghostFragment.length > 0 && (
+          <div class="beat top">
+            <div class="bk green">// GHOST</div>
+            <blockquote class="ghostq">{d.ghostFragment.map((l) => <p>{l}</p>)}</blockquote>
+          </div>
+        )}
+
+        {d.bridge && (
+          <div class="beat top">
+            <div class="bk violet">// BRIDGE</div>
+            <p class="p">{d.bridge}</p>
+          </div>
+        )}
       </div>
 
       <!-- RAIL -->
@@ -116,22 +126,32 @@ const checks = [
         <div class="artifact">
           <div class="rk">YOUR ARTIFACT</div>
           <div class="font-display art-name">{cur.artifact}</div>
-          <p class="art-p">A documented question, the evidence you'd need to answer it, and your investigation angle.</p>
+          {d.artifactDesc && <p class="art-p">{d.artifactDesc}</p>}
         </div>
 
-        <SelfCheck client:visible stationId="g1" checks={checks} artifactLabel={cur.artifact} beginHref="#" doneHref="/underground" />
+        <SelfCheck client:visible stationId={station.id} checks={d.selfChecks ?? []} artifactLabel={cur.artifact} beginHref="#" doneHref="/underground" />
 
-        <div class="sources">
-          <div class="rk">SOURCES / DATA</div>
-          <div class="src-list">
-            {d.sources.map((src, i) => (
-              <a class="src" href={src.url} target="_blank" rel="noopener">
-                <span class="sn2">{String(i + 1).padStart(2, '0')}</span>{src.label}
-              </a>
-            ))}
+        {d.artifactTemplate && (
+          <div class="tmpl-card">
+            <div class="rk">ARTIFACT TEMPLATE</div>
+            <pre class="tmpl" data-tmpl>{d.artifactTemplate}</pre>
+            <button class="tmpl-copy" type="button" data-tmpl-copy>Copy template</button>
           </div>
-          <div class="src-note">// real sources · accessed {d.sources[0]?.accessed}</div>
-        </div>
+        )}
+
+        {d.sources.length > 0 && (
+          <div class="sources">
+            <div class="rk">SOURCES / DATA</div>
+            <div class="src-list">
+              {d.sources.map((src, i) => (
+                <a class="src" href={src.url} target="_blank" rel="noopener">
+                  <span class="sn2">{String(i + 1).padStart(2, '0')}</span>{src.label}
+                </a>
+              ))}
+            </div>
+            <div class="src-note">// real sources · accessed {d.sources[0]?.accessed}</div>
+          </div>
+        )}
       </aside>
     </div>
 
@@ -142,12 +162,30 @@ const checks = [
         <div class="next-id">
           <span class="next-code">{next.code}</span>
           <span class="font-display next-title">{next.title}</span>
-          <span class="next-status">ANNOUNCED · LOCKED</span>
+          <span class="next-status">{nextLabel(next.status)}</span>
         </div>
       </div>
     )}
   </main>
 </Base>
+
+<script>
+  // Copy the artifact template to clipboard (LINE G station rail).
+  document.addEventListener('astro:page-load', () => {
+    const btn = document.querySelector('[data-tmpl-copy]')
+    const pre = document.querySelector('[data-tmpl]')
+    if (!(btn instanceof HTMLButtonElement) || !pre) return
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pre.textContent ?? '')
+        btn.textContent = 'Copied ✓'
+        setTimeout(() => (btn.textContent = 'Copy template'), 1600)
+      } catch {
+        btn.textContent = 'Press ⌘/Ctrl+C'
+      }
+    })
+  })
+</script>
 
 <style>
   .st { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
@@ -194,12 +232,18 @@ const checks = [
   .vlist { display: grid; gap: 10px; }
   .vrow { display: flex; gap: 12px; align-items: center; font-size: 14px; color: var(--color-ink); }
   .arr { color: var(--color-line-b); }
+  .ghostq { border-left: 2px solid var(--color-line-g); padding-left: 16px; margin: 0; display: grid; gap: 10px; }
+  .ghostq p { font-size: 15px; line-height: 1.6; color: var(--color-ink-2); margin: 0; font-style: italic; }
 
   .rail { position: sticky; top: 20px; display: grid; gap: 16px; }
   .artifact { border: 1px solid var(--color-edge); border-top: 3px solid var(--color-signal); background: var(--color-panel); padding: 20px; }
   .rk { font-size: 10px; letter-spacing: 0.16em; color: var(--color-ink-4); margin-bottom: 12px; }
   .art-name { font-weight: 700; font-size: 19px; color: var(--color-signal); margin-bottom: 8px; }
   .art-p { font-size: 12.5px; line-height: 1.55; color: var(--color-ink-3); margin: 0; }
+  .tmpl-card { border: 1px solid var(--color-edge); background: var(--color-panel); padding: 18px; }
+  .tmpl { margin: 0 0 12px; padding: 12px; background: var(--color-bg); border: 1px solid var(--color-edge); font-family: var(--font-mono); font-size: 11px; line-height: 1.5; color: var(--color-ink-2); white-space: pre-wrap; max-height: 300px; overflow: auto; }
+  .tmpl-copy { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; background: var(--color-signal); color: var(--color-panel-2); border: none; padding: 9px 14px; cursor: pointer; }
+  .tmpl-copy:hover { background: var(--color-signal-hi); }
   .sources { border: 1px solid var(--color-edge); background: var(--color-panel); padding: 20px; }
   .src-list { display: grid; gap: 9px; }
   .src { display: flex; gap: 9px; align-items: baseline; font-size: 12px; color: var(--color-ink-3); text-decoration: none; transition: color .2s ease; }

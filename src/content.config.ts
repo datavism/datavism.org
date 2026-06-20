@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content'
+import { defineCollection } from 'astro:content'
 import { glob } from 'astro/loaders'
+import { z } from 'zod'
 
 // Stations collection (design §6). One markdown file per station; the cinematic
 // story-kern is a Svelte island, so the body stays mostly notes — the structured
@@ -15,7 +16,7 @@ const stations = defineCollection({
     dropDate: z.string().optional(),
     teaser: z.string().optional(), // one-liner shown on the line page for any station
     sources: z
-      .array(z.object({ label: z.string(), url: z.string().url(), accessed: z.string() }))
+      .array(z.object({ label: z.string(), url: z.url(), accessed: z.string() }))
       .default([]),
     ogImage: z.string().optional(),
     // playable beats — only `open` stations carry them (design §4)

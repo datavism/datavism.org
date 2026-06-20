@@ -2,15 +2,10 @@
 // Utility ribbon — a 28px scrolling mono ticker (Data Underground Transit
 // Authority chrome). The fragment list is rendered twice for a seamless
 // translateX(-50%) loop; pauses on hover; freezes under reduced-motion.
-const FRAGMENTS: { text: string; color?: string; href?: string }[] = [
+const FRAGMENTS: { text: string; color?: string }[] = [
   { text: 'DATA UNDERGROUND TRANSIT AUTHORITY' },
   { text: '◆ STILL COOKING', color: 'var(--color-cooking)' },
   { text: '5 LINES · 25 STATIONS' },
-  // Null Island (0,0): where mis-tagged / nulled / manipulated geodata washes up
-  // when no one assigns it a place — and where the Ghost keeps the interchange.
-  // The coordinate is real and points somewhere (the door), so it isn't a hollow
-  // "secret". A mouse-only breadcrumb for the curious.
-  { text: '0.0000°N 0.0000°E', href: '/underground/ghost' },
   { text: 'G', color: 'var(--color-line-g)' },
   { text: 'K', color: 'var(--color-line-k)' },
   { text: 'R', color: 'var(--color-line-r)' },
@@ -24,13 +19,9 @@ const FRAGMENTS: { text: string; color?: string; href?: string }[] = [
 <div class="dv-ribbon ticker" aria-hidden="true">
   <div class="dv-track track">
     {[0, 1].map(() =>
-      FRAGMENTS.map((f) =>
-        f.href ? (
-          <a class="frag frag-link" href={f.href} tabindex="-1" style={f.color ? `color:${f.color}` : undefined}>{f.text}</a>
-        ) : (
-          <span class="frag" style={f.color ? `color:${f.color}` : undefined}>{f.text}</span>
-        ),
-      ),
+      FRAGMENTS.map((f) => (
+        <span class="frag" style={f.color ? `color:${f.color}` : undefined}>{f.text}</span>
+      )),
     )}
   </div>
 </div>
@@ -54,7 +45,4 @@ const FRAGMENTS: { text: string; color?: string; href?: string }[] = [
     color: var(--color-ink-4);
   }
   .frag { padding: 0 20px; }
-  /* the one breadcrumb fragment looks identical until hovered (mouse-only egg) */
-  .frag-link { color: inherit; text-decoration: none; cursor: pointer; }
-  .frag-link:hover { color: var(--color-ink-2); text-decoration: underline; text-underline-offset: 3px; }
 </style>

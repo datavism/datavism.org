@@ -29,6 +29,7 @@ interface Props {
   active?: 'network' | 'lines' | 'method' | 'manifesto'
   footer?: boolean
   chrome?: boolean // ticker + header; off for focused funnels (onboarding)
+  noindex?: boolean // robots noindex (hidden / ARG pages)
 }
 const {
   title = COPY.meta.title,
@@ -37,6 +38,7 @@ const {
   active,
   footer = true,
   chrome = true,
+  noindex = false,
 } = Astro.props
 const canonical = new URL(Astro.url.pathname, Astro.site).href
 const ogImage = new URL(image, Astro.site).href
@@ -79,6 +81,7 @@ const ogImage = new URL(image, Astro.site).href
     <meta name="theme-color" content="#060608" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />

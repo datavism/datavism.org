@@ -5,7 +5,7 @@ import type { SignalCard } from './types'
 import { EVIDENCE_TYPES } from './types'
 import { getLineById } from '../curriculum/lines'
 
-export function stageLabel(c: SignalCard): string {
+export function stageLabel(c: { stage?: SignalCard['stage'] }): string {
   return c.stage === 'case-file' ? 'Case File #1' : 'Suspicion → Question'
 }
 

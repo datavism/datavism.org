@@ -7,4 +7,4 @@ const src = import.meta.env.PUBLIC_UMAMI_SRC
 const websiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID
 const enabled = import.meta.env.PROD && src && websiteId
 ---
-{enabled && <script defer src={src} data-website-id={websiteId} data-cache="true"></script>}
+{enabled && <script is:inline defer src={src} data-website-id={websiteId} data-cache="true"></script>}

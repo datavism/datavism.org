@@ -1,5 +1,6 @@
 <!-- src/components/initiation/G1InitiationFlow.svelte -->
 <script>
+  // TODO Phase 2: namespace storage keys by stationId (currently hardcoded to g1-the-folder)
   const { stationId = 'the-folder' } = $props()
 
   import {
@@ -7,7 +8,7 @@
   } from '../../lib/signal-cards/types'
   import { suggestLines } from '../../lib/signal-cards/route-suggestions'
   import { loadDraft, saveDraft, clearDraft, saveCard, newCardId } from '../../lib/signal-cards/storage'
-  import { LINES, getLineById } from '../../lib/curriculum/lines'
+  import { LINES } from '../../lib/curriculum/lines'
   import SignalCard from '../signal-card/SignalCard.svelte'
   import { toMarkdown, toJson, downloadFile, copyText } from '../../lib/signal-cards/export'
   import { domToPng } from 'modern-screenshot'
@@ -72,6 +73,7 @@
 
   let cardEl = $state(null)
   let copied = $state(false)
+  let pngMsg = $state('')
 
   async function doCopy() {
     copied = await copyText(toMarkdown($state.snapshot(draft)))
@@ -81,9 +83,15 @@
   function doJson() { downloadFile(`${draft.id}.json`, toJson($state.snapshot(draft)), 'application/json') }
   async function doPng() {
     if (!cardEl) return
-    const url = await domToPng(cardEl, { scale: 2, backgroundColor: '#060608' })
-    const a = document.createElement('a')
-    a.href = url; a.download = `${draft.id}.png`; a.click()
+    try {
+      const bg = getComputedStyle(document.documentElement).getPropertyValue('--color-bg').trim() || '#060608'
+      const url = await domToPng(cardEl, { scale: 2, backgroundColor: bg })
+      const a = document.createElement('a')
+      a.href = url; a.download = `${draft.id}.png`; a.click()
+    } catch (e) {
+      console.error('[doPng]', e)
+      pngMsg = 'PNG export failed — try Copy or .md instead.'
+    }
   }
 
   let showUpgrade = $state(false)
@@ -191,6 +199,7 @@
         <button class="act" onclick={doJson}>Download .json</button>
         <button class="act" onclick={doPng}>Download .png</button>
       </div>
+      {#if pngMsg}<p class="muted">{pngMsg}</p>{/if}
       <div class="upgrade">
         {#if !showUpgrade}
           <button class="ghostbtn" onclick={() => (showUpgrade = true)}>Make it a full Case File →</button>
@@ -204,7 +213,7 @@
       </div>
 
       <div class="contribute">
-        <p class="muted">Your card is private on this device. You can keep it that way, export it, or contribute an anonymized copy.</p>
+        <p class="muted">Your card is private on this device. Keep it that way, export it, or contribute an anonymized copy — your suspicion text is removed, but your question, evidence and uncertainty are included, so keep personal details out.</p>
         <button class="ghostbtn" onclick={contribute}>Contribute anonymously (copy payload)</button>
         {#if contributeMsg}<p class="muted ok">{contributeMsg}</p>{/if}
         <a class="muted link" href="/archive">View the Signal Archive →</a>

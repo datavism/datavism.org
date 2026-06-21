@@ -30,6 +30,10 @@ describe('signal-card export', () => {
     const md = toMarkdown({ ...base, stage: 'case-file', actor: 'AdCorp', sourceLead: 'register', publicRelevance: 'affects many' })
     expect(md).toContain('## Actor')
     expect(md).toContain('AdCorp')
+    expect(md).toContain('## Source Lead')
+    expect(md).toContain('register')
+    expect(md).toContain('## Public Relevance')
+    expect(md).toContain('affects many')
   })
 
   it('json round-trips', () => {

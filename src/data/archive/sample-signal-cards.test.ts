@@ -12,6 +12,7 @@ describe('sample signal cards', () => {
       expect(c.disclaimer).toMatch(/not evidence yet/i)
       expect(c.visibility).toBe('public-anonymous')
       expect(['question', 'case-file']).toContain(c.stage)
+      expect(c.tags).toContain('curated')
     }
   })
   it('uses unique ids', () => {

@@ -1,0 +1,10 @@
+---
+// src/components/site/Analytics.astro — cookieless, no-PII web analytics.
+// Renders ONLY in production and ONLY when the provider env vars are set, so dev
+// and previews stay clean. No cookies / no device storage → no consent banner.
+// Swap providers (Umami ⇄ Plausible) by editing the <script> tag below only.
+const src = import.meta.env.PUBLIC_UMAMI_SRC
+const websiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID
+const enabled = import.meta.env.PROD && src && websiteId
+---
+{enabled && <script defer src={src} data-website-id={websiteId} data-cache="true"></script>}

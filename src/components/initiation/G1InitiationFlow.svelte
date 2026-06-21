@@ -7,6 +7,8 @@
   import { loadDraft, saveDraft, clearDraft, saveCard, newCardId } from '../../lib/signal-cards/storage'
   import { LINES, getLineById } from '../../lib/curriculum/lines'
   import SignalCard from '../signal-card/SignalCard.svelte'
+  import { toMarkdown, toJson, downloadFile, copyText } from '../../lib/signal-cards/export'
+  import { domToPng } from 'modern-screenshot'
 
   const STEPS = ['intro', 'system-signal', 'suspicion', 'question', 'evidence', 'uncertainty', 'route', 'card']
   const PROGRESS = ['Signal', 'Suspicion', 'Question', 'Evidence', 'Uncertainty', 'Route', 'Card']
@@ -64,6 +66,22 @@
     draft = { evidenceNeeded: [], tags: [] }
     clearDraft()
     step = 'intro'
+  }
+
+  let cardEl = $state(null)
+  let copied = $state(false)
+
+  async function doCopy() {
+    copied = await copyText(toMarkdown($state.snapshot(draft)))
+    setTimeout(() => (copied = false), 1600)
+  }
+  function doMarkdown() { downloadFile(`${draft.id}.md`, toMarkdown($state.snapshot(draft)), 'text/markdown') }
+  function doJson() { downloadFile(`${draft.id}.json`, toJson($state.snapshot(draft)), 'application/json') }
+  async function doPng() {
+    if (!cardEl) return
+    const url = await domToPng(cardEl, { scale: 2, backgroundColor: '#060608' })
+    const a = document.createElement('a')
+    a.href = url; a.download = `${draft.id}.png`; a.click()
   }
 
   // gating
@@ -148,7 +166,13 @@
   {:else if step === 'card'}
     <div class="panel cardwrap">
       <p class="ghost done">Investigation opened. This is your Signal Card — it is not evidence yet.</p>
-      <SignalCard card={draft} />
+      <div bind:this={cardEl}><SignalCard card={draft} /></div>
+      <div class="actions">
+        <button class="act" onclick={doCopy}>{copied ? 'Copied ✓' : 'Copy text'}</button>
+        <button class="act" onclick={doMarkdown}>Download .md</button>
+        <button class="act" onclick={doJson}>Download .json</button>
+        <button class="act" onclick={doPng}>Download .png</button>
+      </div>
       <div class="nav"><button class="ghostbtn" onclick={restart}>Start another →</button></div>
     </div>
   {/if}
@@ -180,4 +204,7 @@
   .go:disabled { opacity: 0.4; cursor: not-allowed; }
   .ghostbtn { background: transparent; border: 1px solid var(--color-edge-2); color: var(--color-ink-3); font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.06em; padding: 11px 16px; cursor: pointer; }
   .cardwrap { justify-items: start; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .act { background: var(--color-panel-2); border: 1px solid var(--color-edge-2); color: var(--color-ink); font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em; padding: 10px 14px; cursor: pointer; }
+  .act:hover { border-color: var(--color-line-g); }
 </style>

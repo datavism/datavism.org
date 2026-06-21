@@ -4,6 +4,7 @@ index: 1
 title: THE FOLDER
 skill: Ask the right question (spec-thinking begins)
 status: open
+interactive: g1-initiation
 teaser: "There is a folder. Your name is on it. You've never opened it."
 missionMinutes: "45–90 min"
 artifactName: "Your First Case File"

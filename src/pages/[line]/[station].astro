@@ -7,6 +7,7 @@
 import { getCollection } from 'astro:content'
 import Base from '../../layouts/Base.astro'
 import SelfCheck from '../../components/SelfCheck.svelte'
+import G1InitiationFlow from '../../components/initiation/G1InitiationFlow.svelte'
 import { getLineById } from '../../lib/curriculum/lines'
 
 export async function getStaticPaths() {
@@ -56,6 +57,12 @@ const STRIP = line.stations.map((s) => ({
         ))}
       </div>
     </section>
+
+    {d.interactive === 'g1-initiation' && (
+      <section class="initiation">
+        <G1InitiationFlow client:load stationId={station.id} />
+      </section>
+    )}
 
     <!-- BODY -->
     <div class="body">
@@ -131,7 +138,7 @@ const STRIP = line.stations.map((s) => ({
           {d.artifactDesc && <p class="art-p">{d.artifactDesc}</p>}
         </div>
 
-        <SelfCheck client:visible stationId={station.id} checks={d.selfChecks ?? []} artifactLabel={cur.artifact} beginHref="#" doneHref="/underground" />
+        {!d.interactive && <SelfCheck client:visible stationId={station.id} checks={d.selfChecks ?? []} artifactLabel={cur.artifact} beginHref="#" doneHref="/underground" />}
 
         {d.artifactTemplate && (
           <div class="tmpl-card">
@@ -198,6 +205,7 @@ const STRIP = line.stations.map((s) => ({
   .ink { color: var(--color-ink); }
 
   .hero { padding: 40px 0 30px; border-bottom: 1px solid var(--color-edge); }
+  .initiation { padding: 28px 0 8px; border-bottom: 1px solid var(--color-edge); }
   .crumb { font-size: 11px; letter-spacing: 0.14em; color: var(--color-ink-4); margin-bottom: 22px; }
   .badges { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 18px; }
   .bg-line { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border: 1.5px solid var(--accent); color: var(--accent); font-weight: 700; font-size: 19px; }

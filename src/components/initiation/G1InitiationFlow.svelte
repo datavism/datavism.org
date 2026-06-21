@@ -1,5 +1,7 @@
 <!-- src/components/initiation/G1InitiationFlow.svelte -->
 <script>
+  const { stationId = 'the-folder' } = $props()
+
   import {
     SYSTEM_SIGNALS, EVIDENCE_TYPES, SIGNAL_CARD_DISCLAIMER, deriveStage,
   } from '../../lib/signal-cards/types'

@@ -36,6 +36,7 @@ const stations = defineCollection({
     artifactDesc: z.string().optional(),
     artifactTemplate: z.string().optional(), // copyable markdown the learner fills in
     stationSentence: z.string().optional(), // memorable closing line (canon "Station Sentence")
+    interactive: z.enum(['g1-initiation']).optional(), // opt-in interactive mission island
   }),
 })
 

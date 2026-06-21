@@ -13,6 +13,9 @@ export { isConfigured }
 
 /** Step 1 — email a magic link that returns to /connect?token=… */
 export async function startConnect(email: string): Promise<void> {
+  // v0.1 sends email only. The bridge also accepts recoveryCode/codename on the
+  // request, but we read the codename on redeem (from crew/{uid}), so the
+  // request-side identity hints stay intentionally unused for now.
   await requestMagicLink(email)
 }
 

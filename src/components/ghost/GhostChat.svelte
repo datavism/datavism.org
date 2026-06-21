@@ -31,8 +31,10 @@
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ messages: next }),
       })
-      if (res.status === 503) { offline = true; return }
       const data = await res.json().catch(() => ({}))
+      // only the permanent "no key configured" 503 flips to the offline panel;
+      // a transient 503 falls through to the generic error so the user can retry.
+      if (res.status === 503 && data?.error === 'not-configured') { offline = true; return }
       if (!res.ok) {
         error = data?.error === 'safety-blocked'
           ? 'GHOST declined that one. Keep it to the method.'

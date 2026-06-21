@@ -12,6 +12,9 @@ const ERROR_STATUS: Record<string, number> = {
   'safety-blocked': 422,
 }
 
+// TODO v0.2: this is an unauthenticated public endpoint. Per-request caps bound
+// cost per call, but NOT call volume — add per-IP rate limiting (Vercel Edge
+// Config or Upstash Redis) before any high-traffic launch.
 export default async function handler(req: Req, res: Res): Promise<void> {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'method-not-allowed' })

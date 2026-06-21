@@ -23,7 +23,7 @@ describe('askGhost', () => {
     expect(sent.systemInstruction.parts[0].text).toMatch(/GHOST/)
     expect(sent.contents.at(-1)).toEqual({ role: 'user', parts: [{ text: 'help' }] })
     expect(f.calls[0].url).toContain('gemini-2.5-flash-lite')
-    expect(f.calls[0].url).not.toContain('apiKey') // key is a query param value, not literally leaked into our code
+    expect(f.calls[0].url).toContain('?key=') // key is the '?key=' query param (Gemini API contract), not an HTTP header
   })
 
   it('maps assistant turns to the model role', async () => {
@@ -47,8 +47,13 @@ describe('askGhost', () => {
     ).rejects.toMatchObject({ code: 'bad-request' })
   })
 
-  it('throws safety-blocked when Gemini blocks the prompt', async () => {
+  it('throws safety-blocked when Gemini blocks the prompt (input-side)', async () => {
     const f = mockFetch(200, { promptFeedback: { blockReason: 'SAFETY' } })
+    await expect(askGhost([user('bad')], opts(f))).rejects.toMatchObject({ code: 'safety-blocked' })
+  })
+
+  it('throws safety-blocked when the candidate finishReason is SAFETY (output-side)', async () => {
+    const f = mockFetch(200, { candidates: [{ finishReason: 'SAFETY', content: { parts: [] } }] })
     await expect(askGhost([user('bad')], opts(f))).rejects.toMatchObject({ code: 'safety-blocked' })
   })
 

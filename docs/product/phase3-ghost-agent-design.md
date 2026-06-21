@@ -35,9 +35,9 @@ src/pages/ghost.astro        the /ghost page
 - **Config-gated + manual:** the live Gemini call — verified once `GEMINI_API_KEY` is set, via `vercel dev` or a preview deploy.
 - Gates: `astro check` 0/0/0, `astro build` green (still static), `vitest` all pass.
 
-## Non-goals (v0.1)
+## Non-goals (v0.1) — accepted risks
 
-Streaming responses, cross-session memory, vector RAG, a floating site-wide widget, per-user rate limiting (only per-request caps). All later.
+Streaming responses, cross-session memory, vector RAG, a floating site-wide widget. **Per-IP rate limiting is deliberately deferred** (only per-request caps in v0.1): the `/api/ghost` endpoint is unauthenticated and public, so per-request input/output caps bound cost *per call* but not call *volume*. **Tracked risk** — before any high-traffic launch, add per-IP rate limiting (Vercel Edge Config or Upstash Redis); marked with a `TODO v0.2` in `api/ghost.ts`. Low-traffic preview is acceptable; watch the Gemini quota.
 
 ## Go-live checklist
 

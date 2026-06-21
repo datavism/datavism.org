@@ -29,6 +29,8 @@ export async function askGhost(messages: GhostMessage[], opts: AskOpts): Promise
 
   const turns = messages.slice(-limits.maxTurns)
   if (!turns.length || turns[turns.length - 1].role !== 'user') throw new GhostError('bad-request')
+  // cap is on the window actually sent (last maxTurns), not the full history;
+  // single-turn max is therefore maxInputChars.
   if (turns.reduce((n, m) => n + m.content.length, 0) > limits.maxInputChars) throw new GhostError('too-long')
 
   const body = {
@@ -46,8 +48,10 @@ export async function askGhost(messages: GhostMessage[], opts: AskOpts): Promise
   if (!res.ok) throw new GhostError('api-error', `gemini ${res.status}`)
 
   const data: any = await res.json()
-  if (data?.promptFeedback?.blockReason) throw new GhostError('safety-blocked')
-  const reply = (data?.candidates?.[0]?.content?.parts ?? [])
+  if (data?.promptFeedback?.blockReason) throw new GhostError('safety-blocked') // input-side block
+  const candidate = data?.candidates?.[0]
+  if (candidate?.finishReason === 'SAFETY') throw new GhostError('safety-blocked') // output-side block
+  const reply = (candidate?.content?.parts ?? [])
     .map((p: { text?: string }) => p.text ?? '')
     .join('')
     .trim()

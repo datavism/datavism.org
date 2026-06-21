@@ -21,11 +21,13 @@ describe('api/ghost handler (no-network paths)', () => {
   const origKey = process.env.GEMINI_API_KEY
   const origUrl = process.env.UPSTASH_REDIS_REST_URL
   const origTok = process.env.UPSTASH_REDIS_REST_TOKEN
+  const origEnv = process.env.VERCEL_ENV
   const restore = (k: string, v: string | undefined) => (v === undefined ? delete process.env[k] : (process.env[k] = v))
   afterEach(() => {
     restore('GEMINI_API_KEY', origKey)
     restore('UPSTASH_REDIS_REST_URL', origUrl)
     restore('UPSTASH_REDIS_REST_TOKEN', origTok)
+    restore('VERCEL_ENV', origEnv)
   })
 
   it('405 on a non-POST method', async () => {
@@ -49,8 +51,9 @@ describe('api/ghost handler (no-network paths)', () => {
     expect(res.code).toBe(400)
   })
 
-  it('503 fails closed when the key is set but no rate limiter is configured', async () => {
+  it('503 fails closed on a deployed env when the key is set but no limiter is configured', async () => {
     process.env.GEMINI_API_KEY = 'k'
+    process.env.VERCEL_ENV = 'production'
     delete process.env.UPSTASH_REDIS_REST_URL
     delete process.env.UPSTASH_REDIS_REST_TOKEN
     const res = mockRes()

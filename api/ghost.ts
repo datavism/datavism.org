@@ -48,22 +48,27 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     return
   }
 
-  // Rate limit is REQUIRED when the agent is live — protects the Gemini budget.
+  // Rate limit protects the Gemini budget. On deployed envs (production/preview) it
+  // is REQUIRED — fail closed so the public endpoint can never run uncapped. Locally
+  // (vercel dev) it is optional, so GHOST can be tested without an Upstash backend.
   const rl = { url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN }
-  if (!rateLimitConfigured(rl)) {
+  const deployed = process.env.VERCEL_ENV === 'production' || process.env.VERCEL_ENV === 'preview'
+  if (rateLimitConfigured(rl)) {
+    try {
+      const verdict = await checkRateLimit(clientIp(req.headers), rl)
+      if (!verdict.allowed) {
+        res.status(429).json({ error: 'rate-limited', scope: verdict.reason })
+        return
+      }
+    } catch {
+      res.status(503).json({ error: 'ratelimit-unavailable' }) // backend down → fail closed
+      return
+    }
+  } else if (deployed) {
     res.status(503).json({ error: 'ratelimit-not-configured' })
     return
   }
-  try {
-    const verdict = await checkRateLimit(clientIp(req.headers), rl)
-    if (!verdict.allowed) {
-      res.status(429).json({ error: 'rate-limited', scope: verdict.reason })
-      return
-    }
-  } catch {
-    res.status(503).json({ error: 'ratelimit-unavailable' }) // backend down → fail closed
-    return
-  }
+  // local/dev without a limiter: allowed (per-request caps still apply)
 
   try {
     const { reply } = await askGhost(messages as GhostMessage[], {

@@ -21,6 +21,7 @@ import { COPY } from '../lib/copy/en'
 import Ticker from '../components/site/Ticker.astro'
 import SiteHeader from '../components/site/SiteHeader.astro'
 import SiteFooter from '../components/site/SiteFooter.astro'
+import Analytics from '../components/site/Analytics.astro'
 
 interface Props {
   title?: string
@@ -90,6 +91,7 @@ const ogImage = new URL(image, Astro.site).href
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <ClientRouter />
+    <Analytics />
   </head>
   <body>
     <div class="topglow" aria-hidden="true"></div>

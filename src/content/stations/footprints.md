@@ -3,100 +3,75 @@ line: "k"
 index: 1
 title: "FOOTPRINTS"
 skill: "Trace literacy and footprint mapping."
-status: "locked"
-teaser: "Understanding the traces people, browsers, devices and platforms generate."
-sources: []
-missionMinutes: "90 min"
-ghostFragment:
-  - "K1 opens a new part of the Evidence Engine."
-  - "This station is a stub. Replace this fragment with the final story beat."
-mission:
-  goal: "Create a first version of the Footprint Map for KEY / Tracking & OSINT."
-  steps:
-    - "Define the investigation question."
-    - "Collect or inspect the relevant source material."
-    - "Use AI only with explicit constraints and documented prompts."
-    - "Verify the output against sources."
-    - "Package the result as: Footprint Map."
-selfChecks:
-  - "I can explain what K1 teaches."
-  - "I can show the source material or evidence trail."
-  - "I can mark what is verified, uncertain or still missing."
+status: "open"
+teaser: "An ordinary day. Weather, messenger, a symptom search, one purchase. How many traces did it leave?"
+missionMinutes: "60–90 min"
 artifactName: "Footprint Map"
-nextTeaser: "Continue through the KEY / Tracking & OSINT line."
+ogImage: /og/datavism.png
+sources: []
+outcome: "After this station you can take an ordinary day online and map the traces it produced — what kind, where, who might receive them, and how sensitive they are. It is the first move of every tracking investigation."
+signal:
+  lead: "You open the weather. A messenger. A news article. You search a symptom, buy one thing, scroll a feed. A normal morning."
+  body: "Every one of those actions left a trace — a request, an identifier, a timestamp, a quiet guess. You saw almost none of them. Before you can trace the watchers, you have to see what they collect: footprints."
+method:
+  intro: "Trace inventory. You reconstruct a slice of your own digital day and turn each action into a described trace — voluntary, behavioral, technical or inferred — instead of a vague sense of being watched."
+  steps:
+    - "Reconstruct one real hour or day: list the actions — open app, search, buy, sign up, scroll."
+    - "For each action, name the trace it likely produced, and what kind it is."
+    - "Mark where the trace is produced and who might receive it: first party, third party, broker, platform."
+    - "Rate how sensitive it is — and whether you could even see the trace at all."
+tooling:
+  intro: "Nothing invasive. You observe your own footprint and describe it precisely."
+  items: ["Your own browser / app history", "A spreadsheet or table", "App privacy labels / permissions", "Any AI assistant (to classify trace types)"]
+mission:
+  goal: "Build the first Footprint Map for your own digital day — and name which traces are sensitive and which stay invisible."
+  steps:
+    - "Pick one real hour or day and list at least eight actions."
+    - "Turn each into a trace row: type, context, possible receiver, sensitivity, visibility."
+    - "Mark every row as observed or assumed — do not guess silently."
+    - "Name your single most sensitive trace, and write one question it opens for K2."
+verification:
+  intro: "Your Footprint Map holds when:"
+  checks:
+    - "Each row says whether the trace is observed or only assumed."
+    - "You can name a plausible receiver — not just 'someone'."
+    - "You can point to the most sensitive trace and say why it matters."
+ghostFragment:
+  - "You think you left no trace. You left dozens before breakfast — a request, an identifier, a quiet guess about who you are."
+  - "None of it screams. That is the design. The trace is quiet; the profile built from it is loud."
+  - "Do not chase people. Trace the machine that watches them — and start with what it already collected: you."
+bridge: "A footprint is not yet proof. Next — K2 SIGNALS: open the dev tools and catch the trackers in the act, before you even click. LINE K rule: we trace systems, not private individuals."
+artifactDesc: "A structured map of one digital day: each action as a described trace, with receiver, sensitivity, and what you can and cannot actually see."
+artifactTemplate: |
+  # Footprint Map — [Your Digital Day]
+
+  ## Trace Table
+  | Action | Trace Type | Context | Possible Receiver | Sensitivity | Visibility | Evidence | Open Question |
+  |--------|-----------|---------|-------------------|-------------|------------|----------|---------------|
+  |        |           |         |                   |             |            |          |               |
+
+  - **Trace Type:** voluntary / behavioral / technical / inferred
+  - **Context:** browser, app, platform, payment, location, search …
+  - **Possible Receiver:** first party / third party / broker / analytics / platform
+  - **Sensitivity:** low / medium / high · **Visibility:** can you see it? (yes / partial / no)
+
+  ## Most Sensitive Trace
+  Which one, and why.
+
+  ## Question for K2
+  The tracking signal you most want to catch in the act.
+stationSentence: "Before you can trace the watchers, you need to understand the traces."
+selfChecks:
+  - "I can explain the difference between an action and a trace."
+  - "I can list at least five trace types."
+  - "I can identify possible receivers of a trace."
+  - "I can mark which claims are observed and which are assumptions."
+  - "I can formulate one follow-up question for K2."
+nextTeaser: "K2 — SIGNALS: tracking is not invisible. It leaves signals you can capture."
 ---
-# K1 — FOOTPRINTS
 
-> **Line:** KEY / Tracking & OSINT  
-> **Line motto:** Trace the watchers.  
-> **Role in line:** Orientation: understand traces created by people, devices, browsers and platforms.  
-> **Artifact:** Footprint Map
-
-## Core Question
-
-What traces exist before anyone calls them data?
-
-## Learner Outcome
-
-After this station, the learner can:
-
-- explain the purpose of **FOOTPRINTS** in the DATAVISM Evidence Engine;
-- apply the method: **Trace literacy and footprint mapping.**;
-- document the work as a verifiable artifact;
-- distinguish between what is proven, uncertain and still missing.
-
-## Signal
-
-TODO: Add the real-world phenomenon, case, dataset, source, public issue or story beat that opens this station.
-
-## Method
-
-TODO: Describe the method introduced in this station.
-
-Suggested starting point:
-
-> Understanding the traces people, browsers, devices and platforms generate.
-
-## Tooling
-
-TODO: Add tool categories, not hard dependencies.
-
-Possible categories:
-
-- AI co-pilot / LLM
-- spreadsheet or table tool
-- notebook or lightweight coding environment
-- browser dev tools / public sources / APIs
-- visualization or writing tool
-
-## Verification
-
-TODO: Define how the learner checks the output.
-
-Minimum verification pattern:
-
-1. Claim
-2. Source
-3. Check
-4. Status
-5. Uncertainty
-6. Correction or next step
-
-## Artifact
-
-**Footprint Map**
-
-TODO: Define what a complete artifact must contain.
-
-## Self-Check
-
-- [ ] I can explain the investigation question.
-- [ ] I can show my source trail.
-- [ ] I can describe where AI helped and where it might be wrong.
-- [ ] I can separate findings from assumptions.
-- [ ] I can name the next question this station opens.
-
-## Bridge
-
-TODO: Add links to related snacks, cases, lines or stations.
-
+K1 FOOTPRINTS — LINE K station 1, the orientation door into KEY / Tracking &
+OSINT. Playable beats live in the frontmatter (rendered by [line]/[station].astro).
+Method station: the learner maps their OWN digital footprint — no third-party
+data, no surveillance of others. LINE K ethical boundary: we trace systems, not
+private individuals.

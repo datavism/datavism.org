@@ -44,6 +44,8 @@ export type CurriculumLine = {
     hex: string;
   };
   mapDescription: string;
+  intro?: string; // longer landing-page intro paragraph
+  landingWhy?: string; // landing rail "why this line" note
   stations: Station[];
 };
 
@@ -86,6 +88,10 @@ export const LINES = [
     system: "The learner's own uncertainty",
     finalArtifact: "Eval Report",
     mapDescription: "G teaches the method.",
+    intro:
+      "Line G is the operating system of DATAVISM — the method every other line runs on. You learn to turn a vague suspicion into a verifiable investigation, then carry that method into surveillance, money, feeds or the future.",
+    landingWhy:
+      "Everyone starts with G. It is the shared grammar — the method the whole underground speaks.",
     color: {
       name: "ghost green",
       hex: "#00ff88",
@@ -167,6 +173,10 @@ export const LINES = [
     system: "PANOPTICON",
     finalArtifact: "Panopticon Case File",
     mapDescription: "K traces surveillance.",
+    intro:
+      "They track you. Line K teaches you to track the system back. From browser signals to data brokers, from consent theater to identity graphs, from one-time inspection to ongoing monitoring — KEY turns invisible observation into verifiable evidence.",
+    landingWhy:
+      "Trace systems, not people. K turns invisible observation into evidence — without turning anyone into a target.",
     color: {
       name: "key cyan",
       hex: "#00ffff",
@@ -177,7 +187,7 @@ export const LINES = [
         code: "K1",
         slug: "footprints",
         title: "FOOTPRINTS",
-        status: "locked",
+        status: "open",
         role: "Orientation: understand traces created by people, devices, browsers and platforms.",
         skill: "Trace literacy and footprint mapping.",
         artifact: "Footprint Map",
@@ -189,7 +199,7 @@ export const LINES = [
         code: "K2",
         slug: "signals",
         title: "SIGNALS",
-        status: "locked",
+        status: "announced",
         role: "Access: inspect pixels, cookies, SDKs, consent flows and request patterns.",
         skill: "Tracking signal inspection.",
         artifact: "Tracking Signal Sheet",

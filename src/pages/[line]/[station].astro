@@ -1,21 +1,23 @@
 ---
-// Station / mission page (design: docs/curriculum/line-g-concept.md). Fully
-// frontmatter-driven: every beat (signal, method, tooling, mission, verification,
-// GHOST fragment, bridge, artifact template) comes from the station markdown.
-// Only `open` LINE-G stations are built. Self-check is a browser-only island.
+// Station / mission page — line-agnostic. Every beat (signal, method, tooling,
+// mission, verification, mentor fragment, bridge, artifact template) comes from
+// the station markdown; line identity (code, mentor, name, accent colour) comes
+// from the curriculum canon (lines.ts). Only `open` stations are built, on any
+// line. Self-check is a browser-only island.
 import { getCollection } from 'astro:content'
 import Base from '../../layouts/Base.astro'
 import SelfCheck from '../../components/SelfCheck.svelte'
 import { getLineById } from '../../lib/curriculum/lines'
 
 export async function getStaticPaths() {
-  const open = (await getCollection('stations')).filter((s) => s.data.line === 'g' && s.data.status === 'open')
-  return open.map((s) => ({ params: { station: s.id }, props: { station: s } }))
+  const open = (await getCollection('stations')).filter((s) => s.data.status === 'open')
+  return open.map((s) => ({ params: { line: `line-${s.data.line}`, station: s.id }, props: { station: s } }))
 }
 
 const { station } = Astro.props
 const d = station.data
 const line = getLineById(d.line)
+const accent = line.color.hex
 const cur = line.stations.find((s) => s.slug === station.id)!
 const next = line.stations[line.stations.indexOf(cur) + 1]
 const nextLabel = (st: string) => (st === 'open' ? 'OPEN · LIVE NOW' : st === 'announced' ? 'ANNOUNCED · LOCKED' : 'LOCKED')
@@ -23,19 +25,19 @@ const nextLabel = (st: string) => (st === 'open' ? 'OPEN · LIVE NOW' : st === '
 // line strip: dot/line opacity per status
 const STRIP = line.stations.map((s) => ({
   code: s.code,
-  dot: s.status === 'open' ? '#00ff88' : '#0b0c10',
+  dot: s.status === 'open' ? accent : '#0b0c10',
   op: s.status === 'locked' ? 0.4 : 1,
   lineOp: s.status === 'open' ? 0.85 : 0.3,
-  codeColor: s.status === 'open' ? '#00ff88' : '#6b7280',
+  codeColor: s.status === 'open' ? accent : '#6b7280',
 }))
 ---
-<Base title={`${d.title} — LINE G — DATAVISM`} description={cur.coreQuestion} image={d.ogImage} footer={false}>
-  <main class="st">
+<Base title={`${d.title} — LINE ${line.code} — DATAVISM`} description={cur.coreQuestion} image={d.ogImage} footer={false}>
+  <main class="st" style={`--accent:${accent}`}>
     <!-- HERO -->
     <section class="hero">
-      <div class="crumb">NETWORK <span class="sep">/</span> <span class="g">G · GHOST · FOUNDATION</span> <span class="sep">/</span> <span class="ink">{cur.code}</span></div>
+      <div class="crumb">NETWORK <span class="sep">/</span> <span class="lname">{line.code} · {line.mentor} · {line.shortName.toUpperCase()}</span> <span class="sep">/</span> <span class="ink">{cur.code}</span></div>
       <div class="badges">
-        <span class="bg-line font-display">G</span>
+        <span class="bg-line font-display">{line.code}</span>
         <span class="bg-code">{cur.code}</span>
         <span class="bg-status"><span class="dot"></span>OPEN · LIVE NOW</span>
       </div>
@@ -108,7 +110,7 @@ const STRIP = line.stations.map((s) => ({
 
         {d.ghostFragment && d.ghostFragment.length > 0 && (
           <div class="beat top">
-            <div class="bk green">// GHOST</div>
+            <div class="bk green">// {line.mentor}</div>
             <blockquote class="ghostq">{d.ghostFragment.map((l) => <p>{l}</p>)}</blockquote>
           </div>
         )}
@@ -160,7 +162,7 @@ const STRIP = line.stations.map((s) => ({
     <!-- NEXT -->
     {next && (
       <div class="next">
-        <div class="next-k">NEXT STOP ON LINE G</div>
+        <div class="next-k">NEXT STOP ON LINE {line.code}</div>
         <div class="next-id">
           <span class="next-code">{next.code}</span>
           <span class="font-display next-title">{next.title}</span>
@@ -172,7 +174,7 @@ const STRIP = line.stations.map((s) => ({
 </Base>
 
 <script>
-  // Copy the artifact template to clipboard (LINE G station rail).
+  // Copy the artifact template to clipboard (station rail).
   document.addEventListener('astro:page-load', () => {
     const btn = document.querySelector('[data-tmpl-copy]')
     const pre = document.querySelector('[data-tmpl]')
@@ -192,18 +194,16 @@ const STRIP = line.stations.map((s) => ({
 <style>
   .st { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
   .sep { color: var(--color-ink-5); }
-  .g { color: var(--color-line-g); }
+  .lname { color: var(--accent); }
   .ink { color: var(--color-ink); }
-  .sig { color: var(--color-signal); }
-  .k { color: var(--color-line-k); } .r { color: var(--color-line-r); } .b { color: var(--color-line-b); } .v { color: var(--color-line-v); }
 
   .hero { padding: 40px 0 30px; border-bottom: 1px solid var(--color-edge); }
   .crumb { font-size: 11px; letter-spacing: 0.14em; color: var(--color-ink-4); margin-bottom: 22px; }
   .badges { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 18px; }
-  .bg-line { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border: 1.5px solid var(--color-line-g); color: var(--color-line-g); font-weight: 700; font-size: 19px; }
-  .bg-code { display: inline-flex; align-items: center; justify-content: center; min-width: 50px; height: 40px; padding: 0 10px; background: var(--color-line-g); color: #06120a; font-weight: 800; font-size: 20px; }
-  .bg-status { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--color-line-g); color: var(--color-line-g); padding: 6px 11px; font-size: 10.5px; letter-spacing: 0.12em; }
-  .bg-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--color-line-g); }
+  .bg-line { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border: 1.5px solid var(--accent); color: var(--accent); font-weight: 700; font-size: 19px; }
+  .bg-code { display: inline-flex; align-items: center; justify-content: center; min-width: 50px; height: 40px; padding: 0 10px; background: var(--accent); color: #06120a; font-weight: 800; font-size: 20px; }
+  .bg-status { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--accent); color: var(--accent); padding: 6px 11px; font-size: 10.5px; letter-spacing: 0.12em; }
+  .bg-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
   .title { font-weight: 800; font-size: clamp(40px, 7vw, 86px); line-height: 0.96; letter-spacing: -0.05em; margin: 0; color: var(--color-ink); }
   .cq { font-size: clamp(18px, 2.4vw, 26px); line-height: 1.3; color: var(--color-signal); margin: 22px 0 0; max-width: 24ch; }
   .outcome { max-width: 60ch; font-size: 15px; line-height: 1.6; color: var(--color-ink-3); margin: 20px 0 0; }
@@ -212,29 +212,29 @@ const STRIP = line.stations.map((s) => ({
   .strip { display: flex; align-items: center; margin-top: 32px; max-width: 460px; }
   .strip-seg { display: flex; align-items: center; flex: 1; }
   .strip-node { position: relative; display: inline-flex; flex-direction: column; align-items: center; gap: 7px; }
-  .strip-dot { width: 13px; height: 13px; border-radius: 50%; border: 2.5px solid var(--color-line-g); }
+  .strip-dot { width: 13px; height: 13px; border-radius: 50%; border: 2.5px solid var(--accent); }
   .strip-code { font-size: 10px; font-weight: 700; }
-  .strip-line { flex: 1; height: 2px; background: var(--color-line-g); }
+  .strip-line { flex: 1; height: 2px; background: var(--accent); }
 
   .body { display: grid; grid-template-columns: 1fr 340px; gap: 40px; padding: 36px 0 64px; align-items: start; }
   .main { display: grid; gap: 34px; min-width: 0; }
   .beat.top { border-top: 1px solid var(--color-edge); padding-top: 28px; }
   .bk { font-size: 11px; letter-spacing: 0.16em; margin-bottom: 14px; }
-  .bk.magenta { color: var(--color-magenta); } .bk.green { color: var(--color-line-g); } .bk.gold { color: var(--color-line-k); } .bk.blue { color: var(--color-line-b); } .bk.violet { color: var(--color-line-v); }
+  .bk.magenta { color: var(--color-magenta); } .bk.green { color: var(--accent); } .bk.gold { color: var(--color-signal); } .bk.blue { color: var(--color-line-b); } .bk.violet { color: var(--color-line-v); }
   .lead { font-size: clamp(18px, 2.2vw, 23px); line-height: 1.45; color: var(--color-ink); margin: 0; }
   .p { font-size: 15px; line-height: 1.6; color: var(--color-ink-3); margin: 16px 0 0; }
   .p.mb { font-size: 16px; line-height: 1.55; color: var(--color-ink-2); margin: 0 0 22px; }
   .p strong { color: var(--color-ink); font-weight: 700; }
   .steps { display: grid; gap: 12px; }
   .step { display: flex; gap: 16px; align-items: baseline; border: 1px solid var(--color-edge); background: var(--color-panel); padding: 15px 18px; }
-  .sn { font-weight: 800; font-size: 18px; color: var(--color-line-g); flex: none; }
+  .sn { font-weight: 800; font-size: 18px; color: var(--accent); flex: none; }
   .stext { font-size: 14.5px; line-height: 1.5; color: var(--color-ink); }
   .chips { display: flex; flex-wrap: wrap; gap: 10px; }
   .chip { font-size: 12px; color: var(--color-ink); border: 1px solid var(--color-edge-2); padding: 9px 13px; }
   .vlist { display: grid; gap: 10px; }
   .vrow { display: flex; gap: 12px; align-items: center; font-size: 14px; color: var(--color-ink); }
   .arr { color: var(--color-line-b); }
-  .ghostq { border-left: 2px solid var(--color-line-g); padding-left: 16px; margin: 0; display: grid; gap: 10px; }
+  .ghostq { border-left: 2px solid var(--accent); padding-left: 16px; margin: 0; display: grid; gap: 10px; }
   .ghostq p { font-size: 15px; line-height: 1.6; color: var(--color-ink-2); margin: 0; font-style: italic; }
 
   .rail { position: sticky; top: 20px; display: grid; gap: 16px; }
@@ -256,7 +256,7 @@ const STRIP = line.stations.map((s) => ({
   .next { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--color-edge); padding: 28px 0 56px; }
   .next-k { font-size: 11px; letter-spacing: 0.12em; color: var(--color-ink-4); }
   .next-id { display: flex; align-items: center; gap: 14px; opacity: 0.6; }
-  .next-code { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 34px; padding: 0 9px; border: 1px solid var(--color-line-g); color: var(--color-line-g); font-weight: 800; font-size: 15px; }
+  .next-code { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 34px; padding: 0 9px; border: 1px solid var(--accent); color: var(--accent); font-weight: 800; font-size: 15px; }
   .next-title { font-weight: 700; font-size: 18px; color: var(--color-ink-3); }
   .next-status { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--color-edge-2); color: var(--color-ink-4); padding: 5px 10px; font-size: 10px; letter-spacing: 0.1em; }
 

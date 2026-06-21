@@ -3,8 +3,9 @@ line: "k"
 index: 2
 title: "SIGNALS"
 skill: "Tracking signal inspection."
-status: "locked"
-teaser: "Reading pixels, cookies, SDKs, consent flows and request patterns."
+status: "announced"
+dropDate: "2026-07"
+teaser: "Open the dev tools. Watch what loads before you click — pixels, cookies, SDKs, third-party domains."
 sources: []
 missionMinutes: "90 min"
 ghostFragment:

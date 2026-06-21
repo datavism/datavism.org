@@ -9,6 +9,12 @@ This is the **actionable contract** for connecting datavism.org accounts to the 
 data-snack identity. It tells you what datavism builds, the exact shared shape, and the
 two doc-drifts to avoid.
 
+> **Scope — technical only.** This contract covers data shapes, transport, and ownership.
+> The *meaning* of datavism's own fields (what `line` values stand for, how onboarding
+> collects them) is datavism's story/product domain and is **out of scope here** — defined
+> in datavism's own story docs, not in this bridge contract. data-snack stores those fields
+> opaquely and never reads them.
+
 ---
 
 ## TL;DR — what we build on datavism.org
@@ -54,8 +60,8 @@ Pick **A** unless there's a concrete reason not to. We'll need the `data-snack` 
    on redeem, look up `crew/{uid}` → **import `passport.codename`** into the datavism store.
 2. **Onboarding → write `crew/{uid}.datavism`** with the `line` affinity (schema below).
 
-Same email across devices = same `uid`. The codename is the stable cross-platform handle
-(MINSKY-DRIFT stays MINSKY-DRIFT — do not regenerate).
+Same email across devices = same `uid`. The codename is the stable cross-platform handle —
+read it from the crew doc and keep it; do not regenerate it.
 
 ---
 
@@ -71,8 +77,8 @@ crew/{uid} = {
     recovery_code: string,
     // ...full PassportData (version 2) compatible
   },
-  datavism?: {                 // ← WE OWN this; data-snack never touches it
-    line: 'G' | 'K' | 'R' | 'B' | 'V',
+  datavism?: {                 // ← WE OWN this; data-snack stores it opaquely
+    line: string,              // affinity code, current values 'G'|'K'|'R'|'B'|'V'
     enrolledLines: string[],
     completedStations: string[],
     cohortIds: string[],
@@ -80,17 +86,17 @@ crew/{uid} = {
 }
 ```
 
-`line` maps to the Data Underground transit lines: **G**=GHOST/Foundation, **K**=Key, **R**=Rook,
-**B**=Bite, **V**=Vesper (see `docs/STORY.md` §6).
+`line` and the other `datavism` fields are **our** vocabulary — their allowed values and
+meaning are defined in datavism's own story/product docs, not here. To the bridge they are
+opaque strings that data-snack stores verbatim and never interprets.
 
 ---
 
 ## ⚠ Two doc-drifts — do NOT trip on these
 
-1. **Use `line`, not `role`.** Binding: `line: 'G'|'K'|'R'|'B'|'V'`. The old
-   `role: warrior|rebel|artist|explorer` + `motivation` is **retired** (Data Underground rework).
-   Onboarding mapping — *"Welche Frage treibt dich?"*: Wem nützt es? → **R** · Wie ist es gebaut? → **K** ·
-   Warum bleiben wir? → **B** · Was bleibt? → **V** · Foundation/GHOST → **G**.
+1. **Use `line`, not `role`.** The field is a `line` string (current agreed values
+   `'G'|'K'|'R'|'B'|'V'`). The old `role: warrior|rebel|artist|explorer` + `motivation`
+   is **retired**. How those values are chosen/what they mean lives in our story docs, not here.
 
 2. **Passport is v2 + snake_case.** Build against the data-snack `src/lib/passport.ts` shape
    (snake_case `visited_snacks`, key `data_snack_passport`), not the older ADR-004 camelCase snippet.

@@ -18,10 +18,14 @@ function mockRes() {
 }
 
 describe('api/ghost handler (no-network paths)', () => {
-  const orig = process.env.GEMINI_API_KEY
+  const origKey = process.env.GEMINI_API_KEY
+  const origUrl = process.env.UPSTASH_REDIS_REST_URL
+  const origTok = process.env.UPSTASH_REDIS_REST_TOKEN
+  const restore = (k: string, v: string | undefined) => (v === undefined ? delete process.env[k] : (process.env[k] = v))
   afterEach(() => {
-    if (orig === undefined) delete process.env.GEMINI_API_KEY
-    else process.env.GEMINI_API_KEY = orig
+    restore('GEMINI_API_KEY', origKey)
+    restore('UPSTASH_REDIS_REST_URL', origUrl)
+    restore('UPSTASH_REDIS_REST_TOKEN', origTok)
   })
 
   it('405 on a non-POST method', async () => {
@@ -38,10 +42,20 @@ describe('api/ghost handler (no-network paths)', () => {
     expect(res.body).toEqual({ error: 'not-configured' })
   })
 
-  it('400 when messages is not an array', async () => {
+  it('400 when messages is not an array (validation precedes the limiter)', async () => {
     process.env.GEMINI_API_KEY = 'k'
     const res = mockRes()
     await handler({ method: 'POST', body: { messages: 'nope' } }, res)
     expect(res.code).toBe(400)
+  })
+
+  it('503 fails closed when the key is set but no rate limiter is configured', async () => {
+    process.env.GEMINI_API_KEY = 'k'
+    delete process.env.UPSTASH_REDIS_REST_URL
+    delete process.env.UPSTASH_REDIS_REST_TOKEN
+    const res = mockRes()
+    await handler({ method: 'POST', body: { messages: [{ role: 'user', content: 'hi' }] } }, res)
+    expect(res.code).toBe(503)
+    expect(res.body).toEqual({ error: 'ratelimit-not-configured' })
   })
 })

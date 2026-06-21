@@ -32,15 +32,17 @@
         body: JSON.stringify({ messages: next }),
       })
       const data = await res.json().catch(() => ({}))
-      // only the permanent "no key configured" 503 flips to the offline panel;
-      // a transient 503 falls through to the generic error so the user can retry.
-      if (res.status === 503 && data?.error === 'not-configured') { offline = true; return }
+      // permanent deployment-config states (no key, or no rate limiter) → offline
+      // panel. A transient 503 falls through to a retryable error.
+      if (res.status === 503 && (data?.error === 'not-configured' || data?.error === 'ratelimit-not-configured')) { offline = true; return }
       if (!res.ok) {
-        error = data?.error === 'safety-blocked'
-          ? 'GHOST declined that one. Keep it to the method.'
-          : data?.error === 'too-long'
-            ? 'That is too long — trim it down.'
-            : 'GHOST hit an error. Try again.'
+        error = res.status === 429
+          ? 'GHOST is at its limit right now — try again in a minute.'
+          : data?.error === 'safety-blocked'
+            ? 'GHOST declined that one. Keep it to the method.'
+            : data?.error === 'too-long'
+              ? 'That is too long — trim it down.'
+              : 'GHOST hit an error. Try again.'
         return
       }
       messages = [...next, { role: 'assistant', content: data.reply }]

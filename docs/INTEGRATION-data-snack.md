@@ -97,8 +97,12 @@ opaque strings that data-snack stores verbatim and never interprets.
 
 ## API contract (concrete — build against these)
 
-All three are gen2 HTTPS functions, `region=europe-west3`, project `data-snack`. Exact URLs handed
-over after deploy (`https://europe-west3-data-snack.cloudfunctions.net/<name>`).
+All three are gen2 HTTPS functions, `region=europe-west3`, project `data-snack`. **Live (deployed +
+smoke-tested 2026-06-21):**
+
+- `https://europe-west3-data-snack.cloudfunctions.net/requestMagicLink`
+- `https://europe-west3-data-snack.cloudfunctions.net/redeemMagicLink`
+- `https://europe-west3-data-snack.cloudfunctions.net/setDatavismProfile`
 
 ```
 POST requestMagicLink            (no auth — public)
@@ -139,7 +143,7 @@ POST setDatavismProfile          (auth: Authorization: Bearer <our Firebase ID t
 ## Build checklist (datavism side)
 
 - [x] Transport = Option A (decided)
-- [ ] Obtain `data-snack` Firebase web config + confirm `datavism.org` in Auth authorized domains
+- [ ] Obtain `data-snack` Firebase web config (`PUBLIC_FIREBASE_*`, from data-snack's `.env`) → our `.env`
 - [ ] Add Firebase client SDK, init against project `data-snack`
 - [ ] `/connect` page: email → `requestMagicLink({app:'datavism'})` → on `?token` redeem →
       `signInWithCustomToken` → read `crew/{uid}` → import `passport.codename`
@@ -147,9 +151,10 @@ POST setDatavismProfile          (auth: Authorization: Bearer <our Firebase ID t
 - [ ] Handle returning-connected-user state
 - [ ] Keep this file in sync with the data-snack mirror
 
-**Waiting on data-snack:** deploy of the origin-aware functions + `setDatavismProfile`, and the
-Firebase config / authorized-domain handover. The API contract above is final — you can build the
-`/connect` UI against it now and point at the URLs once they land.
+**data-snack side is ready:** the three functions are live + smoke-tested (URLs above). No Firebase
+Auth provisioning is needed — the browser key is unrestricted and `signInWithCustomToken` + Firestore
+reads don't use authorized domains. **Only blocker:** copy the `PUBLIC_FIREBASE_*` config across. The
+API contract is final — build `/connect` against it now.
 
 ---
 

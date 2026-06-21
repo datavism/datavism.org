@@ -514,7 +514,10 @@ export function getOpenStations(): StationWithLine[] {
 }
 
 export function getAnnouncedStations(): StationWithLine[] {
-  return STATIONS.filter((station) => station.status === 'announced');
+  // Widen `status` so this typechecks even when the current canon contains no
+  // announced station (the `as const` data would otherwise narrow the union to
+  // 'open' | 'locked' and TS flags the comparison as dead).
+  return STATIONS.filter((station) => (station.status as StationStatus) === 'announced');
 }
 
 export function getLockedStations(): StationWithLine[] {

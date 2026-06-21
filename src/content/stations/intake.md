@@ -44,25 +44,22 @@ artifactDesc: "A described, classified source inventory — with reliability, ca
 artifactTemplate: |
   # Intake Sheet — [Investigation Title]
 
-  ## 1. Investigation Question
+  ## Investigation Question
   From G1.
 
-  ## 2. Source Inventory
-  | ID | Source | Type | Owner | Accessed | Contains | Does NOT contain | Reliability |
-  |----|--------|------|-------|----------|----------|------------------|-------------|
+  ## Source Table
+  Rule: keep the raw material. Do not replace a source with an AI summary.
 
-  ## 3. Field Map (if structured data)
-  | Field | Meaning | Example | Caveat |
-  |-------|---------|---------|--------|
+  | ID | Source Type | Title / Label | URL / Location | Accessed At | Actor | Relevant Claim | Raw Material | Extracted Fields | Transformation | AI Use | Confidence | Notes |
+  |----|-------------|---------------|----------------|-------------|-------|----------------|--------------|------------------|----------------|--------|------------|-------|
+  | S1 |             |               |                |             |       |                |              |                  |                |        |            |       |
 
-  ## 4. Strongest / Weakest Source
+  ## Strongest / Weakest Source
   Which to lean on; which to distrust.
 
-  ## 5. Smallest Evidence Set
+  ## Smallest Evidence Set
   The minimum needed for the next step.
-
-  ## 6. Caveats
-  What this source trail cannot prove yet.
+stationSentence: "Evidence starts as messy intake."
 selfChecks:
   - "I can distinguish a source from a claim from an interpretation."
   - "I can create a source inventory with metadata."

@@ -35,6 +35,7 @@ const stations = defineCollection({
     bridge: z.string().optional(),
     artifactDesc: z.string().optional(),
     artifactTemplate: z.string().optional(), // copyable markdown the learner fills in
+    stationSentence: z.string().optional(), // memorable closing line (canon "Station Sentence")
   }),
 })
 

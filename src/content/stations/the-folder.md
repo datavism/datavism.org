@@ -60,22 +60,29 @@ artifactTemplate: |
   # Your First Case File — [Working Title]
 
   ## 1. Suspicion
-  What feels wrong, invasive, manipulative or unexplained?
+  What feels wrong, strange or important?
 
-  ## 2. Claim
-  What exactly might the system be doing?
+  ## 2. System
+  What system may be involved?
 
-  ## 3. Question
-  What can be tested?
+  ## 3. Actor
+  Who might create, operate or benefit from it?
 
-  ## 4. Evidence Needed
-  What data, documents, observations or sources could answer the question?
+  ## 4. Question
+  What exactly are we investigating? One testable sentence.
 
-  ## 5. Limits
-  What can we not claim yet?
+  ## 5. Evidence Need
+  What would answer the question?
 
-  ## 6. Next Step
-  What is the smallest next investigation move?
+  ## 6. Source Lead
+  Where could evidence be found?
+
+  ## 7. Assumptions
+  What is not yet proven?
+
+  ## 8. Public Relevance
+  Why does this matter beyond one person?
+stationSentence: "A feeling is not evidence. But it can become the beginning of a question."
 ---
 
 THE FOLDER is the first station on LINE G. The GHOST fragment above is a DRAFT

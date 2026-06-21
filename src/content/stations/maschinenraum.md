@@ -44,29 +44,36 @@ artifactDesc: "An honest evaluation of your whole workflow, plus a first public-
 artifactTemplate: |
   # Eval Report — [Investigation Title]
 
-  ## 1. Original vs Revised Question
-  What you began with; how it improved.
+  ## 1. Investigation Question
+  Final version.
 
-  ## 2. AI Use
-  Where it helped. Where it failed. Where it could mislead.
+  ## 2. Evidence Need
+  What evidence was required?
 
-  ## 3. Source Trail
-  The sources, traceable.
+  ## 3. Command Review
+  How AI was used — and where it failed.
 
-  ## 4. Verified Claims
-  What survived verification.
+  ## 4. Intake Review
+  What sources / material were collected.
 
-  ## 5. Uncertain Claims
-  What remains unclear.
+  ## 5. Verification Review
+  Which claims were checked.
 
-  ## 6. Method Weaknesses
-  Where the investigation is still weak.
+  ## 6. Weakest Link
+  The biggest methodological weakness.
 
-  ## 7. Public Summary
-  What can be responsibly shared.
+  ## 7. Uncertainty
+  What remains unknown.
 
-  ## 8. Next Case
-  What to investigate next — and on which line.
+  ## 8. Ethical Risk
+  What could cause harm if published.
+
+  ## 9. Readiness
+  Not ready / internal only / publishable with caveats / ready.
+
+  ## 10. Next Step
+  Continue, revise, expand, or move to a thematic line.
+stationSentence: "The machine room is where confidence goes to be inspected."
 selfChecks:
   - "I can explain the full DATAVISM workflow."
   - "I can show how my question changed."

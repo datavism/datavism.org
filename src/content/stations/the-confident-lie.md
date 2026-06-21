@@ -44,28 +44,22 @@ artifactDesc: "A claim-by-claim audit of fluent AI output: what survived, what b
 artifactTemplate: |
   # Verification Protocol — [Investigation Title]
 
-  ## 1. AI Output Under Review
-  Paste or summarize the output.
+  ## AI Output Under Review
+  Paste or summarize the output being checked.
 
-  ## 2. Claim Table
-  | Claim | Source | Source says | AI says | Status | Correction |
-  |-------|--------|-------------|---------|--------|------------|
-  (Status: Verified / Unsupported / Misleading / Contradicted / Unclear)
+  ## Claim Table
+  | Claim ID | Claim | Source Given | Source Checked | Evidence | Status | Correction | Uncertainty | Risk |
+  |----------|-------|--------------|----------------|----------|--------|------------|-------------|------|
+  | C1 |       |              |                |          |        |            |             |      |
 
-  ## 3. What Survived
-  Verified claims.
+  Status: Supported / Partly supported / Unsupported / False / Unclear
 
-  ## 4. What Broke
-  Failed, misleading or contradicted claims.
+  ## Corrected Summary
+  A version that says only what the sources can carry.
 
-  ## 5. Missing Caveats
-  What should have been said and was not.
-
-  ## 6. Corrected Summary
-  A version that says only what can be supported.
-
-  ## 7. Remaining Unknowns
+  ## Remaining Unknowns
   What still needs checking.
+stationSentence: "The most dangerous lie is the one that sounds like work already done."
 selfChecks:
   - "I can extract claims from fluent text."
   - "I can verify a claim against a source."

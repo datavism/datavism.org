@@ -44,26 +44,27 @@ artifactDesc: "Your three commands, the problems you caught, and the final reusa
 artifactTemplate: |
   # Command Log — [Investigation Title]
 
-  ## 1. Starting Question
+  ## Starting Question
   The question from G1.
 
-  ## 2. Command v1
-  Your first prompt — and the output it produced.
+  ---
 
-  ## 3. Output Problems
-  What was vague, false, generic or unhelpful?
+  ## Command 1
+  - **Goal:** What did I need the AI to help with?
+  - **Input:** What context did I provide?
+  - **Command Version:** v1
+  - **Constraints:** What did I forbid or require?
+  - **Output:** What did the AI produce?
+  - **Failure:** What was wrong, vague, invented or incomplete?
+  - **Revision:** How did I improve the command?
+  - **Useful Result:** What survived?
+  - **Verification Need:** What still must be checked?
 
-  ## 4. Command v2 / v3
-  The improved prompt(s): role, constraints, evidence rules, output format.
+  *(Repeat the block for each version: Command 2, Command 3 …)*
 
-  ## 5. Useful Output
-  What the AI actually helped clarify.
-
-  ## 6. Risks
-  Where the AI could still be wrong.
-
-  ## 7. Reusable Command
+  ## Reusable Command
   The final prompt template, ready to reuse.
+stationSentence: "Prompts are not vibes. Prompts are working specs."
 selfChecks:
   - "I can explain the difference between asking and commanding."
   - "I can write constraints for an AI task."

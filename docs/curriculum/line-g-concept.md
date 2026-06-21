@@ -1,3 +1,6 @@
+> **Superseded as curriculum canon by [`line-g.md`](line-g.md) (v0.1, 2026-06-21).**
+> This file is retained for the **Stufe-A build plan (§11)** that drove the live build.
+
 # LINE G — GHOST / Foundation
 
 **The Initiation Track of the Evidence Engine**

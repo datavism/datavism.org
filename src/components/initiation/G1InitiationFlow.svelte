@@ -84,6 +84,22 @@
     a.href = url; a.download = `${draft.id}.png`; a.click()
   }
 
+  let showUpgrade = $state(false)
+  let contributeMsg = $state('')
+
+  function upgradeFields() {
+    draft.stage = deriveStage(draft)
+    draft.updatedAt = new Date().toISOString()
+    saveCard($state.snapshot(draft))
+  }
+  async function contribute() {
+    const payload = { ...$state.snapshot(draft), visibility: 'public-anonymous', suspicion: undefined }
+    const ok = await copyText(JSON.stringify(payload, null, 2))
+    contributeMsg = ok
+      ? 'Anonymized payload copied. Nothing was posted — send it in if you want it curated into the Archive.'
+      : 'Copy failed — your card stays private on this device.'
+  }
+
   // gating
   const canSuspicion = $derived((draft.suspicion ?? '').trim().length >= 10)
   const canQuestion = $derived((draft.question ?? '').trim().length >= 10)
@@ -173,6 +189,25 @@
         <button class="act" onclick={doJson}>Download .json</button>
         <button class="act" onclick={doPng}>Download .png</button>
       </div>
+      <div class="upgrade">
+        {#if !showUpgrade}
+          <button class="ghostbtn" onclick={() => (showUpgrade = true)}>Make it a full Case File →</button>
+        {:else}
+          <p class="ghost">Three more fields turn the Signal Card into Case File #1.</p>
+          <label class="fld">Actor<input bind:value={draft.actor} placeholder="Who creates, operates or benefits?" /></label>
+          <label class="fld">Source lead<input bind:value={draft.sourceLead} placeholder="Where could evidence be found?" /></label>
+          <label class="fld">Public relevance<input bind:value={draft.publicRelevance} placeholder="Why does this matter beyond one person?" /></label>
+          <button class="go" onclick={upgradeFields}>Save Case File</button>
+        {/if}
+      </div>
+
+      <div class="contribute">
+        <p class="muted">Your card is private on this device. You can keep it that way, export it, or contribute an anonymized copy.</p>
+        <button class="ghostbtn" onclick={contribute}>Contribute anonymously (copy payload)</button>
+        {#if contributeMsg}<p class="muted ok">{contributeMsg}</p>{/if}
+        <a class="muted link" href="/archive">View the Signal Archive →</a>
+      </div>
+
       <div class="nav"><button class="ghostbtn" onclick={restart}>Start another →</button></div>
     </div>
   {/if}
@@ -207,4 +242,11 @@
   .actions { display: flex; flex-wrap: wrap; gap: 8px; }
   .act { background: var(--color-panel-2); border: 1px solid var(--color-edge-2); color: var(--color-ink); font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em; padding: 10px 14px; cursor: pointer; }
   .act:hover { border-color: var(--color-line-g); }
+  .upgrade { display: grid; gap: 10px; border-top: 1px solid var(--color-edge); padding-top: 16px; }
+  .fld { display: grid; gap: 4px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--color-ink-4); text-transform: uppercase; }
+  .fld input { background: var(--color-bg); border: 1px solid var(--color-edge-2); color: var(--color-ink); font: inherit; font-size: 14px; text-transform: none; letter-spacing: 0; padding: 10px; }
+  .contribute { display: grid; gap: 8px; border-top: 1px solid var(--color-edge); padding-top: 16px; }
+  .muted { font-size: 12px; line-height: 1.55; color: var(--color-ink-4); margin: 0; }
+  .muted.ok { color: var(--color-line-g); }
+  .link { color: var(--color-signal); text-decoration: none; }
 </style>

@@ -22,43 +22,46 @@ two doc-drifts to avoid.
 1. **Bridge = one shared Firestore document** `crew/{uid}` in GCP project **`data-snack`**.
    Key is the **email → Firebase Auth uid**. Mechanism is **Magic Link** (no OAuth, no password).
 2. **Read the codename from `crew/{uid}.passport.codename` and keep it.** Never regenerate it.
-3. **We write only `crew/{uid}.datavism`**, using the **`line`** schema (`G/K/R/B/V`) —
-   NOT the retired `role` schema.
-4. **Transport decision is open** — recommended **Option A** below.
+3. **We write only `crew/{uid}.datavism`**, via the `setDatavismProfile` function (not a direct
+   Firestore write) — using the `line` field, NOT the retired `role` schema.
+4. **Transport: Option A (decided 2026-06-21)** — Firebase client SDK + `data-snack` config.
 
 ---
 
-## Our situation + the one open decision
+## Transport: Option A (decided)
 
-datavism.org is **Astro 6 with no auth backend wired yet** (no Supabase, no Firebase). That's an
-advantage: there's no conflicting store, so we can adopt the shared Firestore cleanly.
+datavism.org is **Astro 6 with no auth backend wired yet** (no Supabase, no Firebase). No conflicting
+store → we adopt the shared Firestore cleanly.
 
 | Option | What datavism does | Verdict |
 |---|---|---|
-| **A — Firebase SDK** | Add the Firebase client SDK + the `data-snack` project config; read/write `crew/{uid}` directly as the authenticated user | ✅ **Recommended** — schema-ready, lowest friction, both sites are Astro |
-| **B — Server-to-server** | Call a `data-snack` Cloud Function that reads/patches `crew/{uid}` | cleaner trust boundary, needs a new endpoint |
+| **A — Firebase SDK** | Add the Firebase client SDK + the `data-snack` project config; read `crew/{uid}` directly, write `.datavism` via `setDatavismProfile` | ✅ **Chosen** — schema-ready, lowest friction, both sites are Astro |
+| **B — Server-to-server** | Call a `data-snack` Cloud Function for every read/patch | cleaner trust boundary, more endpoints |
 | **C — Mirror locally** | copy `crew` into a separate datavism store | ❌ breaks single source of truth |
 
-Pick **A** unless there's a concrete reason not to. We'll need the `data-snack` Firebase web config
-(`PUBLIC_FIREBASE_*`) and the project's Firestore rules to permit a matching-uid `.datavism` write
-(or expose a small Function for it).
+We need from data-snack: the Firebase web config (`PUBLIC_FIREBASE_*`, project `data-snack`) and
+`datavism.org` added to **Firebase Auth → Authorized domains**. No Firestore rules change is needed —
+reads use the existing matching-uid rule, the `.datavism` write goes through `setDatavismProfile`.
 
 ---
 
 ## The flow (Magic Link)
 
-**Already built on the data-snack side** (we consume it, we don't rebuild it):
+**Already built on the data-snack side** (we consume it, we don't rebuild it — origin-aware as of
+2026-06-21, pending deploy):
 
-- `requestMagicLink` — `{email, recoveryCode?, codename?}` → 15-min JWT → `magic_links/{jti}` → mail.
+- `requestMagicLink` — `{email, app?, recoveryCode?, codename?}` → 15-min JWT → `magic_links/{jti}`
+  → mail. We send **`app:'datavism'`** so the link lands on `https://datavism.org/connect`.
 - `redeemMagicLink` — verifies (single-use) → get-or-create Firebase Auth user by email →
   **upserts `crew/{uid}`** with `{uid, email, signed_up_at, passport:{codename, recovery_code}}` →
   mints a custom token.
+- `setDatavismProfile` — our write path for `crew/{uid}.datavism`; auth via our Firebase **ID token**.
 
 **What we build on datavism.org:**
 
-1. **`/connect`** — user enters the *same* email → trigger a magic link →
-   on redeem, look up `crew/{uid}` → **import `passport.codename`** into the datavism store.
-2. **Onboarding → write `crew/{uid}.datavism`** with the `line` affinity (schema below).
+1. **`/connect`** — user enters the *same* email → `requestMagicLink` (`app:'datavism'`) →
+   on redeem (`signInWithCustomToken`), look up `crew/{uid}` → **import `passport.codename`**.
+2. **Onboarding → call `setDatavismProfile`** to write `crew/{uid}.datavism` (the `line` affinity).
 
 Same email across devices = same `uid`. The codename is the stable cross-platform handle —
 read it from the crew doc and keep it; do not regenerate it.
@@ -92,6 +95,36 @@ opaque strings that data-snack stores verbatim and never interprets.
 
 ---
 
+## API contract (concrete — build against these)
+
+All three are gen2 HTTPS functions, `region=europe-west3`, project `data-snack`. Exact URLs handed
+over after deploy (`https://europe-west3-data-snack.cloudfunctions.net/<name>`).
+
+```
+POST requestMagicLink            (no auth — public)
+  body: { email: string, app: 'datavism',
+          recoveryCode?: string, codename?: string }
+  → 202 { ok: true, mail: 'sent' | 'queued' }  |  202 { ok:true, deduplicated:true }
+  → 400 { error: 'invalid-email' }
+  app:'datavism' → link lands on https://datavism.org/connect?token=…
+
+POST redeemMagicLink             (no auth — the JWT in the body IS the proof)
+  body: { token: string }        // the ?token from the redeem URL
+  → 200 { customToken: string, uid: string, email: string }
+  → 400 invalid-or-expired | 404 unknown-jti | 409 already-redeemed | 410 expired
+  then: signInWithCustomToken(customToken) → read crew/{uid} → keep passport.codename
+
+POST setDatavismProfile          (auth: Authorization: Bearer <our Firebase ID token>)
+  body: { line?: string, enrolledLines?: string[],
+          completedStations?: string[], cohortIds?: string[] }
+  → 200 { ok: true }             // REPLACES the whole crew/{uid}.datavism object
+  → 401 missing-bearer | invalid-token
+  → 409 not-crew                 // user hasn't completed the magic-link upgrade yet
+  Send the full datavism profile each call; values are stored verbatim.
+```
+
+---
+
 ## ⚠ Two doc-drifts — do NOT trip on these
 
 1. **Use `line`, not `role`.** The field is a `line` string (current agreed values
@@ -105,11 +138,18 @@ opaque strings that data-snack stores verbatim and never interprets.
 
 ## Build checklist (datavism side)
 
-- [ ] Transport decision (Option A recommended) + obtain `data-snack` Firebase config
-- [ ] `/connect` page: email → magic link → redeem → import `passport.codename`
-- [ ] Onboarding writes `crew/{uid}.datavism` with the `line` schema
-- [ ] Confirm Firestore rule path for the matching-uid `.datavism` write
+- [x] Transport = Option A (decided)
+- [ ] Obtain `data-snack` Firebase web config + confirm `datavism.org` in Auth authorized domains
+- [ ] Add Firebase client SDK, init against project `data-snack`
+- [ ] `/connect` page: email → `requestMagicLink({app:'datavism'})` → on `?token` redeem →
+      `signInWithCustomToken` → read `crew/{uid}` → import `passport.codename`
+- [ ] Onboarding → `setDatavismProfile` (full `datavism` payload, Bearer ID token)
+- [ ] Handle returning-connected-user state
 - [ ] Keep this file in sync with the data-snack mirror
+
+**Waiting on data-snack:** deploy of the origin-aware functions + `setDatavismProfile`, and the
+Firebase config / authorized-domain handover. The API contract above is final — you can build the
+`/connect` UI against it now and point at the URLs once they land.
 
 ---
 

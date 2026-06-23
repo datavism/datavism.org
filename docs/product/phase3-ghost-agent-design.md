@@ -35,9 +35,13 @@ src/pages/ghost.astro        the /ghost page
 - **Config-gated + manual:** the live Gemini call — verified once `GEMINI_API_KEY` is set, via `vercel dev` or a preview deploy.
 - Gates: `astro check` 0/0/0, `astro build` green (still static), `vitest` all pass.
 
-## Non-goals (v0.1) — accepted risks
+## Rate limiting (implemented)
 
-Streaming responses, cross-session memory, vector RAG, a floating site-wide widget. **Per-IP rate limiting is deliberately deferred** (only per-request caps in v0.1): the `/api/ghost` endpoint is unauthenticated and public, so per-request input/output caps bound cost *per call* but not call *volume*. **Tracked risk** — before any high-traffic launch, add per-IP rate limiting (Vercel Edge Config or Upstash Redis); marked with a `TODO v0.2` in `api/ghost.ts`. Low-traffic preview is acceptable; watch the Gemini quota.
+The `/api/ghost` endpoint is unauthenticated and public, so per-request input/output caps bound cost *per call* but not call *volume*. To protect the Gemini budget, the endpoint enforces (`src/lib/ghost/ratelimit.ts` — Upstash Redis REST, no SDK dep): a **per-IP/minute burst guard** and a **HARD global daily cap** (`RL_LIMITS` — `perIpPerMin: 12`, `globalPerDay: 500`) that bounds worst-case daily spend regardless of attacker count. It **fails closed**: when `GEMINI_API_KEY` is set but `UPSTASH_*` is not, the endpoint returns 503 and GHOST cannot run uncapped. Backed by free Upstash Redis. Belt-and-braces: also set a budget/quota cap on the Gemini key in Google AI Studio / Cloud (ideally a *dedicated datavism key*, not the shared data-snack one).
+
+## Non-goals (v0.1)
+
+Streaming responses, cross-session memory, vector RAG, a floating site-wide widget. Per-account limits (only per-IP + global daily in v0.1).
 
 ## Go-live checklist
 

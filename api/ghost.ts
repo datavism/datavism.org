@@ -23,7 +23,7 @@ export class GhostError extends Error {
   }
 }
 
-export const GHOST_LIMITS = { maxInputChars: 4000, maxTurns: 12, maxOutputTokens: 600 }
+export const GHOST_LIMITS = { maxInputChars: 16000, maxTurns: 12, maxOutputTokens: 600 }
 export const RL_LIMITS = { perIpPerMin: 12, globalPerDay: 500 }
 
 // ── system prompt ───────────────────────────────────────────────────────────
@@ -58,9 +58,14 @@ export async function askGhost(
   const { apiKey, model = 'gemini-2.5-flash-lite', fetchImpl = fetch, limits = GHOST_LIMITS } = opts
   if (!apiKey) throw new GhostError('not-configured')
 
-  const turns = messages.slice(-limits.maxTurns)
+  let turns = messages.slice(-limits.maxTurns)
   if (!turns.length || turns[turns.length - 1].role !== 'user') throw new GhostError('bad-request')
-  if (turns.reduce((n, m) => n + m.content.length, 0) > limits.maxInputChars) throw new GhostError('too-long')
+  // Keep the conversation alive: drop the OLDEST turns until the window fits the
+  // char budget, always keeping the final user turn. Only a single message that
+  // alone overflows the budget is genuinely 'too-long'.
+  const totalChars = (ts: GhostMessage[]) => ts.reduce((n, m) => n + m.content.length, 0)
+  while (turns.length > 1 && totalChars(turns) > limits.maxInputChars) turns = turns.slice(1)
+  if (totalChars(turns) > limits.maxInputChars) throw new GhostError('too-long')
 
   const body = {
     systemInstruction: { parts: [{ text: buildSystemPrompt() }] },

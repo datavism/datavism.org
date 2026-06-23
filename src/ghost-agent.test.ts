@@ -66,6 +66,26 @@ describe('askGhost', () => {
     await expect(askGhost([user('hi')], opts(mockFetch(429, {})))).rejects.toBeInstanceOf(GhostError)
     await expect(askGhost([user('hi')], opts(mockFetch(200, { candidates: [] })))).rejects.toMatchObject({ code: 'empty' })
   })
+  it('trims the oldest turns to fit the budget instead of rejecting a long conversation', async () => {
+    const f = mockFetch(200, { candidates: [{ content: { parts: [{ text: 'ok' }] } }] })
+    const limits = { maxInputChars: 100, maxTurns: 12, maxOutputTokens: 600 }
+    const convo = [
+      { role: 'user' as const, content: 'a'.repeat(60) },
+      { role: 'assistant' as const, content: 'b'.repeat(60) },
+      { role: 'user' as const, content: 'c'.repeat(60) },
+    ]
+    const r = await askGhost(convo, { apiKey: 'k', fetchImpl: f as any, limits })
+    expect(r.reply).toBe('ok')
+    const sent = JSON.parse(f.calls[0].init.body)
+    expect(sent.contents.length).toBe(1) // only the final user turn fits (60 ≤ 100; +any prior = 120 > 100)
+    expect(sent.contents[0].parts[0].text).toBe('c'.repeat(60))
+  })
+  it('still rejects a single message that alone overflows the budget', async () => {
+    const limits = { maxInputChars: 100, maxTurns: 12, maxOutputTokens: 600 }
+    await expect(
+      askGhost([user('x'.repeat(101))], { apiKey: 'k', fetchImpl: mockFetch(200, {}) as any, limits }),
+    ).rejects.toMatchObject({ code: 'too-long' })
+  })
 })
 
 describe('rate limit', () => {

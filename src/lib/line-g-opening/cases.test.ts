@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { LAUNCHPAD_CASES, getCase } from './cases'
+import { LAUNCHPAD_CASES, getCase, terrainFor } from './cases'
 import type { SystemSignal } from '../signal-cards/types'
 
 const VALID_SIGNALS: SystemSignal[] = ['tracking', 'money', 'feed', 'future']
@@ -44,5 +44,15 @@ describe('getCase', () => {
 
   it('returns undefined for an unknown id', () => {
     expect(getCase('nope')).toBeUndefined()
+  })
+})
+
+describe('terrainFor', () => {
+  it('hands a non-empty list of real evidence terrains for each signal', () => {
+    for (const sig of ['tracking', 'money', 'feed', 'future'] as const) {
+      const t = terrainFor(sig)
+      expect(t.places.length).toBeGreaterThan(0)
+      for (const p of t.places) expect(p.url.startsWith('http')).toBe(true)
+    }
   })
 })

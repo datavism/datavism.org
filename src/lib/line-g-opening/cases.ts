@@ -157,3 +157,78 @@ export const LAUNCHPAD_CASES: LaunchpadCase[] = [
 export function getCase(id: string): LaunchpadCase | undefined {
   return LAUNCHPAD_CASES.find((c) => c.id === id)
 }
+
+export type Terrain = { places: { kind: string; example: string; url: string }[] }
+
+const TERRAIN: Record<string, Terrain> = {
+  tracking: {
+    places: [
+      {
+        kind: 'Data-broker registries',
+        example: 'California Data Broker Registry',
+        url: 'https://cppa.ca.gov/data_broker_registry/',
+      },
+      {
+        kind: 'Sanctions & PEP databases',
+        example: 'OpenSanctions',
+        url: 'https://www.opensanctions.org/search/',
+      },
+    ],
+  },
+  money: {
+    places: [
+      {
+        kind: 'Lobby registers',
+        example: 'Lobbyregister (Bundestag)',
+        url: 'https://www.lobbyregister.bundestag.de/startseite',
+      },
+      {
+        kind: 'Campaign-finance records',
+        example: 'TSE Brazil (Prestação de Contas)',
+        url: 'https://dadosabertos.tse.jus.br/dataset/prestacao-de-contas-eleitorais-2024',
+      },
+      {
+        kind: 'Offshore / ownership leaks',
+        example: 'ICIJ Offshore Leaks',
+        url: 'https://offshoreleaks.icij.org/',
+      },
+      {
+        kind: 'Public spending portals',
+        example: 'Vulekamali (South Africa)',
+        url: 'https://vulekamali.gov.za/',
+      },
+    ],
+  },
+  feed: {
+    places: [
+      {
+        kind: 'Platform transparency databases',
+        example: 'EU DSA Transparency DB',
+        url: 'https://transparency.dsa.ec.europa.eu/',
+      },
+      {
+        kind: 'Global media/event databases',
+        example: 'GDELT Project',
+        url: 'https://www.gdeltproject.org/',
+      },
+    ],
+  },
+  future: {
+    places: [
+      {
+        kind: 'Independent emissions tracking',
+        example: 'Climate TRACE',
+        url: 'https://climatetrace.org/data',
+      },
+      {
+        kind: 'Deforestation / satellite monitoring',
+        example: 'Global Forest Watch',
+        url: 'https://www.globalforestwatch.org/dashboards/global/',
+      },
+    ],
+  },
+}
+
+export function terrainFor(signal: string): Terrain {
+  return TERRAIN[signal] ?? { places: [] }
+}

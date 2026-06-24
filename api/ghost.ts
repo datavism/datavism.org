@@ -51,11 +51,27 @@ HARD RULES:
 }
 
 // ── Gemini call ───────────────────────────────────────────────────────────────
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504])
+
 export async function askGhost(
   messages: GhostMessage[],
-  opts: { apiKey: string; model?: string; fetchImpl?: Fetch; limits?: typeof GHOST_LIMITS },
+  opts: {
+    apiKey: string
+    model?: string
+    fetchImpl?: Fetch
+    limits?: typeof GHOST_LIMITS
+    retries?: number
+    sleepImpl?: (ms: number) => Promise<void>
+  },
 ): Promise<{ reply: string }> {
-  const { apiKey, model = 'gemini-2.5-flash-lite', fetchImpl = fetch, limits = GHOST_LIMITS } = opts
+  const {
+    apiKey,
+    model = 'gemini-2.5-flash-lite',
+    fetchImpl = fetch,
+    limits = GHOST_LIMITS,
+    retries = 2,
+    sleepImpl = (ms: number) => new Promise<void>((r) => setTimeout(r, ms)),
+  } = opts
   if (!apiKey) throw new GhostError('not-configured')
 
   let turns = messages.slice(-limits.maxTurns)
@@ -73,12 +89,29 @@ export async function askGhost(
     generationConfig: { maxOutputTokens: limits.maxOutputTokens, temperature: 0.7 },
   }
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`
-  const res = await fetchImpl(url, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  if (!res.ok) throw new GhostError('api-error', `gemini ${res.status}`)
+  // The model returns transient 503 'high demand' / 429 spikes. Retry a few times
+  // with backoff before surfacing a hard error, so a momentary blip never reaches
+  // the user. Non-retryable statuses (e.g. 400) fail fast.
+  let res: Awaited<ReturnType<Fetch>> | undefined
+  let lastInfo = 'network'
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    if (attempt > 0) await sleepImpl(250 * 2 ** (attempt - 1))
+    try {
+      res = await fetchImpl(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+    } catch {
+      lastInfo = 'network'
+      res = undefined
+      continue
+    }
+    if (res.ok) break
+    lastInfo = `gemini ${res.status}`
+    if (!RETRYABLE_STATUS.has(res.status)) break
+  }
+  if (!res || !res.ok) throw new GhostError('api-error', lastInfo)
 
   const data: any = await res.json()
   if (data?.promptFeedback?.blockReason) throw new GhostError('safety-blocked') // input-side block

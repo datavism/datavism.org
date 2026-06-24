@@ -15,7 +15,7 @@
   import { SIGNAL_CARD_DISCLAIMER } from '../../lib/signal-cards/types'
   import type { SignalCard, SystemSignal } from '../../lib/signal-cards/types'
   import { toMarkdown, toJson, downloadFile, copyText } from '../../lib/signal-cards/export'
-  import SignalCard from '../signal-card/SignalCard.svelte'
+  import SignalCardView from '../signal-card/SignalCard.svelte'
   import { domToPng } from 'modern-screenshot'
 
   const { stationId = 'g1-the-folder' } = $props()
@@ -377,7 +377,7 @@
         <p class="ln ghost-line"><span class="gh">GHOST</span>&nbsp;{GHOST_LINES.card}</p>
 
         <div bind:this={cardEl}>
-          <SignalCard card={finalCard} />
+          <SignalCardView card={finalCard} />
         </div>
 
         <div class="actions">

@@ -57,3 +57,6 @@ landing-full*.png
 final-landing.png
 map-*.png
 /*.png
+
+# brainstorming visual companion (local scratch)
+.superpowers/

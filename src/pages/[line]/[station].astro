@@ -7,7 +7,7 @@
 import { getCollection } from 'astro:content'
 import Base from '../../layouts/Base.astro'
 import SelfCheck from '../../components/SelfCheck.svelte'
-import G1InitiationFlow from '../../components/initiation/G1InitiationFlow.svelte'
+import Descent from '../../components/line-g-opening/Descent.svelte'
 import { getLineById } from '../../lib/curriculum/lines'
 
 export async function getStaticPaths() {
@@ -60,7 +60,7 @@ const STRIP = line.stations.map((s) => ({
 
     {d.interactive === 'g1-initiation' && (
       <section class="initiation">
-        <G1InitiationFlow client:load stationId={station.id} />
+        <Descent client:load stationId={station.id} />
       </section>
     )}
 

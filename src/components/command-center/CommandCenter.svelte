@@ -164,7 +164,7 @@
           <span class="map-hd-meta">NATURAL EARTH · WGS-84</span>
         </div>
         <div class="map-frame">
-          <WorldMap />
+          <WorldMap chrome={false} />
         </div>
       </div>
     </div>

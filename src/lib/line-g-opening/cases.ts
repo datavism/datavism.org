@@ -152,6 +152,173 @@ export const LAUNCHPAD_CASES: LaunchpadCase[] = [
       contains: '300+ event categories georeferenced, 1979–present, updated every 15 minutes, 100+ languages, tone analysis, a Global Knowledge Graph. Browser Analysis Service, BigQuery, CSV. Free.',
     },
   },
+
+  // ── BATCH 2 ─────────────────────────────────────────────────────
+  {
+    id: 'exodus-privacy-trackers',
+    hook: 'Every Android app may carry invisible passengers — Exodus audited 279,000+ apps, found 432 distinct trackers.',
+    systemSignal: 'tracking',
+    starterQuestion: 'Which tracker company appears in the most apps, and what does it collect?',
+    source: {
+      title: 'Exodus Privacy',
+      url: 'https://reports.exodus-privacy.eu.org/en/trackers/',
+      contains: '432 trackers, per-app reports, ODbL API.',
+    },
+  },
+  {
+    id: 'iati-aid-flows',
+    hook: '$1T/yr in aid recorded in one open standard — yet recipients can\'t track where it lands.',
+    systemSignal: 'money',
+    starterQuestion: 'How much aid was committed to a country vs actually disbursed?',
+    source: {
+      title: 'IATI d-portal',
+      url: 'https://d-portal.org/',
+      contains: '~1M activities, 1,846 publishers, CSV/JSON/XML.',
+    },
+  },
+  {
+    id: 'open-ownership-beneficial',
+    hook: '104 countries require companies to disclose who really owns them; Open Ownership stitches it together.',
+    systemSignal: 'money',
+    starterQuestion: 'Which UK companies with overseas owners bought British property, and who controls them?',
+    source: {
+      title: 'Open Ownership BODS Data Hub',
+      url: 'https://bods-data.openownership.org/',
+      contains: 'UK PSC + Overseas Entities + GLEIF, CC0.',
+    },
+  },
+  {
+    id: 'ranking-digital-rights',
+    hook: 'The 14 most powerful tech platforms scored on every policy affecting your speech and privacy — none passed.',
+    systemSignal: 'tracking',
+    starterQuestion: 'Which Big Tech firm has the worst record on government data demands?',
+    source: {
+      title: 'Ranking Digital Rights 2025',
+      url: 'https://rankingdigitalrights.org/bte25/',
+      contains: '14 companies, 300+ indicators, downloadable.',
+    },
+  },
+  {
+    id: 'atlas-of-surveillance',
+    hook: '14,900+ documented deployments of drones, facial recognition, predictive policing across 6,000 US jurisdictions.',
+    systemSignal: 'tracking',
+    starterQuestion: 'How many US cities use facial recognition, and which vendor supplies most?',
+    source: {
+      title: 'Atlas of Surveillance (EFF)',
+      url: 'https://atlasofsurveillance.org/',
+      contains: '8 tech types, CSV data library.',
+    },
+  },
+  {
+    id: 'edgar-ghg-emissions',
+    hook: 'Every country\'s emissions by sector & fuel, independently calculated by EU scientists — not self-reported.',
+    systemSignal: 'future',
+    starterQuestion: 'Which country\'s emissions grew fastest 2015–2022 and which sector drove it?',
+    source: {
+      title: 'EDGAR v8.0 (JRC)',
+      url: 'https://edgar.jrc.ec.europa.eu/',
+      contains: 'CO2/CH4/N2O/F-gases, 220+ countries, 1970–2022, CC BY 4.0.',
+    },
+  },
+  {
+    id: 'global-carbon-budget',
+    hook: '100+ scientists publish the definitive accounting of carbon emitted — and how little land/ocean absorbed.',
+    systemSignal: 'future',
+    starterQuestion: 'How much has the land carbon sink declined since 2020?',
+    source: {
+      title: 'Global Carbon Budget 2024',
+      url: 'https://globalcarbonbudget.org/the-latest-gcb-data/',
+      contains: 'fossil+land-use emissions, sinks; Zenodo.',
+    },
+  },
+  {
+    id: 'financial-secrecy-index',
+    hook: 'TJN ranks 141 jurisdictions by how aggressively their laws let the wealthy hide money — top enablers surprise.',
+    systemSignal: 'money',
+    starterQuestion: 'Which G20 country has the worst secrecy score and which loopholes?',
+    source: {
+      title: 'Financial Secrecy Index',
+      url: 'https://fsi.taxjustice.net/',
+      contains: '141 jurisdictions, 100+ sub-indicators, free non-commercial.',
+    },
+  },
+  {
+    id: 'usaspending-federal',
+    hook: 'Every US federal contract/grant/loan since 2001 — $6.8T/yr — queryable with no API key.',
+    systemSignal: 'money',
+    starterQuestion: 'Which company got the most federal contracts last year, and how much bypassed competition?',
+    source: {
+      title: 'USAspending.gov',
+      url: 'https://www.usaspending.gov/',
+      contains: 'contracts/grants/loans, free REST API, no key.',
+    },
+  },
+  {
+    id: 'philippines-cids-elections',
+    hook: '30 years of Philippine local election results + fiscal spending in one free DB — dynasties → budget control.',
+    systemSignal: 'money',
+    starterQuestion: 'Which provinces had the same family govern 20+ years, and how does it track education/health spend?',
+    source: {
+      title: 'UP CIDS',
+      url: 'https://elections.cids.up.edu.ph/',
+      contains: '15,148 candidates 1992–2022, electoral+fiscal.',
+    },
+  },
+  {
+    id: 'colombia-secop-contracts',
+    hook: 'Every Colombian public contract logged in one open DB back to 2011 — cross-reference contractors with donors.',
+    systemSignal: 'money',
+    starterQuestion: 'Which 2022 public-works contractors were also campaign donors (Cuentas Claras)?',
+    source: {
+      title: 'Colombia SECOP (OCP)',
+      url: 'https://data.open-contracting.org/en/publication/61',
+      contains: '11.4M tenders, PDDL. Live: colombiacompra.gov.co.',
+    },
+  },
+  {
+    id: 'ghana-procurement-ocds',
+    hook: 'Ghana ran Africa\'s first OCDS national e-procurement (2019); full contracting data free to download.',
+    systemSignal: 'money',
+    starterQuestion: 'Which suppliers won the most Health Ministry contracts 2019–2024 vs tender estimates?',
+    source: {
+      title: 'Ghana PPA (OCP)',
+      url: 'https://data.open-contracting.org/en/publication/85',
+      contains: '9,651 awards, monthly, JSON/Excel/CSV.',
+    },
+  },
+  {
+    id: 'argentina-wealth-declarations',
+    hook: 'Every Argentine executive official must publicly disclose full assets — open format from 2012 on.',
+    systemSignal: 'money',
+    starterQuestion: 'Which Milei-era officials show the largest asset increase vs their salary?',
+    source: {
+      title: 'Argentina OA (DJPI)',
+      url: 'https://www.argentina.gob.ar/servicio/consultar-declaraciones-juradas-de-funcionarios-publicos',
+      contains: 'assets/liabilities/interests 2012–.',
+    },
+  },
+  {
+    id: 'ukraine-prozorro',
+    hook: 'Ukraine put every government tender online in real time — incl. wartime contracts: who supplies the state.',
+    systemSignal: 'money',
+    starterQuestion: 'Which suppliers got the largest military/reconstruction contracts since Feb 2022, how many non-competitive?',
+    source: {
+      title: 'ProZorro (OCP)',
+      url: 'https://data.open-contracting.org/en/publication/154',
+      contains: 'OCDS 2015–2025, API, bulk. (some wartime redactions)',
+    },
+  },
+  {
+    id: 'chile-chilecompra',
+    hook: 'Chile\'s Mercado Público logs every contract from 850 state agencies; full OCDS 2018–2022 downloadable.',
+    systemSignal: 'money',
+    starterQuestion: 'Which municipalities awarded the most single-source contracts during 2019–2021 unrest/pandemic?',
+    source: {
+      title: 'Chile (OCP)',
+      url: 'https://data.open-contracting.org/en/publication/10',
+      contains: 'Law 19,886 contracts. Live: publication/144.',
+    },
+  },
 ]
 
 export function getCase(id: string): LaunchpadCase | undefined {

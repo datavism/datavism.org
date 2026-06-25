@@ -9,8 +9,30 @@
   import { geoNaturalEarth1, geoPath, geoGraticule } from 'd3-geo'
   import { feature } from 'topojson-client'
   import type { Topology } from 'topojson-specification'
-  import { GEO_CASES, SIGNAL_COLOR, ACTIVE_CASE } from '../../lib/command-center/geo'
-  import type { GeoCase } from '../../lib/command-center/geo'
+  import { LAUNCHPAD_CASES } from '../../lib/line-g-opening/cases'
+  import { GEO, ACTIVE_ID, SIGNAL_COLOR } from '../../lib/command-center/geo'
+
+  // ── props ──────────────────────────────────────────────────────
+  let { chrome = true }: { chrome?: boolean } = $props()
+
+  // ── merged case nodes (static, computed once at module load) ──
+  interface CaseNode {
+    id: string
+    signal: string
+    lat: number
+    lng: number
+    label: string
+    active: boolean
+  }
+
+  const CASE_NODES: CaseNode[] = LAUNCHPAD_CASES
+    .filter(c => GEO[c.id])
+    .map(c => ({
+      id: c.id,
+      signal: c.systemSignal,
+      ...GEO[c.id],
+      active: c.id === ACTIVE_ID,
+    }))
 
   // ── container / projection state ──────────────────────────────
   let svgEl: SVGSVGElement
@@ -24,11 +46,11 @@
   let loaded = $state(false)
 
   // ── projected node positions ──────────────────────────────────
-  interface ProjectedCase extends GeoCase {
+  interface ProjectedNode extends CaseNode {
     x: number
     y: number
   }
-  let nodes = $state<ProjectedCase[]>([])
+  let nodes = $state<ProjectedNode[]>([])
 
   // ── connection arcs (quadratic Bezier) ───────────────────────
   interface Arc { d: string; color: string }
@@ -60,30 +82,30 @@
     graticulePath = path(geoGraticule().step([20, 20])()) ?? ''
 
     // Project each case node
-    nodes = GEO_CASES.map(c => {
+    nodes = CASE_NODES.map(c => {
       const pt = proj([c.lng, c.lat])!
       return { ...c, x: pt[0], y: pt[1] }
     })
 
-    // Build 5 connection arcs between thematically linked nodes
+    // Build connection arcs between thematically linked nodes
     arcs = buildArcs(nodes)
   }
 
-  function buildArcs(ns: ProjectedCase[]): Arc[] {
+  function buildArcs(ns: ProjectedNode[]): Arc[] {
     const find = (id: string) => ns.find(n => n.id === id)
-    const arc = (a: ProjectedCase | undefined, b: ProjectedCase | undefined, color: string): Arc | null => {
+    const arc = (a: ProjectedNode | undefined, b: ProjectedNode | undefined, color: string): Arc | null => {
       if (!a || !b) return null
       const mx = (a.x + b.x) / 2
       const my = (a.y + b.y) / 2 - Math.abs(b.x - a.x) * 0.28
       return { d: `M ${a.x},${a.y} Q ${mx},${my} ${b.x},${b.y}`, color }
     }
     return [
-      arc(find('lobby-register-de'),    find('lobby-facts-eu'),          '#ffd23f'),
-      arc(find('lobby-register-de'),    find('open-ownership'),           '#ffd23f'),
-      arc(find('exodus-privacy'),       find('dsa-transparency-db'),      '#00ffff'),
-      arc(find('gdelt'),                find('ranking-digital-rights'),   '#ff2af0'),
-      arc(find('climate-trace-emissions'), find('global-forest-watch'),   '#aa44ff'),
-      arc(find('global-carbon-budget'), find('edgar-ghg'),                '#aa44ff'),
+      arc(find('lobby-register-de'),        find('lobby-facts-eu'),                    '#ffd23f'),
+      arc(find('lobby-register-de'),        find('open-ownership-beneficial'),          '#ffd23f'),
+      arc(find('exodus-privacy-trackers'),  find('dsa-transparency-db'),               '#00ffff'),
+      arc(find('gdelt-media-power'),        find('ranking-digital-rights'),            '#ff2af0'),
+      arc(find('climate-trace-emissions'),  find('global-forest-watch-deforestation'), '#aa44ff'),
+      arc(find('global-carbon-budget'),     find('edgar-ghg-emissions'),               '#aa44ff'),
     ].filter(Boolean) as Arc[]
   }
 
@@ -92,25 +114,25 @@
   const LABELLED = new Set([
     'lobby-register-de',
     'data-brokers-ca',
-    'gdelt',
+    'gdelt-media-power',
     'ukraine-prozorro',
-    'india-myneta',
+    'india-myneta-criminal-wealth',
     'icij-offshore-leaks',
-    'global-forest-watch',
-    'opensanctions',
+    'global-forest-watch-deforestation',
+    'opensanctions-global-power',
   ])
 
   // ── boot sequence ─────────────────────────────────────────────
   async function runBootSequence() {
     // All non-active nodes fade in staggered over 2.5s
-    const nonActive = GEO_CASES.filter(c => !c.active)
+    const nonActive = CASE_NODES.filter(c => !c.active)
     for (let i = 0; i < nonActive.length; i++) {
       await delay(42)
       visibleNodes = new Set([...visibleNodes, nonActive[i].id])
     }
     // Active op locks on last with a slight dramatic pause
     await delay(400)
-    visibleNodes = new Set([...visibleNodes, ACTIVE_CASE.id])
+    visibleNodes = new Set([...visibleNodes, ACTIVE_ID])
     await delay(200)
     bootDone = true
   }
@@ -157,7 +179,7 @@
   //  above; a $effect here would read+write `nodes` and loop — do not add one.)
 
   // ── helpers ───────────────────────────────────────────────────
-  function nodeR(c: GeoCase): number {
+  function nodeR(c: CaseNode): number {
     return c.active ? 8 : 5
   }
 
@@ -187,6 +209,7 @@
   <div class="scanlines" aria-hidden="true"></div>
   <div class="vignette"  aria-hidden="true"></div>
 
+  {#if chrome}
   <!-- ── HUD corner brackets ──────────────────────────────────── -->
   <div class="hud-corner hud-tl" aria-hidden="true"></div>
   <div class="hud-corner hud-tr" aria-hidden="true"></div>
@@ -198,7 +221,7 @@
     <span class="hud-mark">&#9698;</span> GLOBAL INVESTIGATION MAP
   </div>
   <div class="hud-label hud-label-tr" aria-hidden="true">
-    <span class="hud-count">{GEO_CASES.length}</span> ACTIVE CASES
+    <span class="hud-count">{CASE_NODES.length}</span> ACTIVE CASES
     <span class="hud-sep">·</span>
     <span class="hud-clock">{formatTime(now)}</span>
   </div>
@@ -208,6 +231,7 @@
   <div class="hud-label hud-label-br" aria-hidden="true">
     NATURAL_EARTH_1 <span class="hud-sep">·</span> WGS-84
   </div>
+  {/if}
 
   <!-- ── SVG map ──────────────────────────────────────────────── -->
   {#if loaded}
@@ -291,7 +315,7 @@
 
     <!-- ── nodes ───────────────────────────────────────────── -->
     {#each nodes as node, i}
-      {@const color = node.active ? '#00ff88' : SIGNAL_COLOR[node.signal]}
+      {@const color = node.active ? '#00ff88' : (SIGNAL_COLOR[node.signal] ?? '#7a818d')}
       {@const r = nodeR(node)}
       {@const visible = visibleNodes.has(node.id)}
 

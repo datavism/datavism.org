@@ -1,63 +1,48 @@
 // src/lib/command-center/geo.ts
-// Geographic case data for the Global Investigation Map.
-// Coordinates: [lng, lat] — WGS-84, matching d3-geo convention.
+// Geographic positions for ALL 28 cases, keyed by canonical cases.ts ids.
+// Coordinates: lat/lng WGS-84.
 
-export type CaseSignal = 'tracking' | 'money' | 'feed' | 'future'
+export const GEO: Record<string, { lat: number; lng: number; label: string }> = {
+  // ── Batch 1 ────────────────────────────────────────────────────
+  'data-brokers-ca':                   { lat:  37.20,  lng: -119.70, label: 'Data Brokers (CA)' },
+  'lobby-register-de':                 { lat:  52.52,  lng:   13.40, label: '001 · LOBBYREGISTER (DE)' },
+  'abgeordnetenwatch-de':              { lat:  52.40,  lng:   13.62, label: 'Abgeordnetenwatch (DE)' },
+  'dsa-transparency-db':               { lat:  50.85,  lng:    4.35, label: 'DSA Transparency (EU)' },
+  'lobby-facts-eu':                    { lat:  50.60,  lng:    4.62, label: 'LobbyFacts (EU)' },
+  'climate-trace-emissions':           { lat:  10.00,  lng:  -15.00, label: 'Climate TRACE' },
+  'india-myneta-criminal-wealth':      { lat:  28.60,  lng:   77.20, label: 'MyNeta (IN)' },
+  'brazil-tse-campaign-finance':       { lat: -15.80,  lng:  -47.90, label: 'TSE (BR)' },
+  'icij-offshore-leaks':               { lat:  19.00,  lng:  -66.00, label: 'ICIJ Offshore Leaks' },
+  'global-forest-watch-deforestation': { lat:  -3.00,  lng:  -60.00, label: 'Global Forest Watch' },
+  'south-africa-vulekamali-budget':    { lat: -25.70,  lng:   28.20, label: 'Vulekamali (ZA)' },
+  'opensanctions-global-power':        { lat:  50.10,  lng:    8.70, label: 'OpenSanctions' },
+  'gdelt-media-power':                 { lat:  38.90,  lng:  -77.00, label: 'GDELT Project' },
 
-export interface GeoCase {
-  id: string
-  label: string
-  signal: CaseSignal
-  lat: number
-  lng: number
-  active?: true // hero focal point — the active operation
+  // ── Batch 2 ────────────────────────────────────────────────────
+  'exodus-privacy-trackers':           { lat:  48.85,  lng:    2.35, label: 'Exodus Privacy' },
+  'iati-aid-flows':                    { lat:   6.00,  lng:   20.00, label: 'IATI Aid Flows' },
+  'open-ownership-beneficial':         { lat:  51.50,  lng:   -0.10, label: 'Open Ownership' },
+  'ranking-digital-rights':            { lat:  41.00,  lng: -100.00, label: 'Ranking Digital Rights' },
+  'atlas-of-surveillance':             { lat:  39.00,  lng:  -98.00, label: 'Atlas of Surveillance' },
+  'edgar-ghg-emissions':               { lat:  45.80,  lng:    8.60, label: 'EDGAR (EU)' },
+  'global-carbon-budget':              { lat:  55.00,  lng:    9.00, label: 'Global Carbon Budget' },
+  'financial-secrecy-index':           { lat:  46.95,  lng:    7.45, label: 'Financial Secrecy Index' },
+  'usaspending-federal':               { lat:  37.50,  lng:  -77.40, label: 'USAspending' },
+  'philippines-cids-elections':        { lat:  14.60,  lng:  121.00, label: 'CIDS (PH)' },
+  'colombia-secop-contracts':          { lat:   4.70,  lng:  -74.10, label: 'SECOP (CO)' },
+  'ghana-procurement-ocds':            { lat:   5.60,  lng:   -0.20, label: 'Ghana Procurement' },
+  'argentina-wealth-declarations':     { lat: -34.60,  lng:  -58.40, label: 'Wealth Declarations (AR)' },
+  'ukraine-prozorro':                  { lat:  50.45,  lng:   30.52, label: 'ProZorro (UA)' },
+  'chile-chilecompra':                 { lat: -33.45,  lng:  -70.66, label: 'ChileCompra (CL)' },
 }
 
-export const GEO_CASES: GeoCase[] = [
-  // ── TRACKING (cyan) ─────────────────────────────────────────
-  { id: 'data-brokers-ca',          label: 'Data Brokers (CA)',        signal: 'tracking', lat:  37.2,  lng: -119.7 },
-  { id: 'opensanctions',            label: 'OpenSanctions',            signal: 'tracking', lat:  50.1,  lng:    8.7 },
-  { id: 'exodus-privacy',           label: 'Exodus Privacy',           signal: 'tracking', lat:  48.85, lng:    2.35 },
-  { id: 'ranking-digital-rights',   label: 'Ranking Digital Rights',   signal: 'tracking', lat:  40.0,  lng: -100.0 },
-  { id: 'atlas-of-surveillance',    label: 'Atlas of Surveillance',    signal: 'tracking', lat:  39.0,  lng:  -98.0 },
-
-  // ── MONEY (amber) ────────────────────────────────────────────
-  { id: 'lobby-register-de',        label: '001 · LOBBYREGISTER (DE)', signal: 'money',    lat:  52.52, lng:   13.40, active: true },
-  { id: 'abgeordnetenwatch-de',     label: 'Abgeordnetenwatch (DE)',   signal: 'money',    lat:  52.4,  lng:   13.6 },
-  { id: 'lobby-facts-eu',           label: 'Lobby Facts (EU)',         signal: 'money',    lat:  50.6,  lng:    4.6 },
-  { id: 'india-myneta',             label: 'MyNeta (IN)',              signal: 'money',    lat:  28.6,  lng:   77.2 },
-  { id: 'brazil-tse',               label: 'TSE Brasil',               signal: 'money',    lat: -15.8,  lng:  -47.9 },
-  { id: 'icij-offshore-leaks',      label: 'ICIJ Offshore Leaks',      signal: 'money',    lat:  19.0,  lng:  -66.0 },
-  { id: 'south-africa-vulekamali',  label: 'Vulekamali (ZA)',          signal: 'money',    lat: -25.7,  lng:   28.2 },
-  { id: 'iati-aid',                 label: 'IATI Aid Tracker',         signal: 'money',    lat:   6.0,  lng:   20.0 },
-  { id: 'open-ownership',           label: 'Open Ownership (UK)',      signal: 'money',    lat:  51.5,  lng:   -0.1 },
-  { id: 'edgar-ghg',                label: 'EDGAR GHG',                signal: 'money',    lat:  45.8,  lng:    8.6 },
-  { id: 'financial-secrecy-index',  label: 'Financial Secrecy Index',  signal: 'money',    lat:  46.95, lng:    7.45 },
-  { id: 'usaspending',              label: 'USASpending',              signal: 'money',    lat:  38.9,  lng:  -77.05 },
-  { id: 'philippines-cids',         label: 'Philippines CIDS',         signal: 'money',    lat:  14.6,  lng:  121.0 },
-  { id: 'colombia-secop',           label: 'Colombia SECOP',           signal: 'money',    lat:   4.7,  lng:  -74.1 },
-  { id: 'ghana-procurement',        label: 'Ghana Procurement',        signal: 'money',    lat:   5.6,  lng:   -0.2 },
-  { id: 'argentina-wealth',         label: 'Argentina Wealth',         signal: 'money',    lat: -34.6,  lng:  -58.4 },
-  { id: 'ukraine-prozorro',         label: 'Prozorro (UA)',            signal: 'money',    lat:  50.45, lng:   30.52 },
-  { id: 'chile-chilecompra',        label: 'ChileCompra',              signal: 'money',    lat: -33.45, lng:  -70.66 },
-
-  // ── FEED (magenta) ───────────────────────────────────────────
-  { id: 'dsa-transparency-db',      label: 'DSA Transparency DB',      signal: 'feed',     lat:  50.85, lng:    4.35 },
-  { id: 'gdelt',                    label: 'GDELT Project',            signal: 'feed',     lat:  38.9,  lng:  -77.0 },
-
-  // ── FUTURE (violet) ─────────────────────────────────────────
-  { id: 'climate-trace-emissions',  label: 'Climate TRACE',            signal: 'future',   lat:  10.0,  lng:  -15.0 },
-  { id: 'global-forest-watch',      label: 'Global Forest Watch',      signal: 'future',   lat:  -3.0,  lng:  -60.0 },
-  { id: 'global-carbon-budget',     label: 'Global Carbon Budget',     signal: 'future',   lat:  55.0,  lng:    9.0 },
-]
+// Active operation
+export const ACTIVE_ID = 'lobby-register-de'
 
 // Signal → canonical hex (matches global.css tokens)
-export const SIGNAL_COLOR: Record<CaseSignal, string> = {
+export const SIGNAL_COLOR: Record<string, string> = {
   tracking: '#00ffff',  // line-k cyan
   money:    '#ffd23f',  // signal amber
-  feed:     '#ff2af0',  // line-b magenta (close to spec #ff2af0 vs #ff00ff)
+  feed:     '#ff2af0',  // line-b magenta
   future:   '#aa44ff',  // line-v violet
 }
-
-// Active operation (singleton shortcut)
-export const ACTIVE_CASE = GEO_CASES.find(c => c.active)!

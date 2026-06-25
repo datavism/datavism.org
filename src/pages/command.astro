@@ -1,0 +1,134 @@
+---
+// src/pages/command.astro
+// Command Center — standalone dark page housing the Global Investigation Map.
+// No site header / footer: this is a focused operational dashboard view.
+import '../styles/global.css'
+import '@fontsource/spline-sans-mono/latin-400.css'
+import '@fontsource/spline-sans-mono/latin-500.css'
+import '@fontsource/spline-sans-mono/latin-600.css'
+import WorldMap from '../components/command-center/WorldMap.svelte'
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Command Center · DATAVISM</title>
+    <meta name="description" content="Global Investigation Map — DATAVISM Command Center" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <main class="command-shell">
+      <!-- ── eyebrow row ─────────────────────────────────────── -->
+      <div class="cmd-header">
+        <div class="cmd-eyebrow">
+          <span class="cmd-wordmark">&#9651; DATAVISM</span>
+          <span class="cmd-sep">//</span>
+          <span class="cmd-page">COMMAND CENTER</span>
+        </div>
+        <div class="cmd-status">
+          <span class="status-dot"></span>
+          LIVE · OPERATION ACTIVE
+        </div>
+      </div>
+
+      <!-- ── map (full width) ───────────────────────────────── -->
+      <div class="map-stage">
+        <WorldMap client:load />
+      </div>
+
+      <!-- ── bottom bar ─────────────────────────────────────── -->
+      <div class="cmd-footer">
+        <span class="cmd-foot-l">CIVIC SIGNAL PLATFORM · DATAVISM.ORG</span>
+        <span class="cmd-foot-r">CLEARANCE: PUBLIC · DATA: OSINT ONLY</span>
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #060608;
+    color: #7a818d;
+    font-family: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  .command-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  /* ── header bar ──────────────────────────────────────────────── */
+  .cmd-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px;
+    flex-shrink: 0;
+  }
+  .cmd-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .cmd-wordmark { color: #00ff88; font-weight: 600; }
+  .cmd-sep      { opacity: 0.3; }
+  .cmd-page     { color: #a7ada3; }
+
+  .cmd-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #00ff88;
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00ff88;
+    box-shadow: 0 0 6px #00ff88;
+    animation: status-pulse 2s ease-in-out infinite;
+  }
+  @keyframes status-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
+  }
+
+  /* ── map stage (flex-grows to fill viewport) ─────────────────── */
+  .map-stage {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: stretch;
+  }
+  .map-stage > :global(*) {
+    width: 100%;
+    max-height: calc(100dvh - 100px);
+  }
+
+  /* ── footer ──────────────────────────────────────────────────── */
+  .cmd-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #343843;
+    padding: 0 4px;
+    flex-shrink: 0;
+  }
+</style>

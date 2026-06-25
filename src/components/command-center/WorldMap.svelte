@@ -13,7 +13,7 @@
   import { GEO, ACTIVE_ID, SIGNAL_COLOR } from '../../lib/command-center/geo'
 
   // ── props ──────────────────────────────────────────────────────
-  let { chrome = true }: { chrome?: boolean } = $props()
+  let { chrome = true, onselect }: { chrome?: boolean; onselect?: (id: string) => void } = $props()
 
   // ── merged case nodes (static, computed once at module load) ──
   interface CaseNode {
@@ -322,7 +322,13 @@
       <g
         class="map-node"
         class:node-visible={visible}
+        class:node-clickable={!!onselect}
         style="transform-origin: {node.x}px {node.y}px; animation-delay: {pulseDelay(i)}"
+        role={onselect ? 'button' : undefined}
+        tabindex={onselect ? 0 : undefined}
+        aria-label={onselect ? `Open dossier: ${node.label ?? node.id}` : undefined}
+        onclick={() => onselect?.(node.id)}
+        onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onselect?.(node.id) } }}
       >
         {#if node.active}
           <!-- Active op heat glow -->
@@ -578,6 +584,16 @@
   .map-node.node-visible {
     opacity: 1;
     transform: scale(1);
+  }
+
+  /* ── clickable node ─────────────────────────────────────────── */
+  .map-node.node-clickable {
+    cursor: pointer;
+  }
+  .map-node.node-clickable:hover,
+  .map-node.node-clickable:focus-visible {
+    filter: brightness(1.6) drop-shadow(0 0 6px currentColor);
+    outline: none;
   }
 
   /* ── node dot ───────────────────────────────────────────────── */

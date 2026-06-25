@@ -8,11 +8,34 @@
 
   import { onMount } from 'svelte'
   import WorldMap from './WorldMap.svelte'
+  import Dossier from './Dossier.svelte'
   import { LAUNCHPAD_CASES } from '../../lib/line-g-opening/cases'
   import { FIRST_OPERATION } from '../../lib/command-center/operations'
   import { loadHistory } from '../../lib/command-center/history'
   import type { ClosedOperation } from '../../lib/command-center/history'
   import { LINES } from '../../lib/curriculum/lines'
+
+  // ── dossier selection ─────────────────────────────────────────
+  let selectedCaseId = $state<string | null>(null)
+
+  // transient "claimed" confirmation line
+  let claimedMsg = $state<string | null>(null)
+  let claimedTimer: ReturnType<typeof setTimeout> | null = null
+
+  function openDossier(id: string) {
+    selectedCaseId = id
+  }
+
+  function closeDossier() {
+    selectedCaseId = null
+  }
+
+  function handleClaim(id: string) {
+    selectedCaseId = null
+    if (claimedTimer) clearTimeout(claimedTimer)
+    claimedMsg = `Operation claimed — investigation flow coming next.`
+    claimedTimer = setTimeout(() => { claimedMsg = null }, 4_000)
+  }
 
   // ── UTC clock (updates every second) ─────────────────────────
   let now = $state(new Date())
@@ -114,7 +137,14 @@
         </div>
         <div class="panel-body ops-scroll">
           {#each LAUNCHPAD_CASES as c (c.id)}
-            <div class="op-row">
+            <div
+              class="op-row op-row-clickable"
+              role="button"
+              tabindex="0"
+              aria-label="Open dossier: {c.id}"
+              onclick={() => openDossier(c.id)}
+              onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDossier(c.id) } }}
+            >
               <span
                 class="op-sig"
                 style="color: {sigColor[c.systemSignal] ?? '#7a818d'}"
@@ -164,7 +194,7 @@
           <span class="map-hd-meta">NATURAL EARTH · WGS-84</span>
         </div>
         <div class="map-frame">
-          <WorldMap chrome={false} />
+          <WorldMap chrome={false} onselect={openDossier} />
         </div>
       </div>
     </div>
@@ -214,13 +244,26 @@
             <span class="aop-source-name">{FIRST_OPERATION.source.title}</span>
           </div>
           <div class="aop-action">
-            <span class="aop-link" role="link" aria-disabled="true">VIEW DOSSIER →</span>
+            <button
+              class="aop-link"
+              onclick={() => openDossier(FIRST_OPERATION.caseId)}
+            >VIEW DOSSIER →</button>
           </div>
         </div>
       </section>
 
     </aside>
   </div><!-- /cc-main -->
+
+  <!-- ════════════════════════════════════════════════════════════ -->
+  <!-- CLAIMED OPERATION MESSAGE (transient)                         -->
+  <!-- ════════════════════════════════════════════════════════════ -->
+  {#if claimedMsg}
+    <div class="cc-claimed-msg" role="status" aria-live="polite">
+      <span class="claimed-mark">◢</span>
+      {claimedMsg}
+    </div>
+  {/if}
 
   <!-- ════════════════════════════════════════════════════════════ -->
   <!-- BOTTOM BAR                                                   -->
@@ -250,6 +293,17 @@
       SECURE CHANNEL · METHOD CERTIFIED, NOT VERIFIED
     </div>
   </footer>
+
+  <!-- ════════════════════════════════════════════════════════════ -->
+  <!-- DOSSIER OVERLAY                                              -->
+  <!-- ════════════════════════════════════════════════════════════ -->
+  {#if selectedCaseId}
+    <Dossier
+      caseId={selectedCaseId}
+      onclose={closeDossier}
+      onclaim={handleClaim}
+    />
+  {/if}
 
 </div><!-- /cc-shell -->
 
@@ -476,6 +530,19 @@
     border-bottom: 1px solid #13141a;
   }
   .op-row:last-child { border-bottom: none; }
+
+  .op-row-clickable {
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 1px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .op-row-clickable:hover,
+  .op-row-clickable:focus-visible {
+    background: #ffffff08;
+    outline: none;
+  }
 
   .op-sig {
     font-size: 7px;
@@ -708,8 +775,15 @@
     color: #00ff88;
     border: 1px solid #00ff8844;
     padding: 4px 10px;
-    cursor: default;
-    opacity: 0.6;
+    cursor: pointer;
+    background: none;
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .aop-link:hover, .aop-link:focus-visible {
+    border-color: #00ff8888;
+    background: #00ff8808;
+    outline: none;
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -783,9 +857,40 @@
   }
 
   /* ══════════════════════════════════════════════════════════════
+   * CLAIMED MESSAGE (transient status line)
+   * ═════════════════════════════════════════════════════════════*/
+  .cc-claimed-msg {
+    position: fixed;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 250;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #0a0b10;
+    border: 1px solid #00ff8844;
+    padding: 7px 16px;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #00ff88;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: msg-fadein 0.3s ease;
+  }
+  .claimed-mark { font-size: 10px; }
+
+  @keyframes msg-fadein {
+    from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  /* ══════════════════════════════════════════════════════════════
    * REDUCED MOTION
    * ═════════════════════════════════════════════════════════════*/
   @media (prefers-reduced-motion: reduce) {
     .cc-scanlines { display: none; }
+    .cc-claimed-msg { animation: none; }
   }
 </style>

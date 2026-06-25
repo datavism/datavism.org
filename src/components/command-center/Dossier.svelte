@@ -44,7 +44,15 @@
   function handleBackdropKey(e: KeyboardEvent) {
     if (e.key === 'Escape') onclose()
   }
+
+  // ESC closes from anywhere in the dossier (not only the backdrop).
+  function handleWindowKey(e: KeyboardEvent) {
+    if (e.key === 'Escape') onclose()
+  }
+  // (background scroll-lock is owned by the parent CommandCenter.)
 </script>
+
+<svelte:window onkeydown={handleWindowKey} />
 
 <!-- ── backdrop ─────────────────────────────────────────────────── -->
 <div

@@ -67,6 +67,15 @@
     closedOps = loadHistory()
   })
 
+  // Lock background scroll while ANY overlay (dossier or investigation) is open.
+  // One lock for whichever is open, so the dossier→investigation handoff can't race.
+  $effect(() => {
+    const open = selectedCaseId !== null || activeOpId !== null
+    const prev = document.body.style.overflow
+    if (open) document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  })
+
   // ── real case counts by systemSignal ─────────────────────────
   const total = LAUNCHPAD_CASES.length
 

@@ -158,8 +158,25 @@
   function handleBackdropKey(e: KeyboardEvent) {
     if (e.key === 'Escape') onclose()
   }
-  function reviseDraft() { op = back(op) } // certifying-error landed us in draft already; this is a no-op guard
+
+  // ESC closes from anywhere in the overlay — but never while the agent is typing
+  // a finding (that would nuke the draft on a reflex keypress).
+  function handleWindowKey(e: KeyboardEvent) {
+    if (e.key !== 'Escape') return
+    const t = e.target as HTMLElement | null
+    const inField = !!t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')
+    if (!inField) onclose()
+  }
+
+  // Autofocus the first field the agent must fill on the draft step.
+  function autofocus(node: HTMLElement) {
+    node.focus()
+  }
+  // (background scroll-lock is owned by the parent CommandCenter — one lock for
+  //  whichever overlay is open, so the dossier→investigation handoff can't race.)
 </script>
+
+<svelte:window onkeydown={handleWindowKey} />
 
 <div
   class="iv-backdrop"
@@ -279,7 +296,7 @@
           </label>
           <label class="fld">
             <span class="fld-lbl">YOUR FINDING <span class="fld-hint">— one concrete, traceable fact</span></span>
-            <textarea class="fld-ta" rows="3" bind:value={fEvidence} placeholder="e.g. Acme Verband declared the 4.5–5.0M € band, 18 staff, targeting energy policy."></textarea>
+            <textarea class="fld-ta" rows="3" bind:value={fEvidence} use:autofocus placeholder="e.g. Acme Verband declared the 4.5–5.0M € band, 18 staff, targeting energy policy."></textarea>
           </label>
           <label class="fld">
             <span class="fld-lbl">WHAT'S UNVERIFIED <span class="fld-hint">— what could be wrong, self-declared, out of date</span></span>

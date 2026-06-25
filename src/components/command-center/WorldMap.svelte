@@ -119,7 +119,11 @@
     'india-myneta-criminal-wealth',
     'icij-offshore-leaks',
     'global-forest-watch-deforestation',
-    'opensanctions-global-power',
+    'climate-trace-emissions',
+    'brazil-tse-campaign-finance',
+    'south-africa-vulekamali-budget',
+    'chile-chilecompra',
+    'philippines-cids-elections',
   ])
 
   // ── boot sequence ─────────────────────────────────────────────
@@ -180,7 +184,7 @@
 
   // ── helpers ───────────────────────────────────────────────────
   function nodeR(c: CaseNode): number {
-    return c.active ? 8 : 5
+    return c.active ? 9 : 6
   }
 
   function pulseDelay(i: number): string {
@@ -288,15 +292,15 @@
 
     <!-- ── land shadows (soft atmospheric glow behind continents) -->
     {#each borderPaths as bp}
-      <path d={bp} fill="#0bd8c0" opacity="0.08" filter="url(#glow-land)" />
+      <path d={bp} fill="#0bd8c0" opacity="0.16" filter="url(#glow-land)" />
     {/each}
 
     <!-- ── graticule (faint command grid) ─────────────────── -->
-    <path d={graticulePath} fill="none" stroke="#1aa39a" stroke-width="0.3" opacity="0.13" />
+    <path d={graticulePath} fill="none" stroke="#1aa39a" stroke-width="0.35" opacity="0.2" />
 
     <!-- ── landmasses ──────────────────────────────────────── -->
     {#each landPaths as lp}
-      <path d={lp} fill="#13161e" stroke="#283041" stroke-width="0.5" />
+      <path d={lp} fill="#172131" stroke="#36465e" stroke-width="0.6" />
     {/each}
 
     <!-- ── connection arcs ─────────────────────────────────── -->
@@ -403,12 +407,12 @@
           />
         {/if}
 
-        <!-- Core dot -->
+        <!-- Core dot (colored glow) -->
         <circle
           cx={node.x} cy={node.y}
           r={r}
           fill={color}
-          opacity={node.active ? 0.95 : 0.85}
+          opacity={node.active ? 0.95 : 0.9}
           filter={node.active ? 'url(#glow-green)' : `url(#glow-${
             node.signal === 'tracking' ? 'cyan'
             : node.signal === 'money'  ? 'amber'
@@ -419,19 +423,31 @@
           class:active-dot={node.active}
         />
 
+        <!-- Hot core (white-hot beacon center) -->
+        <circle
+          cx={node.x} cy={node.y}
+          r={node.active ? 3 : 2}
+          fill="#ffffff"
+          opacity={node.active ? 0.95 : 0.82}
+          class="node-core"
+        />
+
         <!-- Label (only for labelled set + active) -->
         {#if LABELLED.has(node.id)}
           {@const above = node.y > h * 0.75}
           {@const left  = node.x > w * 0.82}
           <text
-            x={node.x + (left ? -(r + 5) : (r + 5))}
-            y={node.y + (above ? -(r + 3) : (r + 4))}
+            x={node.x + (left ? -(r + 6) : (r + 6))}
+            y={node.y + (above ? -(r + 3) : (r + 5))}
             text-anchor={left ? 'end' : 'start'}
             dominant-baseline={above ? 'auto' : 'hanging'}
             class="node-label"
             class:active-label={node.active}
-            fill={node.active ? '#00ff88' : '#7a818d'}
-            font-size={node.active ? '7' : '6'}
+            fill={node.active ? '#00ff88' : '#aeb4bc'}
+            stroke="#060608"
+            stroke-width="2.6"
+            paint-order="stroke"
+            font-size={node.active ? '9' : '7.5'}
           >{node.label}</text>
         {/if}
       </g>
@@ -501,9 +517,9 @@
     pointer-events: none;
     z-index: 9;
     background: radial-gradient(
-      ellipse 90% 90% at 50% 50%,
-      transparent 50%,
-      rgba(6,6,8,0.55) 100%
+      ellipse 92% 92% at 50% 50%,
+      transparent 58%,
+      rgba(6,6,8,0.42) 100%
     );
   }
 

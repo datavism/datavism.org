@@ -287,9 +287,12 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     return
   }
 
-  // Rate limit protects the Gemini budget. Deployed envs REQUIRE it — fail closed.
+  // Rate limit protects the Gemini budget. PRODUCTION requires it — fail closed so
+  // the public endpoint can never run uncapped. PREVIEW deploys exist for testing:
+  // they still rate-limit IF Upstash is configured, but won't hard-fail without it,
+  // so a throwaway preview can exercise GHOST without provisioning Redis. Local: optional.
   const rl: RlConfig = { url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN }
-  const deployed = process.env.VERCEL_ENV === 'production' || process.env.VERCEL_ENV === 'preview'
+  const requiresRateLimit = process.env.VERCEL_ENV === 'production'
   if (rateLimitConfigured(rl)) {
     try {
       const verdict = await checkRateLimit(clientIp(req.headers), rl)
@@ -301,7 +304,7 @@ export default async function handler(req: Req, res: Res): Promise<void> {
       res.status(503).json({ error: 'ratelimit-unavailable' })
       return
     }
-  } else if (deployed) {
+  } else if (requiresRateLimit) {
     res.status(503).json({ error: 'ratelimit-not-configured' })
     return
   }

@@ -1,0 +1,8 @@
+# Dev / iteration artifacts — never needed for the build or runtime.
+.playwright-mcp/
+.claude/
+docs/
+/*.png
+/*.jpeg
+/*.jpg
+*.log

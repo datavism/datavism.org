@@ -6,7 +6,7 @@
   // No GSAP — CSS + SVG animation only.
 
   import { onMount } from 'svelte'
-  import { geoNaturalEarth1, geoPath } from 'd3-geo'
+  import { geoNaturalEarth1, geoPath, geoGraticule } from 'd3-geo'
   import { feature } from 'topojson-client'
   import type { Topology } from 'topojson-specification'
   import { GEO_CASES, SIGNAL_COLOR, ACTIVE_CASE } from '../../lib/command-center/geo'
@@ -20,6 +20,7 @@
   // ── world geometry ────────────────────────────────────────────
   let landPaths = $state<string[]>([])
   let borderPaths = $state<string[]>([])
+  let graticulePath = $state('')
   let loaded = $state(false)
 
   // ── projected node positions ──────────────────────────────────
@@ -56,6 +57,7 @@
 
     landPaths   = (countries as any).features.map((f: any) => path(f) ?? '')
     borderPaths = [(path(borders) ?? '')]
+    graticulePath = path(geoGraticule().step([20, 20])()) ?? ''
 
     // Project each case node
     nodes = GEO_CASES.map(c => {
@@ -103,7 +105,7 @@
     // All non-active nodes fade in staggered over 2.5s
     const nonActive = GEO_CASES.filter(c => !c.active)
     for (let i = 0; i < nonActive.length; i++) {
-      await delay(80 + i * 55)
+      await delay(42)
       visibleNodes = new Set([...visibleNodes, nonActive[i].id])
     }
     // Active op locks on last with a slight dramatic pause
@@ -151,16 +153,12 @@
     return () => ro.disconnect()
   })
 
-  // ── reactive reproject on size change ────────────────────────
-  $effect(() => {
-    if (loaded && w && h) {
-      buildPaths(w, h, (window as any).__worldTopo)
-    }
-  })
+  // (re-projection on resize is handled non-reactively in the ResizeObserver
+  //  above; a $effect here would read+write `nodes` and loop — do not add one.)
 
   // ── helpers ───────────────────────────────────────────────────
   function nodeR(c: GeoCase): number {
-    return c.active ? 7 : 4
+    return c.active ? 8 : 5
   }
 
   function pulseDelay(i: number): string {
@@ -225,27 +223,27 @@
     <defs>
       <!-- Node glows by signal -->
       <filter id="glow-cyan"    x="-80%" y="-80%" width="260%" height="260%">
-        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feGaussianBlur stdDeviation="6" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
       <filter id="glow-amber"   x="-80%" y="-80%" width="260%" height="260%">
-        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feGaussianBlur stdDeviation="6" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
       <filter id="glow-magenta" x="-80%" y="-80%" width="260%" height="260%">
-        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feGaussianBlur stdDeviation="6" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
       <filter id="glow-violet"  x="-80%" y="-80%" width="260%" height="260%">
-        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feGaussianBlur stdDeviation="6" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
       <filter id="glow-green"   x="-120%" y="-120%" width="340%" height="340%">
-        <feGaussianBlur stdDeviation="7" result="blur"/>
+        <feGaussianBlur stdDeviation="9" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
-      <filter id="glow-land" x="-5%" y="-5%" width="110%" height="110%">
-        <feGaussianBlur stdDeviation="1.5"/>
+      <filter id="glow-land" x="-25%" y="-25%" width="150%" height="150%">
+        <feGaussianBlur stdDeviation="4"/>
       </filter>
 
       <!-- Radial heatmap under active op -->
@@ -266,12 +264,15 @@
 
     <!-- ── land shadows (soft atmospheric glow behind continents) -->
     {#each borderPaths as bp}
-      <path d={bp} fill="#00ffff" opacity="0.025" filter="url(#glow-land)" />
+      <path d={bp} fill="#0bd8c0" opacity="0.08" filter="url(#glow-land)" />
     {/each}
+
+    <!-- ── graticule (faint command grid) ─────────────────── -->
+    <path d={graticulePath} fill="none" stroke="#1aa39a" stroke-width="0.3" opacity="0.13" />
 
     <!-- ── landmasses ──────────────────────────────────────── -->
     {#each landPaths as lp}
-      <path d={lp} fill="#0e1014" stroke="#1c2230" stroke-width="0.4" />
+      <path d={lp} fill="#13161e" stroke="#283041" stroke-width="0.5" />
     {/each}
 
     <!-- ── connection arcs ─────────────────────────────────── -->

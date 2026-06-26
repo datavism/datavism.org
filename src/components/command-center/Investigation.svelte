@@ -61,9 +61,13 @@
     }
   }
 
+  // caseId is read once on purpose: the parent keys this overlay on the case id,
+  // so a different operation remounts the loop with fresh state.
+  // svelte-ignore state_referenced_locally
   const operation = operationFor(caseId)
 
   // ── state machine ──────────────────────────────────────────────────────────
+  // svelte-ignore state_referenced_locally
   let op = $state<OperationState>(initialOp(caseId))
 
   // ── finding form (local; snapshotted into op on submit) ────────────────────

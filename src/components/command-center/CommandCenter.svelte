@@ -404,11 +404,14 @@
   <!-- INVESTIGATION LOOP OVERLAY                                   -->
   <!-- ════════════════════════════════════════════════════════════ -->
   {#if activeOpId}
-    <Investigation
-      caseId={activeOpId}
-      onclose={closeInvestigation}
-      onclosed={handleClosed}
-    />
+    <!-- key on the case id: a new operation must remount the loop with fresh state -->
+    {#key activeOpId}
+      <Investigation
+        caseId={activeOpId}
+        onclose={closeInvestigation}
+        onclosed={handleClosed}
+      />
+    {/key}
   {/if}
 
   <!-- ════════════════════════════════════════════════════════════ -->

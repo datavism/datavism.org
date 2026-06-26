@@ -11,6 +11,7 @@
   import WorldMap from './WorldMap.svelte'
   import Dossier from './Dossier.svelte'
   import Investigation from './Investigation.svelte'
+  import ClosedRecord from './ClosedRecord.svelte'
   import { LAUNCHPAD_CASES } from '../../lib/line-g-opening/cases'
   import { FIRST_OPERATION } from '../../lib/command-center/operations'
   import { loadHistory } from '../../lib/command-center/history'
@@ -20,6 +21,7 @@
   // ── dossier + investigation selection ─────────────────────────
   let selectedCaseId = $state<string | null>(null)   // dossier overlay
   let activeOpId = $state<string | null>(null)        // investigation loop overlay
+  let reviewOp = $state<ClosedOperation | null>(null) // read-only closed-record overlay
 
   // transient confirmation line
   let claimedMsg = $state<string | null>(null)
@@ -70,7 +72,7 @@
   // Lock background scroll while ANY overlay (dossier or investigation) is open.
   // One lock for whichever is open, so the dossier→investigation handoff can't race.
   $effect(() => {
-    const open = selectedCaseId !== null || activeOpId !== null
+    const open = selectedCaseId !== null || activeOpId !== null || reviewOp !== null
     const prev = document.body.style.overflow
     if (open) document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = prev }
@@ -363,7 +365,11 @@
       {:else}
         <div class="closed-list">
           {#each closedOps as op (op.caseId)}
-            <span class="closed-tag">{op.codename}</span>
+            <button
+              class="closed-tag"
+              onclick={() => (reviewOp = op)}
+              aria-label="Review closed operation {op.codename}"
+            >{op.codename}</button>
           {/each}
         </div>
       {/if}
@@ -403,6 +409,13 @@
       onclose={closeInvestigation}
       onclosed={handleClosed}
     />
+  {/if}
+
+  <!-- ════════════════════════════════════════════════════════════ -->
+  <!-- CLOSED RECORD OVERLAY (read-only review)                     -->
+  <!-- ════════════════════════════════════════════════════════════ -->
+  {#if reviewOp}
+    <ClosedRecord op={reviewOp} onclose={() => (reviewOp = null)} />
   {/if}
 
 </div><!-- /cc-shell -->
@@ -1066,8 +1079,18 @@
     text-transform: uppercase;
     color: #00ff88;
     border: 1px solid #00ff8844;
-    padding: 2px 8px;
+    background: #00ff8808;
+    padding: 3px 9px;
     white-space: nowrap;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .closed-tag:hover,
+  .closed-tag:focus-visible {
+    background: #00ff8818;
+    border-color: #00ff8899;
+    outline: none;
   }
 
   .bb-agent { border-right: 1px solid #15161d; }

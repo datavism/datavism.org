@@ -1,0 +1,49 @@
+---
+// src/pages/command.astro
+// Command Center — full-viewport ops-room dashboard.
+// CommandCenter.svelte owns all layout (top bar, three columns, bottom bar).
+// No site chrome here: deliberately isolated from the main site header/footer.
+import '../styles/global.css'
+import '@fontsource/spline-sans-mono/latin-400.css'
+import '@fontsource/spline-sans-mono/latin-500.css'
+import '@fontsource/spline-sans-mono/latin-600.css'
+import CommandCenter from '../components/command-center/CommandCenter.svelte'
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Command Center · DATAVISM</title>
+    <meta name="description" content="DATAVISM Command Center — global investigation ops room" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <CommandCenter client:load />
+  </body>
+</html>
+
+<style>
+  /* Body and html must be zero-margin, overflow hidden so the full-viewport
+     CommandCenter component can govern all scrolling and sizing itself. */
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    background: #060608;
+  }
+
+  /* On narrow screens the dashboard stacks into one tall column — let the page
+     scroll instead of clamping it to a single non-scrolling viewport. */
+  @media (max-width: 960px) {
+    html, body {
+      height: auto;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  }
+</style>

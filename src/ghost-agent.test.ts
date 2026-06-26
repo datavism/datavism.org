@@ -37,7 +37,7 @@ describe('GHOST system prompt', () => {
 })
 
 describe('askGhost', () => {
-  const opts = (f: any) => ({ apiKey: 'k', model: 'gemini-2.5-flash-lite', fetchImpl: f })
+  const opts = (f: any) => ({ apiKey: 'k', model: 'gemini-2.5-flash-lite', fetchImpl: f, sleepImpl: async () => {} })
 
   it('returns the reply and sends a system instruction + the key as ?key=', async () => {
     const f = mockFetch(200, { candidates: [{ content: { parts: [{ text: 'Ask a sharper question.' }] } }] })
@@ -65,6 +65,47 @@ describe('askGhost', () => {
   it('throws api-error / empty', async () => {
     await expect(askGhost([user('hi')], opts(mockFetch(429, {})))).rejects.toBeInstanceOf(GhostError)
     await expect(askGhost([user('hi')], opts(mockFetch(200, { candidates: [] })))).rejects.toMatchObject({ code: 'empty' })
+  })
+  it('retries a transient upstream error, then succeeds', async () => {
+    const seq = [
+      { ok: false, status: 503, json: async () => ({ error: { code: 503 } }) },
+      { ok: true, status: 200, json: async () => ({ candidates: [{ content: { parts: [{ text: 'recovered' }] } }] }) },
+    ]
+    const calls: number[] = []
+    const f = Object.assign(async () => { calls.push(1); return seq[calls.length - 1] as any }, { calls })
+    const r = await askGhost([user('hi')], { apiKey: 'k', fetchImpl: f as any, sleepImpl: async () => {} })
+    expect(r.reply).toBe('recovered')
+    expect(calls.length).toBe(2)
+  })
+  it('does not retry a non-retryable upstream status (fails fast)', async () => {
+    const f = mockFetch(400, { error: { code: 400 } })
+    await expect(askGhost([user('hi')], opts(f))).rejects.toMatchObject({ code: 'api-error' })
+    expect(f.calls.length).toBe(1)
+  })
+  it('gives up with api-error after exhausting retries on a persistent error', async () => {
+    const f = mockFetch(503, { error: { code: 503 } })
+    await expect(askGhost([user('hi')], opts(f))).rejects.toMatchObject({ code: 'api-error' })
+    expect(f.calls.length).toBe(3) // 1 initial + 2 retries
+  })
+  it('trims the oldest turns to fit the budget instead of rejecting a long conversation', async () => {
+    const f = mockFetch(200, { candidates: [{ content: { parts: [{ text: 'ok' }] } }] })
+    const limits = { maxInputChars: 100, maxTurns: 12, maxOutputTokens: 600 }
+    const convo = [
+      { role: 'user' as const, content: 'a'.repeat(60) },
+      { role: 'assistant' as const, content: 'b'.repeat(60) },
+      { role: 'user' as const, content: 'c'.repeat(60) },
+    ]
+    const r = await askGhost(convo, { apiKey: 'k', fetchImpl: f as any, limits })
+    expect(r.reply).toBe('ok')
+    const sent = JSON.parse(f.calls[0].init.body)
+    expect(sent.contents.length).toBe(1) // only the final user turn fits (60 ≤ 100; +any prior = 120 > 100)
+    expect(sent.contents[0].parts[0].text).toBe('c'.repeat(60))
+  })
+  it('still rejects a single message that alone overflows the budget', async () => {
+    const limits = { maxInputChars: 100, maxTurns: 12, maxOutputTokens: 600 }
+    await expect(
+      askGhost([user('x'.repeat(101))], { apiKey: 'k', fetchImpl: mockFetch(200, {}) as any, limits }),
+    ).rejects.toMatchObject({ code: 'too-long' })
   })
 })
 

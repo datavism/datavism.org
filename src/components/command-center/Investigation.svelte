@@ -153,13 +153,8 @@
     }
   }
 
-  // a fill-in-the-blank scaffold the agent can use or ignore (only if finding is empty)
-  const FINDING_TEMPLATE = '[specific entity] — [the concrete figure or fact] — [what it targets / affects]'
   const UNCERTAINTY_EXAMPLE =
     'Example from another case: “The tracker list came from one scan on one device — another build may bundle different ones.”'
-  function useTemplate() {
-    if (!fEvidence.trim()) fEvidence = FINDING_TEMPLATE
-  }
 
   // ── progress rail (4 visible stages mapped from the 5 flow steps) ──────────
   const RAIL = ['QUESTION', 'DATA', 'EVIDENCE', 'CERTIFY'] as const
@@ -390,11 +385,8 @@
             <input class="fld-in" bind:value={fSourceUrl} placeholder="https://… the exact public source" />
           </label>
           <label class="fld">
-            <span class="fld-lbl">
-              YOUR FINDING <span class="fld-hint">— one concrete, traceable fact</span>
-              <button type="button" class="fld-template" onclick={useTemplate}>↳ use template</button>
-            </span>
-            <textarea class="fld-ta" rows="3" bind:value={fEvidence} use:autofocus placeholder="e.g. Acme Verband declared the 4.5–5.0M € band, 18 staff, targeting energy policy."></textarea>
+            <span class="fld-lbl">YOUR FINDING <span class="fld-hint">— one specific entity + one concrete figure or fact</span></span>
+            <textarea class="fld-ta" rows="3" bind:value={fEvidence} use:autofocus placeholder="e.g. Verband der Chemischen Industrie declared the 4.5–5.0M € band, 21 staff, targeting energy regulation."></textarea>
           </label>
           <label class="fld">
             <span class="fld-lbl">WHAT'S UNVERIFIED <span class="fld-hint">— what you can’t yet prove: self-declared, incomplete, out of date</span></span>
@@ -967,20 +959,7 @@
     color: #a7ada3;
   }
 
-  /* ── finding template chip + uncertainty example ────────────── */
-  .fld-template {
-    margin-left: auto;
-    background: none;
-    border: 1px solid #2c2f3a;
-    color: #7a818d;
-    font-family: inherit;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    padding: 2px 8px;
-    cursor: pointer;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .fld-template:hover { color: #00ff88; border-color: #00ff8855; }
+  /* ── uncertainty example ────────────────────────────────────── */
   .fld-example {
     font-size: 11.5px;
     line-height: 1.5;

@@ -47,6 +47,11 @@ describe('certify system prompt', () => {
     expect(p).toMatch(/Return ONLY a JSON object/i)
     expect(p).toMatch(/"certified"/)
   })
+  it('accepts an official source + locatable entity — no deep-link required', () => {
+    expect(p).toMatch(/traceable/i)
+    expect(p).toMatch(/deep-link|permalink/i)
+    expect(p).toMatch(/not required/i)
+  })
 })
 
 describe('preCheckStructure', () => {
@@ -88,6 +93,12 @@ describe('parseVerdict', () => {
   it('coerces non-boolean certified to false', () => {
     const v = parseVerdict('{"certified":"yes","feedback":"hi","notes":{}}')
     expect(v.certified).toBe(false)
+  })
+  it('never shows the failure fallback when certified but feedback is omitted', () => {
+    const v = parseVerdict('{"certified":true,"notes":{"source":true,"specificity":true,"uncertainty":true}}')
+    expect(v.certified).toBe(true)
+    expect(v.feedback).toBe('Method holds.')
+    expect(v.feedback).not.toMatch(/could not read|resubmit/i)
   })
 })
 

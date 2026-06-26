@@ -91,6 +91,71 @@
   let closedCodename = $state<string | null>(null)
   let closedAt = $state<string | null>(null)
 
+  // how many of the three method axes already hold (for the softer-failure framing)
+  const verdictSolid = $derived(
+    verdict ? [verdict.notes.source, verdict.notes.specificity, verdict.notes.uncertainty].filter(Boolean).length : 0,
+  )
+
+  // ── GHOST RECON (orient on the source step — structure, never the answer) ───
+  type Orient = { does: string; shows: string; angles: string; grounded: boolean }
+  let recon = $state<Orient | null>(null)
+  let reconBusy = $state(false)
+  let reconTried = $state(false)
+  async function loadRecon() {
+    if (reconTried || reconBusy || !operation) return
+    reconTried = true
+    reconBusy = true
+    try {
+      const res = await fetch('/api/guide', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          mode: 'orient',
+          source: { title: operation.source.title, url: operation.source.url },
+          question: operation.question,
+        }),
+      })
+      if (res.status === 200) {
+        const v = (await res.json()) as Orient
+        if (v.grounded) recon = v
+      }
+    } catch {
+      /* curated howTo stands as the fallback — the card is never empty */
+    } finally {
+      reconBusy = false
+    }
+  }
+
+  // ── GHOST COACH (react to the partial draft — name the gap, never fill it) ──
+  let coachNudge = $state<string | null>(null)
+  let coachBusy = $state(false)
+  async function askCoach() {
+    if (coachBusy) return
+    coachBusy = true
+    coachNudge = null
+    try {
+      const res = await fetch('/api/guide', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          mode: 'coach',
+          draft: { question: fQuestion, sourceUrl: fSourceUrl, evidence: fEvidence, uncertainty: fUncertainty },
+          question: operation?.question,
+        }),
+      })
+      if (res.status === 200) coachNudge = (await res.json()).nudge
+      else if (res.status === 503) coachNudge = 'GHOST coaching runs server-side and is offline here. Tip: name one specific entity + one concrete figure, then say what you can’t yet prove.'
+      else coachNudge = 'Could not reach GHOST right now — try again in a moment.'
+    } catch {
+      coachNudge = 'Could not reach GHOST — check your connection.'
+    } finally {
+      coachBusy = false
+    }
+  }
+
+  const UNCERTAINTY_EXAMPLE =
+    'Example from another case: “The tracker list came from one scan on one device — another build may bundle different ones.”'
+
   // ── progress rail (4 visible stages mapped from the 5 flow steps) ──────────
   const RAIL = ['QUESTION', 'DATA', 'EVIDENCE', 'CERTIFY'] as const
   const railIndex = $derived(
@@ -110,7 +175,7 @@
   }
 
   // ── transitions ────────────────────────────────────────────────────────────
-  function begin() { op = toSource(op) }
+  function begin() { op = toSource(op); loadRecon() }  // GHOST recons the source as we arrive
   function pulledData() { op = toDraft(op) }
 
   let busy = $state(false)
@@ -259,6 +324,27 @@
           </a>
           <p class="src-how">{operation.source.howTo}</p>
         </div>
+
+        <!-- GHOST RECON — orient in the source (structure, never the answer) -->
+        <div class="recon-card">
+          <div class="recon-hd">
+            <span class="recon-tag">◢ GHOST RECON</span>
+            <span class="recon-note">orients you — the finding is yours</span>
+          </div>
+          {#if reconBusy}
+            <div class="recon-loading"><span class="recon-pip"></span> reconning the source…</div>
+          {:else if recon}
+            <dl class="recon-grid">
+              <dt>DOES</dt><dd>{recon.does}</dd>
+              <dt>SHOWS</dt><dd>{recon.shows}</dd>
+              <dt>ANGLES</dt><dd>{recon.angles}</dd>
+            </dl>
+            {#if recon.grounded}<span class="recon-src">↳ grounded in a live web check</span>{/if}
+          {:else}
+            <p class="recon-fallback">Open the source above and skim it first. Each entry exposes a few fields — read those, then pick one concrete record to build your finding from.</p>
+          {/if}
+        </div>
+
         <div class="iv-actions iv-actions-split">
           <button class="iv-btn iv-btn-ghost" onclick={() => (op = back(op))}>← BACK</button>
           <button class="iv-btn iv-btn-primary" onclick={pulledData}>I'VE PULLED THE DATA → DRAFT</button>
@@ -275,7 +361,7 @@
 
         {#if verdict && !verdict.certified}
           <div class="iv-verdict-fail" role="status">
-            <span class="vf-mark">✕ METHOD NOT YET CERTIFIED</span>
+            <span class="vf-mark">{verdictSolid} OF 3 METHOD AXES SOLID — ONE STEP AWAY</span>
             <p class="vf-feedback">{verdict.feedback}</p>
             <div class="vf-notes">
               <span class="vf-note" class:vf-ok={verdict.notes.source}>SOURCE {verdict.notes.source ? '✓' : '✕'}</span>
@@ -299,12 +385,13 @@
             <input class="fld-in" bind:value={fSourceUrl} placeholder="https://… the exact public source" />
           </label>
           <label class="fld">
-            <span class="fld-lbl">YOUR FINDING <span class="fld-hint">— one concrete, traceable fact</span></span>
-            <textarea class="fld-ta" rows="3" bind:value={fEvidence} use:autofocus placeholder="e.g. Acme Verband declared the 4.5–5.0M € band, 18 staff, targeting energy policy."></textarea>
+            <span class="fld-lbl">YOUR FINDING <span class="fld-hint">— one specific entity + one concrete figure or fact</span></span>
+            <textarea class="fld-ta" rows="3" bind:value={fEvidence} use:autofocus placeholder="e.g. Verband der Chemischen Industrie declared the 4.5–5.0M € band, 21 staff, targeting energy regulation."></textarea>
           </label>
           <label class="fld">
-            <span class="fld-lbl">WHAT'S UNVERIFIED <span class="fld-hint">— what could be wrong, self-declared, out of date</span></span>
+            <span class="fld-lbl">WHAT'S UNVERIFIED <span class="fld-hint">— what you can’t yet prove: self-declared, incomplete, out of date</span></span>
             <textarea class="fld-ta" rows="2" bind:value={fUncertainty} placeholder="e.g. The figure is a self-declared range, not audited."></textarea>
+            <span class="fld-example">{UNCERTAINTY_EXAMPLE}</span>
           </label>
         </div>
 
@@ -313,6 +400,16 @@
           <span class="ck" class:ck-ok={!check.missing.includes('source')}>SOURCE</span>
           <span class="ck" class:ck-ok={!check.missing.includes('specificity')}>SPECIFIC</span>
           <span class="ck" class:ck-ok={!check.missing.includes('uncertainty')}>UNCERTAINTY</span>
+        </div>
+
+        <!-- GHOST coach — names the gap, never fills it -->
+        <div class="coach-row">
+          <button type="button" class="coach-btn" onclick={askCoach} disabled={coachBusy}>
+            {coachBusy ? 'GHOST is reading your draft…' : '◢ Stuck? Ask GHOST'}
+          </button>
+          {#if coachNudge}
+            <div class="coach-nudge"><span class="coach-nudge-tag">GHOST</span>{coachNudge}</div>
+          {/if}
         </div>
 
         <div class="iv-actions iv-actions-split">
@@ -643,9 +740,10 @@
   .ck-ok::before { content: '✓ '; }
 
   /* verdict-fail block */
+  /* "almost there", not "rejected" — amber progress, not alarm red */
   .iv-verdict-fail {
-    background: #ff2a2a0a;
-    border: 1px solid #ff5a5a33;
+    background: #ffd23f0d;
+    border: 1px solid #ffd23f33;
     padding: 12px 14px;
     display: flex;
     flex-direction: column;
@@ -654,16 +752,16 @@
   .vf-mark {
     font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.14em;
-    color: #ff7a7a;
+    letter-spacing: 0.12em;
+    color: #ffd23f;
   }
-  .vf-feedback { font-size: 13.5px; line-height: 1.6; color: #e8c4c4; }
+  .vf-feedback { font-size: 13.5px; line-height: 1.6; color: #e9e2c8; }
   .vf-notes { display: flex; gap: 8px; flex-wrap: wrap; }
   .vf-note {
     font-size: 10px;
     letter-spacing: 0.12em;
-    color: #ff7a7a;
-    border: 1px solid #ff5a5a33;
+    color: #b89b54;
+    border: 1px solid #ffd23f2e;
     padding: 2px 8px;
   }
   .vf-note.vf-ok { color: #00ff88; border-color: #00ff8844; }
@@ -786,8 +884,128 @@
     color: #c4c9d0;
   }
 
+  /* ── GHOST RECON card (source step) ─────────────────────────── */
+  .recon-card {
+    background: #00ff8808;
+    border: 1px solid #00ff8826;
+    border-left: 2px solid #00ff8866;
+    padding: 13px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .recon-hd {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .recon-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: #00ff88;
+  }
+  .recon-note {
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: #7a818d;
+    font-style: italic;
+  }
+  .recon-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #7a818d;
+    letter-spacing: 0.04em;
+  }
+  .recon-pip {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #00ff88;
+    box-shadow: 0 0 8px #00ff88;
+    animation: recon-blink 1.1s ease-in-out infinite;
+  }
+  @keyframes recon-blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+  .recon-grid {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 5px 12px;
+    margin: 0;
+  }
+  .recon-grid dt {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: #5a8a6e;
+    padding-top: 2px;
+  }
+  .recon-grid dd {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #c4c9d0;
+  }
+  .recon-src {
+    font-size: 10.5px;
+    color: #5a606c;
+    letter-spacing: 0.04em;
+  }
+  .recon-fallback {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #a7ada3;
+  }
+
+  /* ── uncertainty example ────────────────────────────────────── */
+  .fld-example {
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: #6f757f;
+    font-style: italic;
+  }
+
+  /* ── GHOST coach ────────────────────────────────────────────── */
+  .coach-row { display: flex; flex-direction: column; gap: 10px; }
+  .coach-btn {
+    align-self: flex-start;
+    background: none;
+    border: 1px dashed #2c2f3a;
+    color: #a7ada3;
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .coach-btn:hover:not(:disabled) { color: #00ff88; border-color: #00ff8866; }
+  .coach-btn:disabled { opacity: 0.6; cursor: default; }
+  .coach-nudge {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: #00ff880a;
+    border-left: 2px solid #00ff8866;
+    padding: 11px 13px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #c4c9d0;
+  }
+  .coach-nudge-tag {
+    flex-shrink: 0;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: #00ff88;
+    padding-top: 2px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .cert-pulse { animation: none; }
+    .recon-pip { animation: none; }
     .iv-btn { transition: none; }
   }
 </style>

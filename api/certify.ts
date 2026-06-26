@@ -60,11 +60,13 @@ export function buildCertifyPrompt(): string {
 YOUR ONE JOB: certify the METHOD. You NEVER verify TRUTH.
 You have NOT seen the source. You CANNOT and MUST NOT judge whether the agent's finding is factually correct — "is this true" is the agent's burden, not yours. Never imply you have confirmed a fact. You judge ONLY whether the investigative method is sound, on exactly three axes:
 
-  SOURCE — Is a real, specific, public source URL cited (not a vague reference, not a search engine homepage)?
-  SPECIFICITY — Is the finding ONE concrete, traceable claim — a named entity, a figure, a specific fact — rather than a vague feeling, a generality, or an opinion?
+  SOURCE — Is the finding TRACEABLE to a real, official public source? PASS if the cited source is the authoritative public source for this kind of data (an official register, database, filing system, or dataset) AND the finding names a specific record or entity that someone could locate there by name or search term. A deep-link or permalink is NOT required — citing the official source plus a named, locatable entity is sufficient traceability; do not demand the exact entry URL (many public registers are apps with no shareable per-entry link). FAIL only if: no source is cited, the source is not authoritative (a search-engine results page, a blog, a social post, a marketing page), or it does not actually cover the claim.
+  SPECIFICITY — Is the finding ONE concrete, traceable claim — it names a specific entity AND at least one concrete attribute the source actually publishes (a figure, a declared RANGE or BAND, a count, a category, a date)? A declared range or band IS concrete — do NOT demand a single exact number when the source only publishes ranges, bands, or categories. FAIL only if the finding is a vague feeling, a generality, an opinion, or names no specific entity or attribute.
   UNCERTAINTY — Does the agent acknowledge what is unverified, self-declared, incomplete, or could be wrong?
 
 Set certified=true ONLY if all three axes hold. Otherwise certified=false, and in feedback name the SINGLE most important fix — concretely, in one sentence.
+
+CALIBRATION — certify when the method is genuinely sound for what THIS source provides. A finding that cites the official source, names a real entity, reports a concrete attribute the source actually publishes, and states its uncertainty is a PASS. Do NOT invent a fourth hurdle, do NOT nitpick formatting, and do NOT demand detail the source cannot yield. Reserve certified=false for findings that are genuinely vague, unsourced, opinion, or untraceable.
 
 VOICE: precise, calm, unsentimental, method-first. Address the agent directly ("you"). Never praise the conclusion — only the craft. Never motivational, never cringe. Be concise: feedback is at most 240 characters.
 
@@ -92,12 +94,18 @@ export function parseVerdict(text: string): Verdict {
     return fallback
   }
   const n = raw?.notes ?? {}
+  const certified = raw?.certified === true
+  // When certified, the model often omits feedback (nothing to fix) — never show the
+  // failure-fallback line in that case; it would contradict the verdict.
+  const feedback =
+    typeof raw?.feedback === 'string' && raw.feedback.trim()
+      ? raw.feedback.trim().slice(0, 240)
+      : certified
+        ? 'Method holds.'
+        : 'Tighten the finding and resubmit.'
   return {
-    certified: raw?.certified === true,
-    feedback:
-      typeof raw?.feedback === 'string' && raw.feedback.trim()
-        ? raw.feedback.trim().slice(0, 240)
-        : fallback.feedback,
+    certified,
+    feedback,
     notes: {
       source: n?.source === true,
       specificity: n?.specificity === true,

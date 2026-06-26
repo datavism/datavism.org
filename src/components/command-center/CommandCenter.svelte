@@ -1159,6 +1159,47 @@
     .bb-num { font-size: 22px; }
   }
 
+  /* ── tablet / large phone: stack to one scrollable column ─────── */
+  @media (max-width: 960px) {
+    .cc-shell {
+      height: auto;
+      min-height: 100dvh;
+      overflow: visible;
+    }
+    .cc-main {
+      grid-template-columns: 1fr;
+      overflow: visible;
+      gap: 12px;
+    }
+    .cc-col { overflow: visible; }
+    .cc-center { order: -1; }            /* the map leads — it's the hero */
+    .panel-map { height: auto; }
+    .panel-ops { max-height: 320px; }    /* ops list scrolls within, never dominates */
+    .panel-assigned .panel-body { overflow: visible; }
+
+    /* bottom band: stack its four cells, wrap the KPI tiles */
+    .cc-bottombar {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+    .bb-kpis { flex-wrap: wrap; justify-content: space-around; border-bottom: 1px solid #15161d; }
+    .bb-kpi { flex: 1 0 auto; border-right: 1px solid #15161d; }
+    .bb-cell { border-right: none; border-bottom: 1px solid #15161d; }
+    .bb-sys { border-bottom: none; }
+  }
+
+  /* ── phone: trim chrome, shrink KPIs ──────────────────────────── */
+  @media (max-width: 560px) {
+    .topbar-nav { display: none; }
+    .cc-topbar { padding: 10px 12px; gap: 10px; }
+    .bb-num { font-size: 20px; }
+    .bb-kpi { min-width: 54px; padding: 8px 10px; }
+    .ov-body { gap: 12px; }
+    .donut { width: 92px; height: 92px; }
+    .donut-hole { inset: 22px; }
+    .donut-num { font-size: 23px; }
+  }
+
   /* ══════════════════════════════════════════════════════════════
    * REDUCED MOTION
    * ═════════════════════════════════════════════════════════════*/

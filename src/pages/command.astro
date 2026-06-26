@@ -35,4 +35,15 @@ import CommandCenter from '../components/command-center/CommandCenter.svelte'
     overflow: hidden;
     background: #060608;
   }
+
+  /* On narrow screens the dashboard stacks into one tall column — let the page
+     scroll instead of clamping it to a single non-scrolling viewport. */
+  @media (max-width: 960px) {
+    html, body {
+      height: auto;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  }
 </style>

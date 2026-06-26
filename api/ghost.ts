@@ -158,6 +158,33 @@ export async function checkRateLimit(
   return { allowed: true }
 }
 
+// ── in-memory fallback limiter (per warm instance; NOT distributed) ────────────
+// Used on deployed envs when Upstash isn't configured, so GHOST works without
+// provisioning Redis instead of failing closed. Weaker than the distributed cap —
+// state lives per warm function instance. Configure Upstash for a hard global limit.
+export type MemStore = {
+  ip: Map<string, { count: number; resetAt: number }>
+  global: { count: number; resetAt: number }
+}
+const _memStore: MemStore = { ip: new Map(), global: { count: 0, resetAt: 0 } }
+
+export function memRateLimit(
+  ip: string,
+  now: number,
+  limits: typeof RL_LIMITS = RL_LIMITS,
+  store: MemStore = _memStore,
+): { allowed: boolean; reason?: 'ip' | 'global' } {
+  const ipE = store.ip.get(ip)
+  if (!ipE || ipE.resetAt <= now) store.ip.set(ip, { count: 1, resetAt: now + 60_000 })
+  else if (++ipE.count > limits.perIpPerMin) return { allowed: false, reason: 'ip' }
+
+  if (store.global.resetAt <= now) { store.global.count = 1; store.global.resetAt = now + 86_400_000 }
+  else if (++store.global.count > limits.globalPerDay) return { allowed: false, reason: 'global' }
+
+  if (store.ip.size > 5000) for (const [k, e] of store.ip) if (e.resetAt <= now) store.ip.delete(k)
+  return { allowed: true }
+}
+
 // ── handler ───────────────────────────────────────────────────────────────────
 type Req = { method?: string; body?: unknown; headers?: Record<string, string | string[] | undefined> }
 type Res = { status: (code: number) => Res; json: (body: unknown) => void }
@@ -195,8 +222,9 @@ export default async function handler(req: Req, res: Res): Promise<void> {
     return
   }
 
-  // Rate limit protects the Gemini budget. Deployed envs (production/preview) REQUIRE
-  // it — fail closed so the public endpoint can never run uncapped. Locally optional.
+  // Rate limit protects the Gemini budget. Prefer the distributed Upstash limiter;
+  // on a deployed env without Upstash, fall back to an in-memory per-instance limiter
+  // instead of failing closed, so GHOST works without Redis. Local dev: unlimited.
   const rl: RlConfig = { url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN }
   const deployed = process.env.VERCEL_ENV === 'production' || process.env.VERCEL_ENV === 'preview'
   if (rateLimitConfigured(rl)) {
@@ -211,8 +239,11 @@ export default async function handler(req: Req, res: Res): Promise<void> {
       return
     }
   } else if (deployed) {
-    res.status(503).json({ error: 'ratelimit-not-configured' })
-    return
+    const verdict = memRateLimit(clientIp(req.headers), Date.now())
+    if (!verdict.allowed) {
+      res.status(429).json({ error: 'rate-limited', scope: verdict.reason })
+      return
+    }
   }
 
   try {

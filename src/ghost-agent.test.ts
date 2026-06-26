@@ -6,9 +6,22 @@ import handler, {
   GHOST_LIMITS,
   rateLimitConfigured,
   checkRateLimit,
+  memRateLimit,
+  type MemStore,
 } from '../api/ghost'
 
 const user = (content: string) => ({ role: 'user' as const, content })
+
+describe('memRateLimit (in-memory fallback)', () => {
+  const fresh = (): MemStore => ({ ip: new Map(), global: { count: 0, resetAt: 0 } })
+  it('allows under the per-IP limit and blocks over it', () => {
+    const store = fresh()
+    const lim = { perIpPerMin: 2, globalPerDay: 1000 }
+    expect(memRateLimit('1.2.3.4', 0, lim, store).allowed).toBe(true)
+    expect(memRateLimit('1.2.3.4', 0, lim, store).allowed).toBe(true)
+    expect(memRateLimit('1.2.3.4', 0, lim, store)).toEqual({ allowed: false, reason: 'ip' })
+  })
+})
 
 function mockFetch(status: number, body: unknown) {
   const calls: { url: string; init: any }[] = []
@@ -165,13 +178,26 @@ describe('handler (no-network paths)', () => {
     await handler({ method: 'POST', body: { messages: 'nope' } }, res)
     expect(res.code).toBe(400)
   })
-  it('503 fails closed on a deployed env with no limiter configured', async () => {
+  it('on a deployed env without Upstash, uses the in-memory limiter instead of failing closed', async () => {
     process.env.GEMINI_API_KEY = 'k'
     process.env.VERCEL_ENV = 'production'
     delete process.env.UPSTASH_REDIS_REST_URL
     delete process.env.UPSTASH_REDIS_REST_TOKEN
-    const res = mockRes()
-    await handler({ method: 'POST', body: { messages: [user('hi')] } }, res)
-    expect(res.body).toEqual({ error: 'ratelimit-not-configured' })
+    const realFetch = globalThis.fetch
+    globalThis.fetch = (async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ candidates: [{ content: { parts: [{ text: 'ok' }] } }] }),
+    })) as any
+    try {
+      const res = mockRes()
+      await handler({ method: 'POST', body: { messages: [user('hi')] } }, res)
+      // No longer 503 'ratelimit-not-configured': the request proceeds through the
+      // in-memory fallback and reaches the (mocked) model.
+      expect(res.code).toBe(200)
+      expect(res.body).toEqual({ reply: 'ok' })
+    } finally {
+      globalThis.fetch = realFetch
+    }
   })
 })

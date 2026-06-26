@@ -5,8 +5,10 @@ import {
   parseVerdict,
   preCheckStructure,
   judgeFinding,
+  memRateLimit,
   CertifyError,
   type Finding,
+  type MemStore,
 } from '../api/certify'
 
 const good: Finding = {
@@ -100,6 +102,48 @@ describe('buildUserTurn', () => {
   it('prefixes operation context when provided', () => {
     const t = buildUserTurn(good, { question: 'Who pays to be in the room?' })
     expect(t).toMatch(/OPERATION QUESTION: Who pays to be in the room\?/)
+  })
+})
+
+describe('memRateLimit (in-memory fallback)', () => {
+  const fresh = (): MemStore => ({ ip: new Map(), global: { count: 0, resetAt: 0 } })
+
+  it('allows up to the per-IP limit, then blocks within the window', () => {
+    const store = fresh()
+    const lim = { perIpPerMin: 3, globalPerDay: 1000 }
+    expect(memRateLimit('1.1.1.1', 1000, lim, store).allowed).toBe(true)
+    expect(memRateLimit('1.1.1.1', 1000, lim, store).allowed).toBe(true)
+    expect(memRateLimit('1.1.1.1', 1000, lim, store).allowed).toBe(true)
+    const blocked = memRateLimit('1.1.1.1', 1000, lim, store)
+    expect(blocked.allowed).toBe(false)
+    expect(blocked.reason).toBe('ip')
+  })
+
+  it('resets the per-IP window after 60s', () => {
+    const store = fresh()
+    const lim = { perIpPerMin: 1, globalPerDay: 1000 }
+    expect(memRateLimit('a', 0, lim, store).allowed).toBe(true)
+    expect(memRateLimit('a', 0, lim, store).allowed).toBe(false)
+    expect(memRateLimit('a', 61_000, lim, store).allowed).toBe(true)
+  })
+
+  it('enforces the global cap across IPs', () => {
+    const store = fresh()
+    const lim = { perIpPerMin: 100, globalPerDay: 3 }
+    expect(memRateLimit('a', 0, lim, store).allowed).toBe(true)
+    expect(memRateLimit('b', 0, lim, store).allowed).toBe(true)
+    expect(memRateLimit('c', 0, lim, store).allowed).toBe(true)
+    const g = memRateLimit('d', 0, lim, store)
+    expect(g.allowed).toBe(false)
+    expect(g.reason).toBe('global')
+  })
+
+  it('tracks IPs independently', () => {
+    const store = fresh()
+    const lim = { perIpPerMin: 1, globalPerDay: 1000 }
+    expect(memRateLimit('x', 0, lim, store).allowed).toBe(true)
+    expect(memRateLimit('y', 0, lim, store).allowed).toBe(true)
+    expect(memRateLimit('x', 0, lim, store).allowed).toBe(false)
   })
 })
 

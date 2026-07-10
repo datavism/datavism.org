@@ -6,6 +6,7 @@
 import Base from '../../layouts/Base.astro'
 import NetworkMap from '../../components/NetworkMap.svelte'
 import { LINES, getLineById } from '../../lib/curriculum/lines'
+import { fieldRefsForLine, ATLAS_URL } from '../../lib/atlas'
 
 export async function getStaticPaths() {
   return LINES
@@ -20,6 +21,10 @@ const [nameMain, nameSub] = line.name.split(' / ')
 const firstOpen = line.stations.find((s) => s.status === 'open')
 const others = LINES.filter((l) => l.id !== line.id)
 const tagline = (l: (typeof LINES)[number]) => l.mapDescription.replace(/^[A-Z]\s+/, '').replace(/\.$/, '')
+
+// ADR 002 Zug 3: reference works from the Atlas (214+ verified works of the
+// field) whose decisive move embodies what this line teaches.
+const fieldRefs = fieldRefsForLine(lineId, 3)
 
 const STATUS = { open: 'LIVE NOW', announced: 'ANNOUNCED', locked: 'LOCKED' } as const
 const STATUS_COLOR = { open: accent, announced: '#f5b700', locked: '#6b7280' } as const
@@ -97,6 +102,26 @@ const rows = line.stations.map((s) => {
             ))}
           </div>
         </div>
+        {fieldRefs.length > 0 && (
+          <div class="rail-field">
+            <div class="field-h">FROM THE FIELD</div>
+            <p class="field-sub">Real works by artists and collectives whose decisive move is what this line teaches.</p>
+            {fieldRefs.map((w) => (
+              <div class="field-work">
+                <div class="fw-head">
+                  {w.source_url ? (
+                    <a class="fw-title" href={w.source_url} target="_blank" rel="noopener noreferrer">{w.title} ↗</a>
+                  ) : (
+                    <span class="fw-title">{w.title}</span>
+                  )}
+                </div>
+                <div class="fw-meta">{w.artist} · {w.year}</div>
+                {w.decisive_move && <p class="fw-move">{w.decisive_move}</p>}
+              </div>
+            ))}
+            <a class="field-atlas" href={ATLAS_URL} target="_blank" rel="noopener noreferrer">THE ATLAS — 214 VERIFIED WORKS ↗</a>
+          </div>
+        )}
       </aside>
     </div>
   </main>
@@ -145,6 +170,17 @@ const rows = line.stations.map((s) => {
   .why-p { font-size: 13px; line-height: 1.6; color: var(--color-ink-3); margin: 0 0 12px; }
   .why-lines { display: grid; gap: 6px; font-size: 12px; line-height: 1.5; color: var(--color-ink-2); }
   .why-row .cl { font-weight: 800; margin-right: 6px; }
+
+  .rail-field { border: 1px solid var(--color-edge); border-top: 3px solid #aa44ff; background: var(--color-panel); padding: 18px; }
+  .field-h { font-size: 10px; letter-spacing: 0.16em; color: #aa44ff; margin-bottom: 8px; }
+  .field-sub { font-size: 11.5px; line-height: 1.5; color: var(--color-ink-4); margin: 0 0 14px; }
+  .field-work { padding: 10px 0; border-top: 1px solid var(--color-edge); }
+  .fw-title { font-size: 13px; font-weight: 700; color: var(--color-ink); text-decoration: none; }
+  a.fw-title:hover { color: #aa44ff; }
+  .fw-meta { font-size: 11px; letter-spacing: 0.04em; color: var(--color-ink-4); margin-top: 3px; }
+  .fw-move { font-size: 11.5px; line-height: 1.55; color: var(--color-ink-3); margin: 6px 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .field-atlas { display: inline-block; margin-top: 12px; font-size: 10.5px; letter-spacing: 0.12em; font-weight: 700; color: #aa44ff; text-decoration: none; }
+  .field-atlas:hover { text-decoration: underline; }
 
   @media (max-width: 940px) {
     .body { grid-template-columns: 1fr; }

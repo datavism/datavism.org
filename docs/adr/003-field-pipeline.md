@@ -1,6 +1,10 @@
 # ADR 003 — Field-Pipeline: Wie Meridian-Werke zu Operationen werden
 
-**Status:** Angenommen (Umsetzung Phase 1 in diesem Repo, 2026-07-11)
+**Status:** Angenommen — Phase 1 umgesetzt 2026-07-11 (drei Replikations-Operationen);
+Phase 2 umgesetzt 2026-07-11 (`scripts/field-sync.mjs`, `/field`-Seiten,
+`.github/workflows/field-sync.yml`); Phase 3 umgesetzt 2026-07-11
+(Atlas-Snapshot `src/data/atlas/werke.json`, `scripts/update-atlas.mjs`,
+`src/lib/atlas.ts`, „FROM THE FIELD" auf den Linien-Seiten)
 **Datum:** 2026-07-11
 **Baut auf:** [ADR 002](002-field-integration.md) (Field-Integration, Zug 1)
 **Betrifft:** `src/lib/command-center/operations.ts` · `src/lib/line-g-opening/cases.ts` ·

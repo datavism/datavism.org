@@ -34,6 +34,11 @@ export const GEO: Record<string, { lat: number; lng: number; label: string }> = 
   'argentina-wealth-declarations':     { lat: -34.60,  lng:  -58.40, label: 'Wealth Declarations (AR)' },
   'ukraine-prozorro':                  { lat:  50.45,  lng:   30.52, label: 'ProZorro (UA)' },
   'chile-chilecompra':                 { lat: -33.45,  lng:  -70.66, label: 'ChileCompra (CL)' },
+
+  // ── Replication cases (derived from Meridian works, ADR 002/003) ─
+  'scope2-twin-invoice':               { lat:  47.61,  lng: -122.33, label: 'SCOPE 2 TWIN INVOICE' },
+  'worldbank-digit-docket':            { lat:  38.60,  lng:  -77.60, label: 'DIGIT DOCKET (WB)' },
+  'detector-calibration':              { lat:  39.95,  lng:  -75.16, label: 'DETECTOR CALIBRATION' },
 }
 
 // Active operation

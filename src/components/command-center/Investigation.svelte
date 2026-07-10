@@ -9,7 +9,7 @@
   // Every line of copy here holds that line.
 
   import { getCase } from '../../lib/line-g-opening/cases'
-  import { FIRST_OPERATION } from '../../lib/command-center/operations'
+  import { getOperation } from '../../lib/command-center/operations'
   import { preCheck, type Finding } from '../../lib/command-center/certify'
   import { recordClosed } from '../../lib/command-center/history'
   import {
@@ -40,17 +40,20 @@
     unsure: '#7a818d',
   }
 
-  // ── resolve the operation for ANY case (first op is fully scripted; others
-  //    derive their question/source from the launchpad case) ─────────────────
+  // ── resolve the operation for ANY case (scripted ops — starter + Meridian
+  //    replications — come from OPERATIONS; others derive question/source from
+  //    the launchpad case) ────────────────────────────────────────────────────
   function operationFor(id: string) {
     const c = getCase(id)
     if (!c) return null
-    if (id === FIRST_OPERATION.caseId) {
+    const scripted = getOperation(id)
+    if (scripted) {
       return {
-        signal: FIRST_OPERATION.signal as string,
-        briefing: FIRST_OPERATION.briefing,
-        question: FIRST_OPERATION.question,
-        source: FIRST_OPERATION.source,
+        signal: scripted.signal as string,
+        briefing: scripted.briefing,
+        question: scripted.question,
+        source: scripted.source,
+        derivedFrom: scripted.derivedFrom,
       }
     }
     return {
@@ -58,6 +61,7 @@
       briefing: c.hook,
       question: c.starterQuestion,
       source: { title: c.source.title, url: c.source.url, howTo: c.source.contains },
+      derivedFrom: undefined,
     }
   }
 
@@ -85,7 +89,7 @@
   const check = $derived(preCheck(finding))
 
   // ── certification result ───────────────────────────────────────────────────
-  type Verdict = { certified: boolean; feedback: string; notes: { source: boolean; specificity: boolean; uncertainty: boolean } }
+  type Verdict = { certified: boolean; feedback: string; critique?: string; notes: { source: boolean; specificity: boolean; uncertainty: boolean } }
   let verdict = $state<Verdict | null>(null)
   let certError = $state<string | null>(null)
   let closedCodename = $state<string | null>(null)
@@ -218,7 +222,7 @@
     const f: Finding = { ...finding }
     const codename = codenameFor(caseId)
     const certifiedAt = new Date().toISOString()
-    recordClosed({ caseId, finding: f, certifiedAt, codename })
+    recordClosed({ caseId, finding: f, certifiedAt, codename, critique: verdict?.critique || undefined })
     closedCodename = codename
     closedAt = certifiedAt
     onclosed?.(caseId)
@@ -305,6 +309,27 @@
         </div>
         <h1 class="iv-question">{operation.question}</h1>
         <p class="iv-briefing">{operation.briefing}</p>
+
+        {#if operation.derivedFrom}
+          <!-- Attribution + honesty baggage (ADR 003): the original travels with the
+               derivation — anchor as comparison, caveats as the original's own limits. -->
+          <div class="dv-card">
+            <div class="dv-hd">
+              <span class="dv-tag">◇ DERIVED FROM</span>
+              <a class="dv-link" href={operation.derivedFrom.workUrl} target="_blank" rel="noopener noreferrer">
+                “{operation.derivedFrom.work}” — {operation.derivedFrom.author}, {operation.derivedFrom.shipped} ↗
+              </a>
+            </div>
+            <p class="dv-anchor"><span class="dv-lbl">ANCHOR</span> {operation.derivedFrom.anchor}</p>
+            <ul class="dv-caveats">
+              {#each operation.derivedFrom.caveats as caveat}
+                <li>{caveat}</li>
+              {/each}
+            </ul>
+            <p class="dv-note">The anchor is Meridian's result, not your answer — your operation targets new material. These caveats are the original's own; they travel with the replication.</p>
+          </div>
+        {/if}
+
         <div class="iv-actions">
           <button class="iv-btn iv-btn-primary" onclick={begin}>BEGIN → LOCATE THE SOURCE</button>
         </div>
@@ -436,6 +461,13 @@
         <p class="closed-question">{fQuestion}</p>
         {#if verdict?.feedback}
           <p class="closed-feedback">“{verdict.feedback}”</p>
+        {/if}
+        {#if verdict?.critique}
+          <div class="closed-objection">
+            <span class="co-tag">THE STANDING OBJECTION</span>
+            <p class="co-text">{verdict.critique}</p>
+            <span class="co-note">Published with your finding — a certified finding carries its own strongest objection. Answer it or let it stand; hiding it is the only wrong move.</span>
+          </div>
         {/if}
         <div class="closed-honesty">
           Method certified — <strong>not</strong> fact-verified. GHOST confirmed your craft, not your conclusion. The claim is yours to stand behind.
@@ -843,6 +875,36 @@
   }
   .closed-honesty strong { color: #ffe98a; }
 
+  /* the standing objection — the Interlocutor's published critique */
+  .closed-objection {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    background: #aa44ff0a;
+    border: 1px solid #aa44ff33;
+    border-left: 2px solid #aa44ff88;
+    padding: 12px 16px;
+    max-width: 500px;
+    text-align: left;
+  }
+  .co-tag {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: #aa44ff;
+  }
+  .co-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #d9c8ee;
+  }
+  .co-note {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #6f757f;
+    font-style: italic;
+  }
+
   /* actions */
   .iv-actions { display: flex; gap: 12px; margin-top: 4px; }
   .iv-actions-split { justify-content: space-between; }
@@ -1001,6 +1063,65 @@
     letter-spacing: 0.16em;
     color: #00ff88;
     padding-top: 2px;
+  }
+
+  /* ── DERIVED FROM card (Meridian attribution + honesty baggage, ADR 003) ── */
+  .dv-card {
+    background: #aa44ff08;
+    border: 1px solid #aa44ff26;
+    border-left: 2px solid #aa44ff66;
+    padding: 13px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .dv-hd {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .dv-tag {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: #aa44ff;
+  }
+  .dv-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: #c88aff;
+    text-decoration: none;
+  }
+  .dv-link:hover { color: #e0bbff; text-decoration: underline; }
+  .dv-anchor {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: #c4c9d0;
+  }
+  .dv-lbl {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: #8a5ab8;
+    margin-right: 6px;
+  }
+  .dv-caveats {
+    margin: 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .dv-caveats li {
+    font-size: 12px;
+    line-height: 1.55;
+    color: #a7ada3;
+  }
+  .dv-note {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #6f757f;
+    font-style: italic;
   }
 
   @media (prefers-reduced-motion: reduce) {

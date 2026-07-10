@@ -142,13 +142,29 @@ Ein Feature ist "fertig" wenn:
 
 ---
 
-## 11. AKTUELLER STAND (Juni 2026 — Repositionierung)
+## 11. AKTUELLER STAND (Juli 2026 — Field-Integration)
+
+**2026-07-10:** **ADR 002 Field-Integration** (`docs/adr/002-field-integration.md`):
+datavism.org wird der menschliche Flügel des Forschungslabors — das autonome
+Kollektiv *Meridian* (`field-research`) liefert verifizierte Werke, die zu
+replizierbaren Operationen werden; GHOST-Certify wird zum Gauntlet ausgebaut;
+der Atlas (214 Referenzwerke) wird Curriculum-Messlatte; Capstones stellen
+**reale Instrumente vor Gericht** statt Pantheon-Figuren zu bekämpfen;
+Data-Jam #1 = Trial 3 des Standing Docket (2026-10-09).
+
+**Code-Stand (Korrektur, 2026-07-10):** Der Astro-Rebuild („Evidence Engine",
+Astro 6 + Svelte 5, ADR 001) ist auf `main` **live gebaut** — Landing, Manifest,
+Linie G komplett (5/5), K1, GHOST-Pipeline (Chat/Guide/Certify), Command Center
+mit einer verdrahteten Operation (Lobbyregister), Legal. Der alte
+Next.js/Supabase-Stack liegt eingefroren auf Branch `legacy-2026`. Der Absatz
+unten („Was existiert / Was kaputt ist") beschreibt den **alten** Stack und ist
+nur noch historisch zu lesen.
 
 **2026-06-07:** Strategische Repositionierung zum *AI-Era Data Skills Bootcamp*
 (siehe `docs/VISION.md`). Narrative ans data-snack-Universum angeglichen: GHOST
 alleiniger Mentor, Pantheon-Antagonisten (Cumulus Rex, Panopticon, Mammon, The
 Feed) als gemeinsame Gegner. Reality-Wars-Ära (Maya Chen, Algorithmic
-Consortium, Fake Brands) → `docs/archive/`. **Der Code-Umbau steht noch aus.**
+Consortium, Fake Brands) → `docs/archive/`.
 
 **Was existiert (Code, Stand Maerz 2026):**
 - Viral Experience (Fingerprint-Reveal, 6 Phasen) — funktioniert aber nicht mobile-optimiert

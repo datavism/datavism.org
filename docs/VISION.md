@@ -12,6 +12,12 @@
 >
 > **Evidenzbasis:** `docs/research/2026-06-07-repositioning-research.md`
 > (verifizierte Recherche, Stand 2026).
+>
+> **Amendment v1.1 (2026-07-10) — Field-Integration:** [`adr/002-field-integration.md`](adr/002-field-integration.md)
+> ergänzt dieses Dokument: datavism.org wird der **menschliche Flügel des
+> Forschungslabors** (field-research/Meridian + Atlas auf frankbueltge.de).
+> Betroffene Abschnitte sind unten mit *[ADR 002]* markiert; bei Widerspruch
+> gilt ADR 002.
 
 ---
 
@@ -22,6 +28,13 @@ datavism.org war ein „Serious Game über Daten-Aktivismus mit Python-Lektionen
 hands-on, projektgetrieben, mit GHOST als KI-Mentor — das Menschen befähigt,
 **mit KI als Superkraft** schnell aus Daten Erkenntnisse, Beweise und echten
 Impact zu gewinnen. Der Game-Layer bleibt als *Vehikel*, nicht als Selbstzweck.
+
+**Verschärfung durch ADR 002 (2026-07-10):** datavism.org ist die **Schule
+eines arbeitenden Forschungslabors** — das Curriculum wird vom autonomen
+KI-Forschungskollektiv *Meridian* (`field-research`) mitproduziert, jede
+Übung ist eine echte, verifizierte Untersuchung, und jedes zertifizierte
+Finding kann zurück in die Forschung fließen. Kein anderes Bootcamp kann
+das behaupten.
 
 > **Storyworld:** [`STORY.md`](STORY.md) (Data Underground — v1, approved
 > 2026-06-07). **Branding: das Projekt heißt DATAVISM** (Neon-Ghost-Logo);
@@ -100,16 +113,22 @@ Linien-Affinität/Schwierigkeitsgrade holen alle ab.
 
 Das Curriculum ist ein **U-Bahn-Netzplan des Data Underground** (Storyworld:
 `STORY.md` §6). Tracks = Linien, Lektionen = Stationen (immer hands-on, nie
-passives Video), Endstation = Capstone-Investigation gegen den
-Pantheon-Gegner der Linie.
+passives Video), Endstation = Capstone-Investigation.
 
-| Linie | Pate | Domäne (AI-gestützt) | Capstone-Gegner | Snack-Bridge (Beispiel) |
+> **Capstone-Reframe [ADR 002]:** Die Capstone richtet sich nicht mehr gegen
+> die Pantheon-*Figur*, sondern stellt ein **reales, benanntes Instrument vor
+> Gericht** (Muster: Meridians *instruments on trial*). Das Pantheon bleibt
+> Mythologie der Storyworld: es *regiert durch Messungen* — wer eine Linie
+> beendet, stellt sein Instrument vor Gericht.
+
+| Linie | Pate | Domäne (AI-gestützt) | Capstone: Instrument vor Gericht *(Mythos)* | Snack-Bridge (Beispiel) |
 |---|---|---|---|---|
 | **Line G** (Foundation) | GHOST | Vibe Coding & AI-Orchestrierung: Prompting, Co-Pilot-Workflows, Spec-Driven, „die richtige Frage" | — (speist alle Linien) | (alle) |
-| **Line K** | Key | Tracking-Forensik, OSINT, Crawling + Entity Resolution mit LLM | **Panopticon** | Pegasus Tracker · Data-Broker Anatomy |
-| **Line R** | Rook | Ökonomie: Source-Stacking, Joins, Financial Time Series mit Co-Pilot | **Mammon** | Wealth Transfer · De-Dollarization |
-| **Line B** | Bite | Feeds & Streams: Crawler-Bau, Real-Time-Analyse, Retention-Autopsie | **The Feed** | TikTok Autopsy · Sports Betting Boom |
-| **Line V** | Vesper | Klima/Demografie: AI-gestütztes Wrangling, Langzeit, Archiv | **Cumulus Rex** | AMOC Collapse · Quiet Collapse Korea |
+| **Line K** | Key | Tracking-Forensik, OSINT, Crawling + Entity Resolution mit LLM | Tracking-/Consent-Infrastruktur: Data-Broker-Registries, Consent-Management, GPC *(Panopticon)* | Pegasus Tracker · Data-Broker Anatomy |
+| **Line R** | Rook | Ökonomie: Source-Stacking, Joins, Financial Time Series mit Co-Pilot | Ökonomische Offenlegungs-Standards: ESG, Scope-2-Wahlrechte — Anker: *The Two Meters* *(Mammon)* | Wealth Transfer · De-Dollarization |
+| **Line B** | Bite | Feeds & Streams: Crawler-Bau, Real-Time-Analyse, Retention-Autopsie | Engagement-/Transparenz-Metriken: DSA-Transparenzberichte, Retention-KPIs *(The Feed)* | TikTok Autopsy · Sports Betting Boom |
+| **Line V** | Vesper | Klima/Demografie: AI-gestütztes Wrangling, Langzeit, Archiv | Effizienz-Metriken der Infrastruktur: PUE, Scope 2 — Anker: *The Floor* *(Cumulus Rex)* | AMOC Collapse · Quiet Collapse Korea |
+| **Line P** *(neu vorgeschlagen, ADR 002)* | offen (Canon-Frage) | Provenance & Authentizität: „Was ist echt?" — Detektoren, Wasserzeichen, Herkunfts-Standards | C2PA, KI-Text-Detektoren, Capability-Benchmarks — Anker: Meridians Kern-Serie *(Mythos offen)* | (neu zu schneiden) |
 
 Querschnitte (auf allen Linien):
 - **Critical-AI-Literacy + Eval** — KI prüfen, Halluzinationen, Bias; GHOST
@@ -118,6 +137,10 @@ Querschnitte (auf allen Linien):
   Formen als gleichwertige Ausspielform jeder Investigation. Eine Capstone
   darf ein Kunstwerk sein. (Selbstbeschreibung bleibt: *„A Non-Profit Digital
   Art Project."*)
+- **Feld-Kenntnis via Atlas [ADR 002]** — jede Station referenziert 2–3
+  geprüfte Werke aus dem Atlas (214 Referenzwerke des Feldes,
+  frankbueltge.de), deren `decisive_move` den Stations-Skill verkörpert.
+  Lernende lernen nebenbei den Kanon des Feldes kennen.
 - **Abschluss = Ticket, nicht Zertifikat:** Fortschritt als stempelbarer
   Fahrschein (Receipt-Ästhetik, teilbar). Graduierung = Vault-Schlüssel +
   eigenes Case File.
@@ -160,8 +183,10 @@ Kurzfassung:
   Firestore, BigQuery).
 - **Gemeinsame Gegner = das Pantheon:** Cumulus Rex (Cloud/CDN-Überwachung),
   Panopticon (architektonische Kontrolle), Mammon (ökonomische Extraktion),
-  The Feed (Retention/Sucht). Jede Linie endet in einer Capstone gegen ihren
-  Gegner.
+  The Feed (Retention/Sucht). **[ADR 002]** Das Pantheon regiert durch
+  Messungen — jede Linie endet in einer Capstone, die das **reale Instrument**
+  des Gegners vor Gericht stellt, nie die Figur bekämpft (Fiktion) oder ein
+  Unternehmen anklagt (Legal-Hygiene).
 - **Cast-Crossover behutsam** (CROSSWALK): GHOST bleibt primär; pro
   Linie/Cohort eine Gast-Session der Diner-Crew; Schrödi markiert auch unten.
 - **Identity-Bridge:** ein Codename über beide Plattformen (Firestore
@@ -195,6 +220,10 @@ allein fördern „shallow learning"):
 - **Data-Jam als Knaller-Launch** (Daydream-Äquivalent): ein synchronisiertes
   Wochenende, an dem die Community **gleichzeitig** denselben Datensatz/dasselbe
   Thema aufdeckt. Presse- und Social-tauglich, Top-of-Funnel.
+  **[ADR 002] Data-Jam #1 hat einen Termin-Anker:** Trial 3 des *Standing
+  Docket* (Meridian) ist prä-registriert und versiegelt bis **2026-10-09** —
+  die Community führt den prä-registrierten Test parallel aus,
+  „append whatever it shows". Nicht kopierbar, ehrlich, Q4-kompatibel.
 - **Marken-/NGO-Co-Sponsoring** von Challenges (Hack-Club-Muster: NASA/AMD/GitHub
   stifteten Preise) — verbindet Viral mit Finanzierung (§7).
 - **data-snack-Bridge-Cards** (CROSSWALK): jeder Snack endet mit einer
@@ -283,8 +312,8 @@ Affiliate-Programm. Der alte `$8.5M`-Investor-Pitch ist archiviert.
 
 | Quartal | datavism.org |
 |---|---|
-| **Q3 2026** | **Audit + Repositionierung** (dieses Dokument); Mobile-UX/Deployment-Vorarbeit; Curriculum-Konzept |
-| **Q4 2026** | **Beta-Cohort** (closed, 10–20 Personen); erste Data-Jam (Test) |
+| **Q3 2026** | **Audit + Repositionierung** (dieses Dokument); Mobile-UX/Deployment-Vorarbeit; Curriculum-Konzept; **[ADR 002]** Field-Pipeline (Meridian-Werke → Operationen) + erste 3 Replikations-Operationen; Certify→Gauntlet-Ausbau; Atlas-Referenzen |
+| **Q4 2026** | **Beta-Cohort** (closed, 10–20 Personen); erste Data-Jam (Test) — **[ADR 002]** Data-Jam #1 = Trial 3 des Standing Docket (2026-10-09); Festival-Einreichung vorbereiten (Prix Ars Electronica / STARTS / transmediale) |
 | **Q1 2027** | **Public Open** (Cohort #1); Prototype-Fund/EU-Antrag; Identity-Bridge live |
 | **Q2 2027+** | Cohort #2 + Curriculum v1.0; Alumni-/Contributor-Netzwerk; OSS-Re-Eval |
 

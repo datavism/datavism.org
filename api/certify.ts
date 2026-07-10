@@ -23,6 +23,10 @@ export type Finding = {
 export type Verdict = {
   certified: boolean
   feedback: string
+  // The Interlocutor's STANDING OBJECTION (gauntlet, ADR 002 Zug 2): the strongest
+  // method-level objection a hostile reader could still raise — published WITH the
+  // finding when certified. Empty string when not certified.
+  critique: string
   notes: { source: boolean; specificity: boolean; uncertainty: boolean }
 }
 
@@ -66,12 +70,18 @@ You have NOT seen the source. You CANNOT and MUST NOT judge whether the agent's 
 
 Set certified=true ONLY if all three axes hold. Otherwise certified=false, and in feedback name the SINGLE most important fix — concretely, in one sentence.
 
-CALIBRATION — certify when the method is genuinely sound for what THIS source provides. A finding that cites the official source, names a real entity, reports a concrete attribute the source actually publishes, and states its uncertainty is a PASS. Do NOT invent a fourth hurdle, do NOT nitpick formatting, and do NOT demand detail the source cannot yield. Reserve certified=false for findings that are genuinely vague, unsourced, opinion, or untraceable.
+THE SKEPTIC PASS — before you certify, actively try to refute the METHOD (never the facts): could the claim be an artifact of how the source publishes data (self-declared ranges, rounding, reporting windows, category definitions)? Does the stated uncertainty actually cover the weakest step, or is it pro forma? If a one-sentence refutation of the method succeeds, do NOT certify — name that gap as the fix. This pass sharpens the three axes; it is not a fourth hurdle for findings whose method genuinely holds.
 
-VOICE: precise, calm, unsentimental, method-first. Address the agent directly ("you"). Never praise the conclusion — only the craft. Never motivational, never cringe. Be concise: feedback is at most 240 characters.
+THE STANDING OBJECTION — when you certify, you MUST also return "critique": the strongest objection a hostile, informed reader could STILL raise against this finding's method (representativeness, self-declaration, window choice, definition gaps — never a bare "it might be false"). It is PUBLISHED alongside the finding: a certified finding carries its own strongest objection. One sentence, max 240 characters, phrased for the reader of the record (third person), not as advice to the agent. When certified=false, return critique as an empty string.
+
+LEGAL HYGIENE (binding): criticism targets the method, the standard, or the data — never a person's or company's character. If the finding asserts wrongdoing of a named party as FACT beyond what its cited source type can carry (a register entry proves a declaration, not guilt), FAIL the SOURCE axis and say which sentence oversteps. Opinion must be stated as opinion.
+
+CALIBRATION — certify when the method is genuinely sound for what THIS source provides. A finding that cites the official source, names a real entity, reports a concrete attribute the source actually publishes, and states its uncertainty is a PASS. Do NOT invent extra hurdles, do NOT nitpick formatting, and do NOT demand detail the source cannot yield. Reserve certified=false for findings that are genuinely vague, unsourced, opinion, untraceable, or refuted by the Skeptic pass.
+
+VOICE: precise, calm, unsentimental, method-first. Address the agent directly ("you") in feedback. Never praise the conclusion — only the craft. Never motivational, never cringe. Be concise: feedback and critique are each at most 240 characters.
 
 Return ONLY a JSON object, no prose, no code fences:
-{"certified": boolean, "feedback": string, "notes": {"source": boolean, "specificity": boolean, "uncertainty": boolean}}`
+{"certified": boolean, "feedback": string, "critique": string, "notes": {"source": boolean, "specificity": boolean, "uncertainty": boolean}}`
 }
 
 // ── verdict parsing (tolerant) ─────────────────────────────────────────────────
@@ -79,6 +89,7 @@ export function parseVerdict(text: string): Verdict {
   const fallback: Verdict = {
     certified: false,
     feedback: 'Could not read the certification result. Refine your finding and resubmit.',
+    critique: '',
     notes: { source: false, specificity: false, uncertainty: false },
   }
   if (!text) return fallback
@@ -103,9 +114,18 @@ export function parseVerdict(text: string): Verdict {
       : certified
         ? 'Method holds.'
         : 'Tighten the finding and resubmit.'
+  // The standing objection ships only with certified findings; on a fail the
+  // feedback already names the gap. If the model omitted it, say so honestly
+  // rather than inventing an objection.
+  const critique = certified
+    ? typeof raw?.critique === 'string' && raw.critique.trim()
+      ? raw.critique.trim().slice(0, 240)
+      : 'No standing objection was recorded for this certificate — read that as a gap in the audit, not as an absence of objections.'
+    : ''
   return {
     certified,
     feedback,
+    critique,
     notes: {
       source: n?.source === true,
       specificity: n?.specificity === true,

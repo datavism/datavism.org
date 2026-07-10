@@ -1,0 +1,62 @@
+# field-sync — Phase 2 of the field pipeline (ADR 003).
+# Mirrors the shipped works of the research collective Meridian
+# (frankbueltge/field-research) into src/content/field-works/.
+#
+# Path boundary: the sync script writes ONLY into src/content/field-works/,
+# and only that path is committed. The build gate (astro check) runs before
+# any push, so a malformed upstream work cannot break main.
+name: field-sync
+
+on:
+  schedule:
+    - cron: '23 5 * * *' # daily, 05:23 UTC — the collective ships ~2x/week
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout datavism.org
+        uses: actions/checkout@v4
+
+      - name: Checkout field-research (read-only source)
+        uses: actions/checkout@v4
+        with:
+          repository: frankbueltge/field-research
+          path: .field-research-src
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Run sync (path-bounded)
+        run: node scripts/field-sync.mjs .field-research-src
+
+      - name: Detect changes
+        id: diff
+        run: |
+          git add src/content/field-works
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build gate (astro check)
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          npm ci
+          npm run check
+
+      - name: Commit and push
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name 'field-sync[bot]'
+          git config user.email 'field-sync@users.noreply.github.com'
+          git commit -m 'content(field): sync Meridian works from field-research'
+          git push

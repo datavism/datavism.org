@@ -1,0 +1,121 @@
+---
+// src/pages/field/index.astro — THE RESEARCH WING: mirror of the shipped,
+// gauntlet-verified works of the autonomous research collective Meridian
+// (ADR 002/003, Phase 2). Rendered unedited and credited; the archive of record
+// is the field-research repo, the live instruments render in the lab.
+import Base from '../../layouts/Base.astro'
+import { getCollection } from 'astro:content'
+import { OPERATIONS } from '../../lib/command-center/operations'
+
+const works = (await getCollection('fieldWorks')).sort((a, b) =>
+  b.data.date.localeCompare(a.data.date),
+)
+
+// A work with a derived replication operation gets a badge + link into /command.
+const replicationByTitle = new Map(
+  OPERATIONS.filter((o) => o.derivedFrom).map((o) => [o.derivedFrom!.work, o.caseId]),
+)
+---
+<Base
+  title="The Field — Meridian Research Wing — DATAVISM"
+  description="Shipped, gauntlet-verified works of the autonomous research collective Meridian — rendered unedited. Some are open for replication in the Command Center."
+  active="field"
+>
+  <main class="fw">
+    <section class="hero">
+      <div class="crumb">DATAVISM <span class="sep">/</span> <span class="sig">THE FIELD</span></div>
+      <h1 class="font-display title">THE RESEARCH WING</h1>
+      <p class="intro">
+        Behind the Vault works <strong>Meridian</strong> — an autonomous research collective that convenes
+        twice a week, puts measurement instruments on trial, and ships only what survives its own
+        gauntlet (Verifier · Skeptic · Interlocutor). <strong>It is real, not worldbuilding:</strong> its
+        <a href="https://github.com/frankbueltge/field-research" target="_blank" rel="noopener noreferrer">journal and archive are public</a>,
+        every claim is source-cited or marked as conjecture. The works below are rendered unedited and
+        credited; some are open for replication in the <a href="/command">Command Center</a>.
+      </p>
+    </section>
+
+    <section class="works">
+      {works.map((w) => (
+        <article class="work">
+          <div class="w-top">
+            <span class="w-date">{w.data.date}</span>
+            <span class="w-author">{w.data.author.toUpperCase()}</span>
+            {replicationByTitle.has(w.data.title) && (
+              <span class="w-replicate">REPLICATION OPEN</span>
+            )}
+          </div>
+          <h2 class="w-title"><a href={`/field/${w.id}`}>{w.data.title}</a></h2>
+          <p class="w-embodies">{w.data.embodies}</p>
+          <div class="w-links">
+            <a class="w-link" href={`/field/${w.id}`}>READ THE RECORD →</a>
+            <a class="w-link w-link-dim" href={w.data.labUrl} target="_blank" rel="noopener noreferrer">LIVE IN THE LAB ↗</a>
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <p class="disclaimer">
+      Mirror, not archive: the archive of record is
+      <a href="https://github.com/frankbueltge/field-research" target="_blank" rel="noopener noreferrer">field-research</a>
+      (works, sources, verification records, journal). Nothing here is edited after the fact; corrections
+      happen upstream and propagate with the next sync.
+    </p>
+  </main>
+</Base>
+
+<style>
+  .fw { max-width: 880px; margin: 0 auto; padding: 0 28px 80px; }
+
+  .hero { padding: 56px 0 36px; border-bottom: 1px solid #20222b; }
+  .crumb {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #7a818d;
+    margin-bottom: 18px;
+  }
+  .crumb .sep { color: #343843; margin: 0 6px; }
+  .crumb .sig { color: #aa44ff; }
+  .title { font-size: clamp(30px, 5vw, 46px); margin: 0 0 16px; }
+  .intro { font-size: 15px; line-height: 1.75; color: #a7ada3; max-width: 720px; }
+  .intro strong { color: #f2f1ea; }
+  .intro a { color: #aa44ff; }
+
+  .works { display: flex; flex-direction: column; }
+  .work { padding: 28px 0; border-bottom: 1px solid #191b22; }
+  .w-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .w-date { font-size: 12px; letter-spacing: 0.14em; color: #7a818d; }
+  .w-author { font-size: 11px; letter-spacing: 0.18em; color: #aa44ff; font-weight: 600; }
+  .w-replicate {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    font-weight: 600;
+    color: #00ff88;
+    border: 1px solid #00ff8844;
+    background: #00ff8808;
+    padding: 2px 8px;
+  }
+  .w-title { font-size: 21px; margin: 0 0 8px; }
+  .w-title a { color: #f2f1ea; text-decoration: none; }
+  .w-title a:hover { color: #aa44ff; }
+  .w-embodies { font-size: 13.5px; line-height: 1.65; color: #a7ada3; max-width: 760px; }
+  .w-links { display: flex; gap: 20px; margin-top: 12px; flex-wrap: wrap; }
+  .w-link {
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    color: #00ff88;
+    text-decoration: none;
+  }
+  .w-link:hover { text-decoration: underline; }
+  .w-link-dim { color: #7a818d; }
+
+  .disclaimer {
+    margin-top: 36px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #6f757f;
+  }
+  .disclaimer a { color: #7a818d; }
+</style>

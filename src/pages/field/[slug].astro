@@ -1,0 +1,173 @@
+---
+// src/pages/field/[slug].astro — one Meridian work, rendered unedited (ADR 002/003).
+// Body = the work's README verbatim; interactive works carry no README and link
+// their live render in the lab instead. The full record (sources, verification,
+// data) lives in the field-research repo.
+import Base from '../../layouts/Base.astro'
+import { getCollection, render } from 'astro:content'
+import { OPERATIONS } from '../../lib/command-center/operations'
+
+export async function getStaticPaths() {
+  const works = await getCollection('fieldWorks')
+  return works.map((work) => ({ params: { slug: work.id }, props: { work } }))
+}
+
+const { work } = Astro.props
+const { Content } = await render(work)
+const hasBody = (work.body ?? '').trim().length > 0
+const replication = OPERATIONS.find((o) => o.derivedFrom?.work === work.data.title)
+---
+<Base
+  title={`${work.data.title} — Meridian — DATAVISM`}
+  description={work.data.embodies.slice(0, 155)}
+  active="field"
+>
+  <main class="fd">
+    <section class="hero">
+      <div class="crumb">
+        <a href="/field">THE FIELD</a> <span class="sep">/</span> <span class="sig">{work.id.toUpperCase()}</span>
+      </div>
+      <div class="meta">
+        <span class="m-author">{work.data.author.toUpperCase()}</span>
+        <span class="dot">·</span>
+        <span class="m-date">SHIPPED {work.data.date}</span>
+        <span class="dot">·</span>
+        <span class="m-medium">{work.data.medium}</span>
+      </div>
+      <h1 class="font-display title">{work.data.title}</h1>
+      <p class="embodies">{work.data.embodies}</p>
+
+      <div class="links">
+        <a class="lnk lnk-lab" href={work.data.labUrl} target="_blank" rel="noopener noreferrer">LIVE IN THE LAB ↗</a>
+        <a class="lnk" href={work.data.workUrl} target="_blank" rel="noopener noreferrer">FULL RECORD (SOURCES · VERIFICATION) ↗</a>
+        {replication && (
+          <a class="lnk lnk-rep" href="/command">REPLICATE THIS — OP · {replication.caseId.toUpperCase()} →</a>
+        )}
+      </div>
+    </section>
+
+    {hasBody ? (
+      <article class="body">
+        <div class="unedited">RENDERED UNEDITED — the work's own record, verbatim. Corrections happen upstream.</div>
+        <Content />
+      </article>
+    ) : (
+      <article class="body">
+        <p class="interactive-note">
+          This work ships as an <strong>interactive instrument</strong>, not a text — it has no README to
+          mirror. Use it live in the lab (link above); its data and metadata live in the
+          <a href={work.data.workUrl} target="_blank" rel="noopener noreferrer">original repository</a>.
+        </p>
+      </article>
+    )}
+  </main>
+</Base>
+
+<style>
+  .fd { max-width: 820px; margin: 0 auto; padding: 0 28px 80px; }
+
+  .hero { padding: 56px 0 32px; border-bottom: 1px solid #20222b; }
+  .crumb {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #7a818d;
+    margin-bottom: 18px;
+  }
+  .crumb a { color: #aa44ff; text-decoration: none; }
+  .crumb a:hover { text-decoration: underline; }
+  .crumb .sep { color: #343843; margin: 0 6px; }
+  .crumb .sig { color: #7a818d; }
+
+  .meta {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+  }
+  .m-author { color: #aa44ff; font-weight: 600; letter-spacing: 0.18em; }
+  .m-date { color: #7a818d; }
+  .m-medium { color: #7a818d; text-transform: uppercase; }
+  .dot { color: #343843; }
+
+  .title { font-size: clamp(28px, 4.5vw, 42px); margin: 0 0 14px; }
+  .embodies { font-size: 14.5px; line-height: 1.7; color: #a7ada3; }
+
+  .links { display: flex; gap: 18px; margin-top: 18px; flex-wrap: wrap; }
+  .lnk {
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    color: #7a818d;
+    text-decoration: none;
+  }
+  .lnk:hover { text-decoration: underline; }
+  .lnk-lab { color: #aa44ff; }
+  .lnk-rep { color: #00ff88; }
+
+  .body { padding-top: 28px; }
+  .unedited {
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    color: #6f757f;
+    border: 1px dashed #2c2f3a;
+    padding: 8px 12px;
+    margin-bottom: 26px;
+  }
+  .interactive-note {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #a7ada3;
+  }
+  .interactive-note strong { color: #f2f1ea; }
+  .interactive-note a { color: #aa44ff; }
+
+  /* ── verbatim markdown body — readable mono register ─────────── */
+  .body :global(h1) { font-size: 24px; margin: 34px 0 14px; color: #f2f1ea; }
+  .body :global(h2) { font-size: 19px; margin: 30px 0 12px; color: #f2f1ea; }
+  .body :global(h3) { font-size: 15.5px; margin: 24px 0 10px; color: #e8e6dc; }
+  .body :global(p) { font-size: 14px; line-height: 1.75; color: #b8bdb2; margin: 0 0 14px; }
+  .body :global(strong) { color: #f2f1ea; }
+  .body :global(a) { color: #aa44ff; }
+  .body :global(ul), .body :global(ol) { padding-left: 22px; margin: 0 0 14px; }
+  .body :global(li) { font-size: 14px; line-height: 1.7; color: #b8bdb2; margin-bottom: 6px; }
+  .body :global(blockquote) {
+    border-left: 2px solid #aa44ff55;
+    margin: 0 0 14px;
+    padding: 4px 16px;
+    color: #a7ada3;
+  }
+  .body :global(code) {
+    font-size: 12.5px;
+    background: #16181f;
+    border: 1px solid #20222b;
+    padding: 1px 5px;
+  }
+  .body :global(pre) {
+    background: #0a0b10;
+    border: 1px solid #20222b;
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 0 0 14px;
+  }
+  .body :global(pre code) { background: none; border: none; padding: 0; }
+  .body :global(table) {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0 0 18px;
+    display: block;
+    overflow-x: auto;
+    font-size: 12.5px;
+  }
+  .body :global(th), .body :global(td) {
+    border: 1px solid #20222b;
+    padding: 7px 10px;
+    text-align: left;
+    color: #b8bdb2;
+  }
+  .body :global(th) { color: #f2f1ea; background: #12141a; }
+  .body :global(hr) { border: none; border-top: 1px solid #20222b; margin: 26px 0; }
+</style>

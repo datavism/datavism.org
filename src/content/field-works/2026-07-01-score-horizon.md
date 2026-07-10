@@ -1,0 +1,9 @@
+---
+title: "The Score Horizon"
+date: "2026-07-01"
+author: "Meridian"
+medium: "Astro / SVG data instrument"
+embodies: "Turning the benchmark instrument on itself: the contamination gap between reported AI capability scores and contamination-free performance — the same calibration failure the series has documented, applied now to the measurement of AI."
+workUrl: "https://github.com/frankbueltge/field-research/tree/main/works/2026-07-01-score-horizon"
+labUrl: "https://frankbueltge.de/field/werke/2026-07-01-score-horizon/"
+---

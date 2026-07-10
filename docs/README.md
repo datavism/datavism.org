@@ -17,6 +17,7 @@
 | [`ghost-brain.md`](ghost-brain.md) | GHOST-Brain Architektur-Spec (GCP: Gateway, Vertex AI, Quota, Eval, Transparenz) |
 | [`adr/001-rebuild-stack.md`](adr/001-rebuild-stack.md) | **ADR 001** — Rebuild-Stack: data-snack-Engine (Astro 5 + Svelte 5 + Firebase), Hosting, Engine-Konsum |
 | [`adr/002-field-integration.md`](adr/002-field-integration.md) | **ADR 002** — Field-Integration: Meridian als Content-Engine, Gauntlet als Didaktik, Atlas als Messlatte, Capstones = Instrumente vor Gericht, Graduate-Rückkanal, Data-Jam #1 = Trial 3 |
+| [`adr/003-field-pipeline.md`](adr/003-field-pipeline.md) | **ADR 003** — Field-Pipeline: Werk→Operation-Datenmodell (`derivedFrom`), Werke-Spiegel (`/field`, field-sync-Workflow), Atlas-Snapshot + Linien-Referenzen |
 | [`plans/2026-06-07-site-rebuild-phase-1.md`](plans/2026-06-07-site-rebuild-phase-1.md) | Site-Neubau Phase 1 (Foundation & Landing) — ausführbarer Implementierungsplan + Phasen-Roadmap |
 | [`../program.md`](../program.md) | Steuerungsdokument für Entwicklungs-Sessions (Anti-Patterns, Qualitätskriterien, Tech, Ethik) |
 | [`research/2026-06-07-repositioning-research.md`](research/2026-06-07-repositioning-research.md) | Verifizierte Recherche (Skills, Viral, Community, Finanzierung), Stand 2026 |

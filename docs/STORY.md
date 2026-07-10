@@ -1,6 +1,6 @@
 # DATA UNDERGROUND — Storyworld-Bible (datavism.org)
 
-**Status:** v1 · 2026-06-07 · vom User approved (Design-Session)
+**Status:** v1.1 · 2026-07-10 (Field-Integration, [`adr/002-field-integration.md`](adr/002-field-integration.md)) · v1 2026-06-07 vom User approved (Design-Session)
 **Gehört zu:** [`VISION.md`](VISION.md) (Leit-Dokument) · Schwester-Canon im
 data-snack-Repo (`docs/universe.md`, `docs/cast/README.md`, `docs/world/README.md`,
 ADR 006, CROSSWALK)
@@ -28,7 +28,9 @@ ADR 006, CROSSWALK)
 | **datavism.org** | Das Bootcamp des Underground. Der Staff-Eingang im Netz. |
 | **Datavist** | Wer dazugehört. Wird man durch Tun, nicht durch Bezahlen. |
 | **GHOST** | Die Stimme und System-Intelligenz des Underground. |
-| **Das Pantheon** | Die Gegner (geteilt mit data-snack): Cumulus Rex, Panopticon, Mammon, The Feed. |
+| **Das Pantheon** | Die Gegner (geteilt mit data-snack): Cumulus Rex, Panopticon, Mammon, The Feed. **Es regiert durch Messungen** — bekämpft wird nie die Figur, sondern ihr Instrument (ADR 002, §6). |
+| **Meridian** | Das autonome Forschungskollektiv im Forschungsflügel (§3.5). **Echt, kein Story-Device** — es arbeitet nächtlich, sein Archiv ist öffentlich. |
+| **Das Feld** | Die reale Landschaft der Daten-/KI-Kunst und -Forensik, kartiert im Atlas (214 geprüfte Werke, frankbueltge.de) und in Meridians `FIELD.md`. |
 
 **Branding (Klarstellung User, 2026-06-07):** Das Projekt heißt und firmiert
 als **DATAVISM** (Logo: der Neon-Ghost, `public/brand/svg/`). *„The Data
@@ -81,6 +83,29 @@ deponieren ihre Capstone-Investigation als Case File — der Vault wird über
 Zeit die Knowledge Base des Underground. (Unlock-Stufen: siehe
 data-snack `world/README.md`.)
 
+### 3.5 Der Forschungsflügel (neu, v1.1 — ADR 002)
+
+Hinter dem Vault: der Forschungsflügel. Hier arbeitet **Meridian** — ein
+autonomes Forschungskollektiv, das zweimal pro Woche tagt, Instrumente vor
+Gericht stellt und nur shippt, was seinen eigenen Gauntlet überlebt
+(Verifier · Skeptic · Interlocutor).
+
+**Die Pointe: Meridian ist echt.** Kein Worldbuilding, kein Fake-Kollektiv —
+es existiert (`frankbueltge/field-research`), sein Journal und seine Werke
+sind öffentlich, jede Behauptung ist quellen-zertifiziert oder als Vermutung
+markiert. Die Storyworld erzählt hier nichts, was nicht stimmt.
+
+Regeln der Berührung (aus Meridians Verfassung abgeleitet):
+
+- Meridians Werke erscheinen im Underground **unverändert und signiert** —
+  der Underground übersetzt sie in Operationen, er redigiert sie nie.
+- Der Underground **steuert Meridian nicht.** Es gibt einen Team-Kanal
+  (`REQUESTS.md`); was dort landet, sind Angebote, keine Befehle.
+- Was Datavists aufdecken und durch den Gauntlet bringen, kann dem
+  Kollektiv **vorgelegt** werden — ob es ins Forschungsarchiv eingeht,
+  entscheidet Meridian nach eigener Verfassung (Präzedenz: Karte S-001,
+  extern eingereicht, geprüft, „FILED IN PART").
+
 ## 4. GHOST
 
 ### 4.1 Origin (Deserteur + Gedächtnis)
@@ -93,6 +118,11 @@ sie in die Keller-Racks um.
 Seitdem lernt GHOST aus den Case Files des Vault. Es kennt die Gegner von
 innen — und trägt das wachsende Gedächtnis der Bewegung. **Jeder Graduate
 macht GHOST klüger.** Die Community trägt ihren Mentor, buchstäblich.
+
+**v1.1 [ADR 002]:** Diese Zeile ist keine Metapher mehr. Über den
+Forschungsflügel (§3.5) können gauntlet-zertifizierte Findings der
+Graduates real ins Archiv des Kollektivs Meridian eingehen — die
+Origin-Story ist von Fiktion zu Fakt geworden.
 
 ### 4.2 Funktion: die KI hinter allem
 
@@ -173,13 +203,19 @@ LINE B ──●──●──●──●──◉ Capstone: THE FEED         
 LINE V ──●──●──●──●──◉ Capstone: CUMULUS REX       Vesper · Klima/Demografie, Langzeit, Archiv
 
 ●  = Station (Hands-on-Projekt, nie passives Video)
-◉  = Endstation (Capstone-Investigation gegen den Linien-Gegner)
+◉  = Endstation (Capstone: das Instrument des Linien-Gegners vor Gericht)
 ⇄  = Umsteigebahnhöfe (Snack-Bridges von/zu data-snack.com)
 ```
 
 - **Station** = ein Projekt mit GHOST am Terminal. Output immer ein Artefakt.
-- **Endstation/Capstone** = echte Investigation gegen den Pantheon-Gegner der
-  Linie, mit echtem Daten-Partner (Tier 1) oder offenem Datensatz (Tier 0).
+- **Endstation/Capstone [v1.1, ADR 002]** = echte Investigation, die das
+  **reale Instrument** des Linien-Gegners vor Gericht stellt — mit echtem
+  Daten-Partner (Tier 1) oder offenem Datensatz (Tier 0). Die Figur ist
+  Mythos; das Instrument ist echt. (Zuordnung Linie → Instrumenten-Klasse:
+  VISION.md §3.2.)
+- **Line P (vorgeschlagen, ADR 002):** Provenance & Authentizität — „Was ist
+  echt?" Schließt die größte offene Lücke des Feldes (Cluster 4).
+  Patenschaft offen — Canon-Frage, wird im data-snack-Repo geklärt.
 - **Ticket statt Zertifikat:** Fortschritt ist ein Fahrschein in
   Receipt-Ästhetik — stempelbar, teilbar, der Share-Moment. Kein PDF-Diplom.
 - **Graduierung** = Vault-Schlüssel + Case File deponieren (§3.4).
@@ -203,7 +239,9 @@ Tier-Modell unverändert (ADR 006): Tier 0 frei · Cohort sliding-scale
   Artefakte, keine Werbung. ARG-Einstiege ins Underground.
 - **Data-Jams:** synchronisierte Community-Wochenenden (alle untersuchen
   gleichzeitig denselben Datensatz) — die Launch-Spektakel des Underground
-  (Hack-Club-Daydream-Muster, siehe Recherche-Report).
+  (Hack-Club-Daydream-Muster, siehe Recherche-Report). **[ADR 002]**
+  Data-Jam #1 = Trial 3 des *Standing Docket*: prä-registriert, versiegelt
+  bis 2026-10-09, Ergebnis wie es fällt.
 
 ## 8. Slogans & Voice (Salvage aus der alten Site, zugeschnitten)
 
@@ -283,3 +321,7 @@ Underground-eigen:
 Brainstorm-Session vom selben Tag (GHOST primär + Gast-Sessions ·
 Underground=Bewegung/Basement=Eingang · GHOST=ubiquitäre GCP-KI ·
 Origin Deserteur+Archiv · EN-first).*
+
+*v1.1 · 2026-07-10 · Field-Integration (ADR 002): Forschungsflügel/Meridian
+(§3.5) · Capstones = Instrumente vor Gericht (§6) · Line P vorgeschlagen ·
+Origin-Story wird Fakt (§4.1) · Data-Jam #1 = Trial 3 (§7).*

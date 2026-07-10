@@ -1,7 +1,9 @@
 # DATAVISM — Documentation Index
 
-> **Stand: 2026-06-07 (Repositionierung).** datavism.org ist das **AI-Era Data
-> Skills Bootcamp** — Schwester-Säule von `data-snack.com`. Die alte
+> **Stand: 2026-07-10 (Field-Integration, ADR 002).** datavism.org ist das
+> **AI-Era Data Skills Bootcamp** — und seit ADR 002 der **menschliche Flügel
+> des Forschungslabors** (Kollektiv Meridian, `field-research` + Atlas auf
+> frankbueltge.de). Schwester-Säule von `data-snack.com`. Die alte
 > „Serious-Game / Reality-Wars"-Ära liegt unter [`archive/`](archive/).
 
 ## Hier starten
@@ -14,6 +16,7 @@
 | [`MANIFESTO.md`](MANIFESTO.md) | Das Manifest (v2, EN, site-ready) |
 | [`ghost-brain.md`](ghost-brain.md) | GHOST-Brain Architektur-Spec (GCP: Gateway, Vertex AI, Quota, Eval, Transparenz) |
 | [`adr/001-rebuild-stack.md`](adr/001-rebuild-stack.md) | **ADR 001** — Rebuild-Stack: data-snack-Engine (Astro 5 + Svelte 5 + Firebase), Hosting, Engine-Konsum |
+| [`adr/002-field-integration.md`](adr/002-field-integration.md) | **ADR 002** — Field-Integration: Meridian als Content-Engine, Gauntlet als Didaktik, Atlas als Messlatte, Capstones = Instrumente vor Gericht, Graduate-Rückkanal, Data-Jam #1 = Trial 3 |
 | [`plans/2026-06-07-site-rebuild-phase-1.md`](plans/2026-06-07-site-rebuild-phase-1.md) | Site-Neubau Phase 1 (Foundation & Landing) — ausführbarer Implementierungsplan + Phasen-Roadmap |
 | [`../program.md`](../program.md) | Steuerungsdokument für Entwicklungs-Sessions (Anti-Patterns, Qualitätskriterien, Tech, Ethik) |
 | [`research/2026-06-07-repositioning-research.md`](research/2026-06-07-repositioning-research.md) | Verifizierte Recherche (Skills, Viral, Community, Finanzierung), Stand 2026 |

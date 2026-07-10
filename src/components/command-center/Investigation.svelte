@@ -89,7 +89,7 @@
   const check = $derived(preCheck(finding))
 
   // ── certification result ───────────────────────────────────────────────────
-  type Verdict = { certified: boolean; feedback: string; notes: { source: boolean; specificity: boolean; uncertainty: boolean } }
+  type Verdict = { certified: boolean; feedback: string; critique?: string; notes: { source: boolean; specificity: boolean; uncertainty: boolean } }
   let verdict = $state<Verdict | null>(null)
   let certError = $state<string | null>(null)
   let closedCodename = $state<string | null>(null)
@@ -222,7 +222,7 @@
     const f: Finding = { ...finding }
     const codename = codenameFor(caseId)
     const certifiedAt = new Date().toISOString()
-    recordClosed({ caseId, finding: f, certifiedAt, codename })
+    recordClosed({ caseId, finding: f, certifiedAt, codename, critique: verdict?.critique || undefined })
     closedCodename = codename
     closedAt = certifiedAt
     onclosed?.(caseId)
@@ -461,6 +461,13 @@
         <p class="closed-question">{fQuestion}</p>
         {#if verdict?.feedback}
           <p class="closed-feedback">“{verdict.feedback}”</p>
+        {/if}
+        {#if verdict?.critique}
+          <div class="closed-objection">
+            <span class="co-tag">THE STANDING OBJECTION</span>
+            <p class="co-text">{verdict.critique}</p>
+            <span class="co-note">Published with your finding — a certified finding carries its own strongest objection. Answer it or let it stand; hiding it is the only wrong move.</span>
+          </div>
         {/if}
         <div class="closed-honesty">
           Method certified — <strong>not</strong> fact-verified. GHOST confirmed your craft, not your conclusion. The claim is yours to stand behind.
@@ -867,6 +874,36 @@
     max-width: 500px;
   }
   .closed-honesty strong { color: #ffe98a; }
+
+  /* the standing objection — the Interlocutor's published critique */
+  .closed-objection {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    background: #aa44ff0a;
+    border: 1px solid #aa44ff33;
+    border-left: 2px solid #aa44ff88;
+    padding: 12px 16px;
+    max-width: 500px;
+    text-align: left;
+  }
+  .co-tag {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: #aa44ff;
+  }
+  .co-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #d9c8ee;
+  }
+  .co-note {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #6f757f;
+    font-style: italic;
+  }
 
   /* actions */
   .iv-actions { display: flex; gap: 12px; margin-top: 4px; }

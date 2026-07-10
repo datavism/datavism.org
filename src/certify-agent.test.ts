@@ -52,6 +52,21 @@ describe('certify system prompt', () => {
     expect(p).toMatch(/deep-link|permalink/i)
     expect(p).toMatch(/not required/i)
   })
+  it('runs the Skeptic pass — refute the method, never the facts', () => {
+    expect(p).toMatch(/SKEPTIC PASS/)
+    expect(p).toMatch(/refute the METHOD/i)
+    expect(p).toMatch(/artifact of how the source publishes/i)
+  })
+  it('demands a published standing objection with every certificate', () => {
+    expect(p).toMatch(/STANDING OBJECTION/)
+    expect(p).toMatch(/PUBLISHED alongside the finding/i)
+    expect(p).toMatch(/"critique"/)
+  })
+  it('binds legal hygiene — method/standard/data, never persons', () => {
+    expect(p).toMatch(/LEGAL HYGIENE/)
+    expect(p).toMatch(/never a person'?s or company'?s character/i)
+    expect(p).toMatch(/a declaration, not guilt/i)
+  })
 })
 
 describe('preCheckStructure', () => {
@@ -99,6 +114,23 @@ describe('parseVerdict', () => {
     expect(v.certified).toBe(true)
     expect(v.feedback).toBe('Method holds.')
     expect(v.feedback).not.toMatch(/could not read|resubmit/i)
+  })
+  it('parses the standing objection on a certified verdict', () => {
+    const v = parseVerdict('{"certified":true,"feedback":"Method holds.","critique":"The band is self-declared; the register audits nothing.","notes":{"source":true,"specificity":true,"uncertainty":true}}')
+    expect(v.critique).toBe('The band is self-declared; the register audits nothing.')
+  })
+  it('clamps an overlong critique to 240 chars', () => {
+    const long = 'y'.repeat(500)
+    const v = parseVerdict(`{"certified":true,"feedback":"ok","critique":"${long}","notes":{"source":true,"specificity":true,"uncertainty":true}}`)
+    expect(v.critique.length).toBe(240)
+  })
+  it('names the audit gap honestly when a certificate arrives without an objection', () => {
+    const v = parseVerdict('{"certified":true,"feedback":"ok","notes":{"source":true,"specificity":true,"uncertainty":true}}')
+    expect(v.critique).toMatch(/gap in the audit/i)
+  })
+  it('carries no objection on a failed verdict', () => {
+    const v = parseVerdict('{"certified":false,"feedback":"Cite the entry.","critique":"should be dropped","notes":{"source":false,"specificity":true,"uncertainty":true}}')
+    expect(v.critique).toBe('')
   })
 })
 

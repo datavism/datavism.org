@@ -7,6 +7,9 @@ export type ClosedOperation = {
   finding: Finding
   certifiedAt: string
   codename: string
+  // The Interlocutor's standing objection, published with the finding (gauntlet,
+  // ADR 002 Zug 2). Optional: records closed before the gauntlet carry none.
+  critique?: string
 }
 
 const HISTORY_KEY = 'datavism:command-center:history'

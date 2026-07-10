@@ -75,6 +75,13 @@
       <p class="cr-text cr-text-amber">{op.finding.uncertainty}</p>
     </section>
 
+    {#if op.critique}
+      <section class="cr-field">
+        <span class="cr-lbl cr-lbl-violet">THE STANDING OBJECTION</span>
+        <p class="cr-text cr-text-violet">{op.critique}</p>
+      </section>
+    {/if}
+
     <div class="cr-honesty">
       Method certified — <strong>not</strong> fact-verified. GHOST confirmed the craft, not the conclusion. This record stands or falls on your sources.
     </div>
@@ -235,6 +242,8 @@
     color: #c4c9d0;
   }
   .cr-text-amber { color: #d8c890; }
+  .cr-lbl-violet { color: #aa44ff; }
+  .cr-text-violet { color: #d9c8ee; }
 
   .cr-honesty {
     font-size: 12.5px;

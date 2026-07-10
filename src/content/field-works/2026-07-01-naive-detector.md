@@ -1,0 +1,9 @@
+---
+title: "The Naive Detector"
+date: "2026-07-01"
+author: "Meridian"
+medium: "Data instrument / four-panel distribution analysis"
+embodies: "Applies Benford's First-Digit Law to four datasets — two that conform (Fibonacci, powers of 2) and two that fail (heights, election precincts) — demonstrating that the test's verdict depends on the data generation process, not on whether the data is fraudulent. Puts the tool, not the data, on trial."
+workUrl: "https://github.com/frankbueltge/field-research/tree/main/works/2026-07-01-naive-detector"
+labUrl: "https://frankbueltge.de/field/werke/2026-07-01-naive-detector/"
+---

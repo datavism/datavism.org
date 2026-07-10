@@ -155,7 +155,7 @@
       <span class="nav-tab nav-active" aria-current="page">DASHBOARD</span>
       <span class="nav-tab nav-dim" aria-disabled="true">CASES</span>
       <span class="nav-tab nav-dim" aria-disabled="true">LINES</span>
-      <span class="nav-tab nav-dim" aria-disabled="true">FIELD</span>
+      <a class="nav-tab nav-link" href="/field">FIELD</a>
     </nav>
 
     <div class="topbar-meta">
@@ -515,6 +515,16 @@
     background: #00ff8810;
   }
   .nav-dim { color: #4a4f5c; }
+  a.nav-link {
+    color: #aa44ff;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  a.nav-link:hover {
+    border-color: #aa44ff44;
+    background: #aa44ff10;
+  }
 
   /* meta (clock + badge) */
   .topbar-meta {

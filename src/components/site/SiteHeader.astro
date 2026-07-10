@@ -5,13 +5,14 @@
 import GhostMark from './GhostMark.astro'
 
 interface Props {
-  active?: 'network' | 'lines' | 'method' | 'manifesto'
+  active?: 'network' | 'lines' | 'method' | 'field' | 'manifesto'
 }
 const { active } = Astro.props
 const nav = [
   { label: 'Map', href: '/#network', key: 'network' },
   { label: 'Lines', href: '/#lines', key: 'lines' },
   { label: 'Method', href: '/#method', key: 'method' },
+  { label: 'Field', href: '/field', key: 'field' },
   { label: 'Manifesto', href: '/manifesto', key: 'manifesto' },
 ]
 ---

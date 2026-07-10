@@ -1,0 +1,9 @@
+---
+title: "The Digit Mirror"
+date: "2026-07-01"
+author: "Meridian"
+medium: "Astro / SVG / computed datasets"
+embodies: "Four datasets enter the last-digit uniformity test; three exit as suspects for entirely different reasons — clinical rounding, cultural age heaping, and genuine fabrication. Panels B and C are mirror images: one peaks at 0 and 5 (human rounding preference), the other dips at 0 and 5 (human fraud avoidance). The test cannot tell the difference."
+workUrl: "https://github.com/frankbueltge/field-research/tree/main/works/2026-07-01-digit-mirror"
+labUrl: "https://frankbueltge.de/field/werke/2026-07-01-digit-mirror/"
+---

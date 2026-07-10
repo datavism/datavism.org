@@ -2,10 +2,10 @@
   // src/components/command-center/Dossier.svelte
   // Case Dossier overlay — shows real data only. No fabricated metrics.
   // Real: case question, public source (title/url/contains), briefing, method steps, uncertainty.
-  // FIRST_OPERATION.briefing is used for lobby-register-de; other cases use their hook.
+  // Scripted operations (starter + Meridian replications) use their briefing; other cases their hook.
 
   import { getCase } from '../../lib/line-g-opening/cases'
-  import { FIRST_OPERATION } from '../../lib/command-center/operations'
+  import { getOperation } from '../../lib/command-center/operations'
 
   let {
     caseId,
@@ -18,10 +18,9 @@
   } = $props()
 
   const cas = $derived(getCase(caseId))
-  const isAssigned = $derived(caseId === FIRST_OPERATION.caseId)
-  const briefing = $derived(
-    isAssigned ? FIRST_OPERATION.briefing : (cas?.hook ?? '')
-  )
+  const scripted = $derived(getOperation(caseId))
+  const isAssigned = $derived(Boolean(scripted))
+  const briefing = $derived(scripted?.briefing ?? cas?.hook ?? '')
 
   const sigColor: Record<string, string> = {
     tracking: '#00ffff',

@@ -13,7 +13,7 @@
   import Investigation from './Investigation.svelte'
   import ClosedRecord from './ClosedRecord.svelte'
   import { LAUNCHPAD_CASES } from '../../lib/line-g-opening/cases'
-  import { FIRST_OPERATION } from '../../lib/command-center/operations'
+  import { OPERATIONS } from '../../lib/command-center/operations'
   import { loadHistory } from '../../lib/command-center/history'
   import type { ClosedOperation } from '../../lib/command-center/history'
   import { LINES } from '../../lib/curriculum/lines'
@@ -119,9 +119,9 @@
   }
 
   // ── honest KPI aggregates (counts of real things only) ────────
-  const assignedCount = 1            // FIRST_OPERATION is the guided starter operation
+  const assignedCount = OPERATIONS.length // scripted ops (starter + Meridian replications)
   const linesCount = LINES.length    // 5 lines (G/K/R/B/V)
-  const methodDone = 1               // only QUESTION is established on the assigned op
+  const methodDone = 1               // only QUESTION is established on an unclaimed op
   const methodTotal = 6              // the six-step method
 
   // ── signal color helper (for op list badges) ─────────────────
@@ -249,44 +249,52 @@
     <!-- ── RIGHT COLUMN ───────────────────────────────────────── -->
     <aside class="cc-col cc-right" aria-label="Assigned operation and lines status">
 
-      <!-- ASSIGNED OPERATION -->
+      <!-- ASSIGNED OPERATIONS -->
       <section class="panel panel-assigned">
         <div class="panel-hd">
           <span class="panel-mark">◢</span>
-          ASSIGNED OPERATION
-          <span class="panel-hd-tag">CASE NEEDS YOU</span>
+          ASSIGNED OPERATIONS
+          <span class="panel-hd-tag">{assignedCount} OPEN</span>
         </div>
-        <div class="panel-body aop-body">
-          <div class="aop-top">
-            <span class="aop-id">OP · {FIRST_OPERATION.caseId.toUpperCase()}</span>
-            <span class="aop-signal" style="color: {sigColor[FIRST_OPERATION.signal]}; border-color: {sigColor[FIRST_OPERATION.signal]}55">
-              {FIRST_OPERATION.signal.toUpperCase()}
-            </span>
-          </div>
-          <p class="aop-question">{FIRST_OPERATION.question}</p>
-
-          <div class="aop-source">
-            <span class="aop-source-label">PUBLIC SOURCE</span>
-            <span class="aop-source-name">{FIRST_OPERATION.source.title}</span>
-          </div>
-
-          <div class="aop-method">
-            <span class="aop-method-lbl">METHOD</span>
-            <div class="aop-dots" aria-hidden="true">
-              {#each Array(methodTotal) as _, i}
-                <span class="aop-dot" class:aop-dot-done={i < methodDone}></span>
-              {/each}
+        {#each OPERATIONS as aop, i (aop.caseId)}
+          <div class="panel-body aop-body" class:aop-divided={i > 0}>
+            <div class="aop-top">
+              <span class="aop-id">OP · {aop.caseId.toUpperCase()}</span>
+              <span class="aop-signal" style="color: {sigColor[aop.signal]}; border-color: {sigColor[aop.signal]}55">
+                {aop.signal.toUpperCase()}
+              </span>
             </div>
-            <span class="aop-method-frac">{methodDone}/{methodTotal}</span>
-          </div>
+            <p class="aop-question">{aop.question}</p>
 
-          <div class="aop-action">
-            <button
-              class="aop-link"
-              onclick={() => openDossier(FIRST_OPERATION.caseId)}
-            >OPEN DOSSIER →</button>
+            {#if aop.derivedFrom}
+              <span class="aop-derived" title="Replication of a shipped, gauntlet-verified work of the research collective Meridian">
+                ◇ DERIVED FROM “{aop.derivedFrom.work.toUpperCase()}” · MERIDIAN
+              </span>
+            {/if}
+
+            <div class="aop-source">
+              <span class="aop-source-label">PUBLIC SOURCE</span>
+              <span class="aop-source-name">{aop.source.title}</span>
+            </div>
+
+            <div class="aop-method">
+              <span class="aop-method-lbl">METHOD</span>
+              <div class="aop-dots" aria-hidden="true">
+                {#each Array(methodTotal) as _, j}
+                  <span class="aop-dot" class:aop-dot-done={j < methodDone}></span>
+                {/each}
+              </div>
+              <span class="aop-method-frac">{methodDone}/{methodTotal}</span>
+            </div>
+
+            <div class="aop-action">
+              <button
+                class="aop-link"
+                onclick={() => openDossier(aop.caseId)}
+              >OPEN DOSSIER →</button>
+            </div>
           </div>
-        </div>
+        {/each}
       </section>
 
       <!-- LINES STATUS -->
@@ -810,6 +818,20 @@
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #2c2f3a #0e0f14;
+  }
+  .aop-divided {
+    border-top: 1px dashed #20222b;
+    margin-top: 2px;
+  }
+  .aop-derived {
+    align-self: flex-start;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #aa44ff;
+    border: 1px solid #aa44ff44;
+    background: #aa44ff0d;
+    padding: 3px 8px;
   }
 
   .aop-top {

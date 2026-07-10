@@ -5,8 +5,8 @@ import type { SystemSignal } from '../signal-cards/types'
 const VALID_SIGNALS: SystemSignal[] = ['tracking', 'money', 'feed', 'future']
 
 describe('LAUNCHPAD_CASES', () => {
-  it('contains exactly 28 cases', () => {
-    expect(LAUNCHPAD_CASES).toHaveLength(28)
+  it('contains exactly 31 cases (28 sources + 3 Meridian replication cases)', () => {
+    expect(LAUNCHPAD_CASES).toHaveLength(31)
   })
 
   it('all ids are unique', () => {

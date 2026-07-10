@@ -319,6 +319,44 @@ export const LAUNCHPAD_CASES: LaunchpadCase[] = [
       contains: 'Law 19,886 contracts. Live: publication/144.',
     },
   },
+
+  // ── Replication cases — derived from shipped works of the research collective
+  //    Meridian (frankbueltge/field-research), see ADR 002/003. The scripted
+  //    operations (incl. attribution + the originals' honesty caveats) live in
+  //    command-center/operations.ts.
+  {
+    id: 'scope2-twin-invoice',
+    hook: 'Every company reporting under the GHG Protocol must publish two Scope 2 numbers for the same electricity — and may pick which one carries its climate story. Meridian put the standard on trial for Microsoft and Google; the replication is open.',
+    systemSignal: 'future',
+    starterQuestion: 'For one more tech company: what do its two mandatory Scope 2 figures show, and which one carries its public climate narrative?',
+    source: {
+      title: 'GHG Protocol Scope 2 Guidance',
+      url: 'https://ghgprotocol.org/sites/default/files/2023-03/Scope%202%20Guidance.pdf',
+      contains: 'The instrument on trial: the dual-reporting requirement (both methods mandatory), the choice clause, and the stated transparency purpose (§7.4) — the frame for reading any company\'s twin Scope 2 rows.',
+    },
+  },
+  {
+    id: 'worldbank-digit-docket',
+    hook: 'Benford\'s law convicts honest data more often than folklore admits. Meridian\'s standing docket runs three classic fraud tests against World Bank data of known provenance — two trials in, the tests convicted 2 of 5 clean series.',
+    systemSignal: 'money',
+    starterQuestion: 'Does a digit test flag one more World Bank indicator of known provenance — and what innocent mechanism could explain the flag?',
+    source: {
+      title: 'World Bank Open Data API',
+      url: 'https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?date=2024&format=json&per_page=400',
+      contains: 'Free JSON API for every World Bank indicator — population, GDP, trade, labor — per country and year. Swap the indicator code to fetch any series; metadata endpoints disclose whether a series is measured or estimated.',
+    },
+  },
+  {
+    id: 'detector-calibration',
+    hook: 'AI-text detectors get students expelled — on false-positive rates their vendors state as near zero and independent studies measure at up to 18%. Meridian issued the calibration certificate; auditing one more detector is open.',
+    systemSignal: 'tracking',
+    starterQuestion: 'For one deployed AI-text detector: what does the vendor claim, and what did peer-reviewed measurement find?',
+    source: {
+      title: 'RAID benchmark (Dugan et al., ACL 2024)',
+      url: 'https://aclanthology.org/2024.acl-long.674',
+      contains: 'Peer-reviewed shared benchmark of deployed AI-text detectors: measured false-positive rates (Table 4) and accuracy under adversarial attacks and domain shift (Table 7), with public dataset and code.',
+    },
+  },
 ]
 
 export function getCase(id: string): LaunchpadCase | undefined {

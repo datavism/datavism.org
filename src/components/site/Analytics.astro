@@ -3,8 +3,11 @@
 // Renders ONLY in production and ONLY when the provider env vars are set, so dev
 // and previews stay clean. No cookies / no device storage → no consent banner.
 // Swap providers (Umami ⇄ Plausible) by editing the <script> tag below only.
-const src = import.meta.env.PUBLIC_UMAMI_SRC
-const websiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID
-const enabled = import.meta.env.PROD && src && websiteId
+//
+// HONESTY COUPLING: the switch lives in src/lib/analytics.ts and is ALSO read by
+// legal.astro, which fails the build if analytics is enabled while the privacy
+// page still claims "no analytics". Enabling this without updating /legal is a
+// build error, not a silent lie.
+import { ANALYTICS_ENABLED, UMAMI_SRC, UMAMI_WEBSITE_ID } from '../../lib/analytics'
 ---
-{enabled && <script is:inline defer src={src} data-website-id={websiteId} data-cache="true"></script>}
+{ANALYTICS_ENABLED && <script is:inline defer src={UMAMI_SRC} data-website-id={UMAMI_WEBSITE_ID} data-cache="true"></script>}

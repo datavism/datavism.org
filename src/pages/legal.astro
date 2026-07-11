@@ -5,7 +5,23 @@
 // no tracking, self-hosted fonts — the only personal-data flow is the optional
 // waitlist email (double opt-in) via the SHARED data-snack drop-notifier backend.
 import Base from '../layouts/Base.astro'
-const updated = '2026-07-07'
+import { ANALYTICS_ENABLED } from '../lib/analytics'
+
+// BUILD GUARD (honesty coupling with Analytics.astro): this page currently states
+// "no analytics, no cookies, no tracking". If the analytics env vars get set, the
+// claim becomes false — so the build MUST fail until this policy is rewritten.
+// To enable analytics: update the EN sections ("The short version", "7. Cookies &
+// storage") and the DE sections ("Kurzfassung", "Cookies"), add the provider to
+// the processors table, bump `updated`, then delete this guard.
+if (ANALYTICS_ENABLED) {
+  throw new Error(
+    'legal.astro still claims "no analytics, no cookies, no tracking" but analytics is enabled ' +
+      '(PUBLIC_UMAMI_SRC/PUBLIC_UMAMI_WEBSITE_ID are set). Update the privacy policy first — ' +
+      'see the BUILD GUARD comment in src/pages/legal.astro.',
+  )
+}
+
+const updated = '2026-07-11'
 ---
 <Base title="Imprint & Privacy — DATAVISM" description="Legal notice, imprint and privacy policy for datavism.org. No tracking, no cookies, self-hosted fonts — only an optional double-opt-in waitlist email." footer={false}>
   <main class="legal">
@@ -26,7 +42,7 @@ const updated = '2026-07-07'
     <section class="sec">
       <h2 class="font-display">// Privacy policy</h2>
       <h3>The short version</h3>
-      <p>This site runs <strong>no analytics, no cookies, no tracking</strong>, and self-hosts its fonts (no third-party CDN call). There is genuinely nothing to track here — "no tracking on this page" is literal. The only personal data we ever process is the email you voluntarily give us for the launch waitlist, and only with double opt-in.</p>
+      <p>This site runs <strong>no analytics, no cookies, no tracking</strong>, and self-hosts its fonts (no third-party CDN call). The only personal data we ever process is the email you voluntarily give us for the launch waitlist, and only with double opt-in.</p>
 
       <h3>1. Controller</h3>
       <p>Frank Bueltge, c/o Autorenglück #98451, Albert-Einstein-Str. 47, 02977 Hoyerswerda, Germany · ghost@datavism.org. A Data Protection Officer is not required under § 38 BDSG; contact the address above for any privacy request.</p>

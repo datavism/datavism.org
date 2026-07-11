@@ -1,29 +1,21 @@
 ---
 // src/pages/legal.astro — Imprint + Privacy for datavism.org.
 // Operator block adopted from data-snack (same controller, Frank Bültge).
-// Privacy reflects datavism's actual data reality: no analytics, no cookies,
-// no tracking, self-hosted fonts — the only personal-data flow is the optional
-// waitlist email (double opt-in) via the SHARED data-snack drop-notifier backend.
+// Privacy reflects datavism's actual data reality: cookieless, no-PII web
+// analytics (self-hosted Umami, EU/Frankfurt) — no cookies, no cross-site
+// tracking — self-hosted fonts, plus the optional waitlist email (double
+// opt-in) via the SHARED data-snack drop-notifier backend.
+//
+// HONESTY NOTE: analytics is LIVE (PUBLIC_UMAMI_SRC + PUBLIC_UMAMI_WEBSITE_ID set
+// on the Vercel project → Analytics.astro ships the Umami script). The disclosure
+// below MUST keep describing it accurately: Umami appears in the "short version",
+// the processors table, section 7 (EN) and the Kurzfassung / "Analyse & Cookies"
+// block (DE). If you ever turn analytics OFF again, soften these claims back.
 import Base from '../layouts/Base.astro'
-import { ANALYTICS_ENABLED } from '../lib/analytics'
-
-// BUILD GUARD (honesty coupling with Analytics.astro): this page currently states
-// "no analytics, no cookies, no tracking". If the analytics env vars get set, the
-// claim becomes false — so the build MUST fail until this policy is rewritten.
-// To enable analytics: update the EN sections ("The short version", "7. Cookies &
-// storage") and the DE sections ("Kurzfassung", "Cookies"), add the provider to
-// the processors table, bump `updated`, then delete this guard.
-if (ANALYTICS_ENABLED) {
-  throw new Error(
-    'legal.astro still claims "no analytics, no cookies, no tracking" but analytics is enabled ' +
-      '(PUBLIC_UMAMI_SRC/PUBLIC_UMAMI_WEBSITE_ID are set). Update the privacy policy first — ' +
-      'see the BUILD GUARD comment in src/pages/legal.astro.',
-  )
-}
 
 const updated = '2026-07-11'
 ---
-<Base title="Imprint & Privacy — DATAVISM" description="Legal notice, imprint and privacy policy for datavism.org. No tracking, no cookies, self-hosted fonts — only an optional double-opt-in waitlist email." footer={false}>
+<Base title="Imprint & Privacy — DATAVISM" description="Legal notice, imprint and privacy policy for datavism.org. Cookieless, no-PII analytics (self-hosted Umami, EU), no cookies, no cross-site tracking, self-hosted fonts — plus an optional double-opt-in waitlist email." footer={false}>
   <main class="legal">
     <div class="eb">// DATAVISM · LEGAL</div>
     <h1 class="font-display title">Imprint &amp; Privacy</h1>
@@ -42,7 +34,7 @@ const updated = '2026-07-11'
     <section class="sec">
       <h2 class="font-display">// Privacy policy</h2>
       <h3>The short version</h3>
-      <p>This site runs <strong>no analytics, no cookies, no tracking</strong>, and self-hosts its fonts (no third-party CDN call). The only personal data we ever process is the email you voluntarily give us for the launch waitlist, and only with double opt-in.</p>
+      <p>This site runs <strong>cookieless, privacy-first analytics</strong> — self-hosted <a href="https://umami.is">Umami</a> on our own EU servers (Frankfurt) — with <strong>no cookies, no cross-site tracking, and no personal profiles</strong>. It self-hosts its fonts (no third-party CDN call). The only directly personal data we ever process is the email you voluntarily give us for the launch waitlist, and only with double opt-in.</p>
 
       <h3>1. Controller</h3>
       <p>Frank Bueltge, c/o Autorenglück #98451, Albert-Einstein-Str. 47, 02977 Hoyerswerda, Germany · ghost@datavism.org. A Data Protection Officer is not required under § 38 BDSG; contact the address above for any privacy request.</p>
@@ -61,6 +53,7 @@ const updated = '2026-07-11'
           <thead><tr><th>Service</th><th>Provider</th><th>Location</th><th>Safeguard</th></tr></thead>
           <tbody>
             <tr><td>Hosting + waitlist proxy</td><td>Vercel Inc.</td><td>USA / EU edge</td><td>DPA · SCC · DPF</td></tr>
+            <tr><td>Web analytics (self-hosted Umami, cookieless)</td><td>Neon (Postgres DB) · Vercel (compute)</td><td>EU (Frankfurt, eu-central-1)</td><td>EU storage · cookieless · no PII</td></tr>
             <tr><td>Waitlist record (system of record)</td><td>Google Cloud (Functions, Firestore)</td><td>EU (europe-west)</td><td>DPA · EU storage</td></tr>
             <tr><td>Email delivery</td><td>Resend, Inc.</td><td>USA inc. · EU storage (eu-west-1)</td><td>DPA · SCC · EU storage</td></tr>
           </tbody>
@@ -73,8 +66,9 @@ const updated = '2026-07-11'
       <h3>6. Your rights</h3>
       <p>You have the rights to access (Art. 15), rectification (16), erasure (17), restriction (18), portability (20), objection (21), and to withdraw consent (Art. 7(3)) at any time. Write to ghost@datavism.org. You may also lodge a complaint with a supervisory authority — for this operator: <em>Der Landesbeauftragte für Datenschutz und Informationsfreiheit Mecklenburg-Vorpommern</em>.</p>
 
-      <h3>7. Cookies &amp; storage</h3>
-      <p>This site sets no cookies and no tracking storage. The only browser storage is a local self-check / waitlist flag that stays on your device and is never sent. There is therefore no cookie banner — there is nothing to consent to.</p>
+      <h3>7. Analytics, cookies &amp; storage</h3>
+      <p>We measure aggregate usage with <strong>self-hosted <a href="https://umami.is">Umami</a></strong>, running on our own EU infrastructure (Frankfurt). It is <strong>cookieless</strong> and stores nothing on your device; it builds no cross-site or cross-day profile (visitor counts use a daily-rotating, non-reversible hash of coarse request data) and no full IP address is retained. Nothing is sold or shared for advertising. Legal basis: Art. 6(1)(f) GDPR (legitimate interest in understanding and improving the site). Because we set no cookies and read no information from your device, no consent banner is required.</p>
+      <p>Beyond analytics, this site sets <strong>no cookies</strong> and no tracking storage. The only browser storage is a local self-check / waitlist flag that stays on your device and is never sent. There is therefore nothing to consent to.</p>
 
       <h3>8. Minors</h3>
       <p>Intended for users aged 16+. We do not knowingly collect data from children under 16.</p>
@@ -95,13 +89,13 @@ const updated = '2026-07-11'
 
     <section class="sec" lang="de">
       <h2 class="font-display">// Datenschutzerklärung · DSGVO</h2>
-      <p><strong>Kurzfassung:</strong> Diese Seite nutzt <strong>keine Analyse, keine Cookies, kein Tracking</strong> und hostet ihre Schriften selbst (kein Dritt-CDN). Es gibt hier schlicht nichts zu tracken. Einzige Verarbeitung personenbezogener Daten: die freiwillig angegebene E-Mail für die Launch-Warteliste, ausschließlich per Double-Opt-in.</p>
+      <p><strong>Kurzfassung:</strong> Diese Seite nutzt <strong>cookieloses, datensparsames Analytics</strong> — selbst-gehostetes <a href="https://umami.is">Umami</a> auf eigenen EU-Servern (Frankfurt) — <strong>ohne Cookies, ohne seitenübergreifendes Tracking, ohne persönliche Profile</strong>, und hostet ihre Schriften selbst (kein Dritt-CDN). Einzige direkt personenbezogene Verarbeitung: die freiwillig angegebene E-Mail für die Launch-Warteliste, ausschließlich per Double-Opt-in.</p>
       <p><strong>Verantwortlicher:</strong> Frank Bueltge, c/o Autorenglück #98451, Albert-Einstein-Str. 47, 02977 Hoyerswerda · ghost@datavism.org. Ein Datenschutzbeauftragter ist nach § 38 BDSG nicht erforderlich.</p>
       <p><strong>Server-Logfiles (essenziell):</strong> technische Zugriffsdaten (gekürzte IP, Zeit, URL, Statuscode, User-Agent, Referrer-Domain). Zweck: Betrieb und Sicherheit. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO. Speicherung: kurzfristig (max. 14 Tage).</p>
       <p><strong>Warteliste (Einwilligung, Double-Opt-in):</strong> Nach Eingabe der E-Mail senden wir eine Bestätigungsmail; erst nach Klick auf den Link wird die Adresse aktiv gespeichert. Verwendung für genau einen Zweck: eine Mail, wenn die erste Linie öffnet. Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO, § 7 Abs. 2 Nr. 3 UWG. Widerruf jederzeit mit Wirkung für die Zukunft (Link in jeder Mail oder ghost@datavism.org). Betrieb über das <strong>geteilte Mail-Backend der Schwesterseite data-snack.com</strong> (geteilter Kontakt-Pool, Segment <code>underground-waitlist</code>; Double-Opt-in-Nachweis in Google Cloud Firestore, EU-Region; Versand über Resend).</p>
-      <p><strong>Auftragsverarbeiter:</strong> Vercel Inc. (Hosting/Proxy, USA/EU, DPA·SCC·DPF), Google Cloud (Wartelisten-Datensatz, EU-Region, DPA), Resend, Inc. (Versand, US-Gesellschaft mit EU-Speicherung, DPA·SCC). Drittlandtransfers via SCC/DPF, EU-Speicherung und Datenminimierung abgesichert; Restrisiko nach Schrems II nicht vollständig ausschließbar.</p>
+      <p><strong>Auftragsverarbeiter:</strong> Vercel Inc. (Hosting/Proxy, USA/EU, DPA·SCC·DPF), Neon (Analytics-Datenbank für selbst-gehostetes, cookieloses Umami, EU/Frankfurt), Google Cloud (Wartelisten-Datensatz, EU-Region, DPA), Resend, Inc. (Versand, US-Gesellschaft mit EU-Speicherung, DPA·SCC). Drittlandtransfers via SCC/DPF, EU-Speicherung und Datenminimierung abgesichert; Restrisiko nach Schrems II nicht vollständig ausschließbar.</p>
       <p><strong>Ihre Rechte:</strong> Auskunft, Berichtigung, Löschung, Einschränkung, Übertragbarkeit, Widerspruch, Widerruf der Einwilligung (Art. 15–21, Art. 7 Abs. 3 DSGVO) — ghost@datavism.org. Beschwerderecht bei der Aufsichtsbehörde: Der Landesbeauftragte für Datenschutz und Informationsfreiheit Mecklenburg-Vorpommern.</p>
-      <p><strong>Cookies:</strong> Es werden keine Cookies und kein Tracking-Storage gesetzt; daher kein Cookie-Banner.</p>
+      <p><strong>Analyse &amp; Cookies:</strong> Reichweitenmessung über selbst-gehostetes, <strong>cookieloses</strong> Umami (EU/Frankfurt): keine Cookies, kein Geräte-Speicher, keine seitenübergreifenden Profile; Besucherzählung über einen täglich rotierenden, nicht umkehrbaren Hash grober Zugriffsdaten, keine vollständige IP-Speicherung. Rechtsgrundlage Art. 6 Abs. 1 lit. f DSGVO. Da keine Cookies gesetzt und keine Informationen auf dem Gerät ausgelesen werden, ist kein Cookie-Banner erforderlich. Darüber hinaus werden keine Cookies und kein Tracking-Storage gesetzt.</p>
     </section>
 
     <p class="back"><a href="/">← back to the entrance</a></p>

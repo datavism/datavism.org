@@ -30,6 +30,7 @@ interface Props {
   active?: 'network' | 'lines' | 'method' | 'field' | 'manifesto'
   footer?: boolean
   chrome?: boolean // ticker + header; off for focused funnels (onboarding)
+  analytics?: boolean // set false on 404 so dead-URL / bot hits stay out of stats
 }
 const {
   title = COPY.meta.title,
@@ -38,6 +39,7 @@ const {
   active,
   footer = true,
   chrome = true,
+  analytics = true,
 } = Astro.props
 const canonical = new URL(Astro.url.pathname, Astro.site).href
 const ogImage = new URL(image, Astro.site).href
@@ -91,7 +93,7 @@ const ogImage = new URL(image, Astro.site).href
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <ClientRouter />
-    <Analytics />
+    {analytics && <Analytics />}
   </head>
   <body>
     <div class="topglow" aria-hidden="true"></div>

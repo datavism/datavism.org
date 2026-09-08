@@ -155,7 +155,6 @@
       <span class="nav-tab nav-active" aria-current="page">DASHBOARD</span>
       <span class="nav-tab nav-dim" aria-disabled="true">CASES</span>
       <span class="nav-tab nav-dim" aria-disabled="true">LINES</span>
-      <a class="nav-tab nav-link" href="/field">FIELD</a>
     </nav>
 
     <div class="topbar-meta">

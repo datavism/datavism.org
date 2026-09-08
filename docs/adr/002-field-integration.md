@@ -7,6 +7,17 @@
 **Ergänzt:** `VISION.md` (Leit-Dokument, v1.1-Amendment) · `STORY.md` (v1.1)
 **Ersetzt nicht:** ADR 001 (Stack) · data-snack ADR 006 (Plattform-Rollen)
 
+> **Teil-Ablösung 2026-09-08 (Frank, Wortlaut privat — Kern: der Werke-Spiegel unter
+> `/field` ergibt auf dieser Site keinen Sinn und wird entfernt).** Damit ist die
+> Spiegel-Fläche dieses ADR erledigt: `/field` und `/field/<slug>` sind von der Site
+> genommen, der `field-sync`-Workflow ist abgeschaltet, beide Routen leiten dauerhaft
+> auf `frankbueltge.de/field` um — dort steht der Record ohnehin kanonisch, daneben im
+> öffentlichen Repo `frankbueltge/field-research`. Bestand hat der Rest der
+> Integration: Meridian-Werke als Quelle für Command-Center-Operationen
+> (`derivedFrom`, ADR 003 Phase 1) und der Atlas-Snapshot (Phase 3). Die Rahmung
+> „menschlicher Flügel" war bereits durch das Governance-Statement v1 (2026-07-17)
+> abgelöst; diese Notiz zieht die Fläche nach.
+
 ---
 
 ## 1. Kontext

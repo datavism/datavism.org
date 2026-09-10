@@ -10,6 +10,14 @@ Phase 2 umgesetzt 2026-07-11 (`scripts/field-sync.mjs`, `/field`-Seiten,
 **Betrifft:** `src/lib/command-center/operations.ts` · `src/lib/line-g-opening/cases.ts` ·
 `src/lib/command-center/geo.ts` · Command-Center-Komponenten
 
+> **Phase 2 zurückgenommen 2026-09-08 (Frank, Wortlaut privat).** Der Werke-Spiegel
+> (`scripts/field-sync.mjs`, `src/pages/field/`, `src/content/field-works/`,
+> `.github/workflows/field-sync.yml`) ist entfernt; `/field` und `/field/<slug>`
+> leiten per 301 auf `frankbueltge.de/field` bzw. `.../field/werke/<slug>`.
+> **Phase 1 (`derivedFrom`) und Phase 3 (Atlas-Snapshot) bleiben unverändert in
+> Kraft** — die Operationen zitieren ihre Meridian-Quelle weiterhin direkt gegen das
+> Repo, ohne Umweg über eine gespiegelte Seite.
+
 ---
 
 ## 1. Kontext
